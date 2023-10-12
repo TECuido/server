@@ -15,3 +15,12 @@ model Post {
   title String @db.VarChar(255)
   content String
 }
+
+
+model Usuario {
+  idUsuario Int @id @default(autoincrement())
+  nombre String @db.VarChar(100)
+  correo String @db.VarChar(50)
+  pasword String @db.VarChar(50)
+  
+}
