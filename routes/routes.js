@@ -1,7 +1,8 @@
 const postsRouter = require("./usuario.js");
+const authRouter = require("./auth.js")
 
 function routerApi(app) {
-  //app.use('/posts', postsRouter)
+  app.use('/', authRouter)
   app.use("/usuarios", postsRouter);
 }
 
