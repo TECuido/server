@@ -54,44 +54,6 @@ class UsaurioController {
    * @author Bernardo de la Sierra
    * @version 1.0.1
    * @license Gp
-   * @params {string} - correo Unico del usuario
-   * @params {string} - password Contraseña unica del usuario
-   * @description  Funcion para inciar sesion por parte de los usuarios
-   */
-  async Login(req, res) {
-    const { correo, password } = req.body;
-
-    // Validamos la request
-    if (!correo || !password) {
-      return res.status(400).json({ message: "Falta correo o contraseña" });
-    }
-
-    try {
-      const usuario = await service.loginUsuario(
-        req.body.correo,
-        req.body.password
-      );
-      // Usuario no valido
-      if (!usuario) {
-        return res
-          .status(401)
-          .json({ message: "Ha fallado el inicio de sesion" });
-      }
-
-      // Inicio de sesion exitoso
-      return res
-        .status(200)
-        .json({ message: "Inicio de sesion exitoso", usuario });
-    } catch (error) {
-      console.error("Error al iniciar sesion:", error);
-      return res.status(500).json({ message: "Error interno del servidor" });
-    }
-  }
-
-  /**
-   * @author Bernardo de la Sierra
-   * @version 1.0.1
-   * @license Gp
    * @params {string} - password Contraseña unica del usuario
    * @params {string} - nombre Nombre del usuario
    * @params {string} - correo Unico del usuario

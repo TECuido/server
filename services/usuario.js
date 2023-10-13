@@ -39,7 +39,7 @@ class UsuarioService {
    * @version 1.0.1
    * @license Gp
    * @params {int} - id Identificador unico del usuario
-   * @description Funcion que te da todos los usuarios
+   * @description Funcion que da el usuario de un id
    */
   async getUsuario(id) {
     const usuario = await prisma.usuario.findUnique({
@@ -51,37 +51,19 @@ class UsuarioService {
   }
 
   /**
-   * @author Bernardo de la Sierra
+   * @author Julio Emmanuel Meza Rangel
    * @version 1.0.1
    * @license Gp
-   * @params {string} - correo Unico del usuario
-   * @params {string} - password Contraseña unica del usuario
-   * @description  Funcion para inciar sesion por parte de los usuarios
+   * @params {correo} correo del usuario
+   * @description Funcion que regresa el usuario que tiene un determinado correo
    */
-  async loginUsuario(correo, password) {
-    try {
-      // Checamos si el usuario existe en verdad
-      const usuario = await prisma.usuario.findUnique({
-        where: {
-          correo: correo,
-        },
-      });
-
-      // No existe es nulo el valor
-      if (!usuario) {
-        return null;
+  async getUsuarioPorCorreo(correo){
+    const usuario = await prisma.usuario.findUnique({
+      where: {
+        correo: correo
       }
-
-      // Checamos que la password exista sino es nuela
-      if (usuario.password === password) {
-        return usuario;
-      } else {
-        return null;
-      }
-    } catch (error) {
-      console.error("Error durante la carga de Inico de Sesión: ", error);
-      throw error;
-    }
+    });
+    return usuario;
   }
 
   /**
@@ -94,20 +76,14 @@ class UsuarioService {
    * @description Funcion para darle registro a determinado usuario
    */
   async createUsuario({ nombre, correo, password }) {
-    try {
-      const result = await prisma.usuario.create({
-        data: {
-          nombre: nombre,
-          correo: correo,
-          password: password,
-        },
-      });
-      return result;
-    } catch (err) {
-      // Manejo de errores
-      console.error("Error al crear el usuario:", err);
-      throw err;
-    }
+    const result = await prisma.usuario.create({
+      data: {
+        nombre: nombre,
+        correo: correo,
+        password: password,
+      },
+    });
+    return result;
   }
 
   /**

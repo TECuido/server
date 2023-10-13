@@ -1,0 +1,20 @@
+Usar los comandos para instalar las librerías del proyecto:
+
+npm install
+- nodemon
+- eslint
+- eslint-config-prettier
+- eslint-plugin-prettier
+- prettier
+- prisma
+--save-dev
+
+npm install
+- express
+- @prisma/client
+- dotenv
+
+El siguiente comando de prisma permite actualizar la base de datos
+Usálo después de hacer cambios en schema.prisma y TAMBIÉN después de hacer pull del proyecto
+- npx prisma migrate dev --name init 
+
