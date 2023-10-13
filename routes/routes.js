@@ -1,7 +1,8 @@
-const postsRouter = require('./posts.js')
+const postsRouter = require("./usuario.js");
 
-function routerApi(app){
-    app.use('/posts', postsRouter)
+function routerApi(app) {
+  //app.use('/posts', postsRouter)
+  app.use("/usuarios", postsRouter);
 }
 
 module.exports = routerApi;
