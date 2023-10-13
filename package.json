@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "build": "npm install && npx prisma migrate dev --name init",
     "start": "node index.js",
