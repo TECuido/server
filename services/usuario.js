@@ -1,5 +1,13 @@
 // Esto es la schema de usuario favor de agregar el dato tipo
 // Realizado por: Bernardo de la Sierra Rábago el dia 12/10/2023
+// para migrarlo npx prisma migrate dev --name init
+/*
+ CHECA COMO SE LLAMA EL ID DE LA COLUMNA PORQUE
+ SINO LO LLEGAS A PONER DE FORMA CORRECTA DE VA A
+ DAR UN ERROR EN EL POSTMAN  Y HAY DOS TIPOS DE FIND:
+ FINDUNIQUE QUE ES PARA DATOS UNICOS Y FINDFIRST SI 
+ SON DATOS QUE SE PUEDEN REPETIR
+*/
 
 const { PrismaClient } = require("@prisma/client");
 
@@ -10,7 +18,7 @@ const prisma = new PrismaClient();
  * @version 1.0.1
  * @license Gp
  * @params Sin parametros
- * @description Aqui estan los metodos de getAll, get determinado user, el login, crear el usuario que mas adelante se va a modificar, actualizar el usuario y eliminar determinado usuario
+ * @description Aqui estan los metodos de getAll, get determinado usuario, el login, crear el usuario que mas adelante se va a modificar, actualizar el usuario y eliminar determinado usuario
  */
 class UsuarioService {
   constructor() {}
@@ -22,8 +30,8 @@ class UsuarioService {
    * @description Funcion que te da todos los usuarios
    */
   async getAllUsuarios() {
-    const posts = await prisma.post.findMany();
-    return posts;
+    const usuarios = await prisma.usuario.findMany();
+    return usuarios;
   }
 
   /**
@@ -34,12 +42,12 @@ class UsuarioService {
    * @description Funcion que te da todos los usuarios
    */
   async getUsuario(id) {
-    const post = await prisma.post.findUnique({
+    const usuario = await prisma.usuario.findUnique({
       where: {
-        id: Number(id),
+        idUsuario: Number(id),
       },
     });
-    return post;
+    return usuario;
   }
 
   /**
@@ -50,23 +58,23 @@ class UsuarioService {
    * @params {string} - password Contraseña unica del usuario
    * @description  Funcion para inciar sesion por parte de los usuarios
    */
-  async loginUser(correo, password) {
+  async loginUsuario(correo, password) {
     try {
       // Checamos si el usuario existe en verdad
-      const user = await prisma.user.findUnique({
+      const usuario = await prisma.usuario.findUnique({
         where: {
           correo: correo,
         },
       });
 
       // No existe es nulo el valor
-      if (!user) {
+      if (!usuario) {
         return null;
       }
 
       // Checamos que la password exista sino es nuela
-      if (user.password === password) {
-        return user;
+      if (usuario.password === password) {
+        return usuario;
       } else {
         return null;
       }
@@ -86,14 +94,20 @@ class UsuarioService {
    * @description Funcion para darle registro a determinado usuario
    */
   async createUsuario({ nombre, correo, password }) {
-    const result = await prisma.post.create({
-      data: {
-        nombre,
-        correo,
-        password,
-      },
-    });
-    return result;
+    try {
+      const result = await prisma.usuario.create({
+        data: {
+          nombre: nombre,
+          correo: correo,
+          password: password,
+        },
+      });
+      return result;
+    } catch (err) {
+      // Manejo de errores
+      console.error("Error al crear el usuario:", err);
+      throw err;
+    }
   }
 
   /**
@@ -107,11 +121,11 @@ class UsuarioService {
    * @description Funcion para actualizar un determinado usuario
    */
   async updateUsuario(id, { nombre, correo, password }) {
-    const post = await prisma.post.update({
-      where: { id: Number(id) },
+    const usuario = await prisma.usuario.update({
+      where: { idUsuario: Number(id) },
       data: { nombre, correo, password },
     });
-    return post;
+    return usuario;
   }
 
   /**
@@ -122,8 +136,8 @@ class UsuarioService {
    * @description Funcion eliminar el usuario
    */
   async deleteUsuario(id) {
-    await prisma.post.delete({
-      where: { id: Number(id) },
+    await prisma.usuario.delete({
+      where: { idUsuario: Number(id) },
     });
   }
 }

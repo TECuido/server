@@ -1,17 +1,17 @@
-const express = require('express')
-const routerApi = require("./routes/routes")
+const express = require("express");
+const routerApi = require("./routes/routes");
 
-const app = express()
+const app = express();
 
-app.use(express.urlencoded({extended: false}))
-app.use(express.json())
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send("HOLA MUNDO")
-})
+app.get("/", (req, res) => {
+  res.send("HOLA MUNDO");
+});
 
-routerApi(app)
+routerApi(app);
 
-app.listen(3000, () => 
-    console.log('Server ready at http://localhost:3000')
-)
+app.listen(3000, () =>
+  console.log("El Servidor esta listo en http://localhost:3000")
+);

@@ -1,4 +1,4 @@
-const postsRouter = require("./usuarios.js");
+const postsRouter = require("./usuario.js");
 
 function routerApi(app) {
   //app.use('/posts', postsRouter)

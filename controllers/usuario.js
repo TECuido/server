@@ -67,7 +67,7 @@ class UsaurioController {
     }
 
     try {
-      const usuario = await service.loginUser(
+      const usuario = await service.loginUsuario(
         req.body.correo,
         req.body.password
       );
@@ -75,7 +75,7 @@ class UsaurioController {
       if (!usuario) {
         return res
           .status(401)
-          .json({ message: "Ha fallado el incio de sesion" });
+          .json({ message: "Ha fallado el inicio de sesion" });
       }
 
       // Inicio de sesion exitoso
