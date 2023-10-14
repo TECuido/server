@@ -37,7 +37,7 @@ class AuthController {
         //Se encontró el usuario
         return res
         .status(200)
-        .json(usuario)
+        .json({message: "ok", usuario})
     } catch(err){
         console.error("Error al iniciar sesion:", err);
         return res.status(500).json({ message: "Error interno del servidor" });
