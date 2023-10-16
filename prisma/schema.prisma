@@ -6,15 +6,27 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("SERVER_DATABASE_URL")
+  url      = env("LOCAL_DATABASE_URL")
 }
 
 
 
 model Usuario {
-  idUsuario Int @id @default(autoincrement())
+  idUsuario Int @id @unique @default(autoincrement())
   nombre String @db.VarChar(100)
   correo String @db.VarChar(50) @unique
   password String @db.VarChar(50)
-  
+  refreshTokens RefreshToken[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}
+
+model RefreshToken {
+  idToken String @id @unique @default(uuid()) 
+  hashedToken String
+  idUsuario Int
+  usuario Usuario @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade)
+  revoked Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
 }

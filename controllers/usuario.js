@@ -2,6 +2,7 @@ const UsuarioServices = require("../services/usuario.js");
 
 const service = new UsuarioServices();
 
+
 class UsaurioController {
   constructor() {}
 

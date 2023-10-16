@@ -1,6 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
+const { db } = require("../utils/db")
+const {hashToken} = require("../utils/hashToken")
 
-const prisma = new PrismaClient();
 
 /**
  * @author Bernardo de la Sierra
@@ -13,30 +13,75 @@ class AuthService {
   constructor() {}
 
   /**
-   * @author Bernardo de la Sierra
+   * @author Julio Meza
    * @version 1.0.1
    * @license Gp
-   * @params {string} - correo Unico del usuario
-   * @params {string} - password Contraseña unica del usuario
-   * @description  Funcion para inciar sesion por parte de los usuarios
+   * @params {jti} - id del token
+   * @params {refreshToken} 
+   * @params {idUsuario} - id del usuario 
+   * @description  Funcion para añadir un refresh token a la lista de tokens autorizados
    */
-  async loginUsuario(correo, password) {
-    
-    // Obtener el usuario
-    const usuario = await prisma.usuario.findUnique({
-    where: {
-        correo: correo,
-    },
+  async addRefreshTokenToWhitelist({ jti, refreshToken, idUsuario }) {
+    return await db.refreshToken.create({
+      data: {
+        id: jti,
+        hashedToken: hashToken(refreshToken),
+        idUsuario
+      },
     });
-
-    // Checamos que la contraseña coincida
-    if (usuario.password === password) {
-        return usuario;
-    } else {
-        return null;
-    }
-
   }
+
+   /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {id} - id del token
+   * @description  Obtener un token por su id
+   */
+  async findRefreshTokenById(id) {
+    return await db.refreshToken.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {id} - id del token
+   * @description  Marcar token como revocado
+   */
+  async deleteRefreshToken(id) {
+    return db.refreshToken.update({
+      where: {
+        id,
+      },
+      data: {
+        revoked: true
+      }
+    });
+  }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {userId} - id del ususario
+   * @description  Marcar como revocados todos los tokens de un usuario
+   */
+  async revokeTokens(userId) {
+    return await db.refreshToken.updateMany({
+      where: {
+        userId
+      },
+      data: {
+        revoked: true
+      }
+    });
+  }
+
   
 }
 

@@ -9,9 +9,8 @@
  SON DATOS QUE SE PUEDEN REPETIR
 */
 
-const { PrismaClient } = require("@prisma/client");
-
-const prisma = new PrismaClient();
+const bcrypt = require('bcrypt')
+const { db } = require("../utils/db")
 
 /**
  * @author Bernardo de la Sierra
@@ -30,7 +29,7 @@ class UsuarioService {
    * @description Funcion que te da todos los usuarios
    */
   async getAllUsuarios() {
-    const usuarios = await prisma.usuario.findMany();
+    const usuarios = await db.usuario.findMany();
     return usuarios;
   }
 
@@ -42,7 +41,7 @@ class UsuarioService {
    * @description Funcion que da el usuario de un id
    */
   async getUsuario(id) {
-    const usuario = await prisma.usuario.findUnique({
+    const usuario = await db.usuario.findUnique({
       where: {
         idUsuario: Number(id),
       },
@@ -58,7 +57,7 @@ class UsuarioService {
    * @description Funcion que regresa el usuario que tiene un determinado correo
    */
   async getUsuarioPorCorreo(correo){
-    const usuario = await prisma.usuario.findUnique({
+    const usuario = await db.usuario.findUnique({
       where: {
         correo: correo
       }
@@ -76,11 +75,11 @@ class UsuarioService {
    * @description Funcion para darle registro a determinado usuario
    */
   async createUsuario({ nombre, correo, password }) {
-    const result = await prisma.usuario.create({
+    const result = await db.usuario.create({
       data: {
         nombre: nombre,
         correo: correo,
-        password: password,
+        password: bcrypt.hashSync(password, 12),
       },
     });
     return result;
@@ -97,7 +96,7 @@ class UsuarioService {
    * @description Funcion para actualizar un determinado usuario
    */
   async updateUsuario(id, { nombre, correo, password }) {
-    const usuario = await prisma.usuario.update({
+    const usuario = await db.usuario.update({
       where: { idUsuario: Number(id) },
       data: { nombre, correo, password },
     });
@@ -112,7 +111,7 @@ class UsuarioService {
    * @description Funcion eliminar el usuario
    */
   async deleteUsuario(id) {
-    await prisma.usuario.delete({
+    await db.usuario.delete({
       where: { idUsuario: Number(id) },
     });
   }
