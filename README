@@ -11,6 +11,10 @@ npm install
 
 npm install
 - express
+- bcrypt
+- uuid
+- jsonwebtoken
+- joi
 - @prisma/client
 - dotenv
 
