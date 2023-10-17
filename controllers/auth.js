@@ -1,7 +1,12 @@
 const AuthService = require("../services/auth.js");
 const UsuarioService = require("../services/usuario.js")
+const { v4: uuidv4 } = require('uuid');
 const {generateTokens} = require("../utils/jwt.js")
 const {hashToken} = require("../utils/hashToken.js")
+const bcrypt = require('bcrypt')
+const config = require("../config/config.js")
+const jwt = require('jsonwebtoken');
+
 
 const authService = new AuthService();
 const usuarioService = new UsuarioService()
@@ -21,15 +26,15 @@ class AuthController {
 
     try {
         //buscar si el correo está registrado
-        const usuarioCorreo = await usuarioService.getUsuarioPorCorreo(correo)
-        if(!usuarioCorreo){
+        const usuario = await usuarioService.getUsuarioPorCorreo(correo)
+        if(!usuario){
             return res
             .status(404)
             .json({message: "No se encontró al usuario"})
         }
         
         //verificar si la contraseña coincide con la contraseña encriptada en la bd
-        const validPassword = await bcrypt.compare(password, usuarioCorreo.password)
+        const validPassword = await bcrypt.compare(password, usuario.password)
         if(!validPassword){
           return res.status(403).json({message: "Credenciales inválidas"})
         }
@@ -100,39 +105,39 @@ class AuthController {
 
       //si no se envió un refresh token, lanzar un error
       if (!refreshToken) {
-        res.status(400).json({message: "Falta refresh token"});
+        return res.status(400).json({message: "Falta refresh token"});
       }
 
       //verificar el token y buscar si está activo en la bd
-      const payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+      const payload = jwt.verify(refreshToken, config.refreshSecret);
       const savedRefreshToken = await authService.findRefreshTokenById(payload.jti);
   
       //si no está guardado o fue revocado lanzar error
       if (!savedRefreshToken || savedRefreshToken.revoked === true) {
-        res.status(401).json({message: "No autorizado"});
+        return res.status(401).json({message: "No autorizado"});
       }
   
       //Obtener el hash del token y compararlo con el guardado
       const hashedToken = hashToken(refreshToken);
       if (hashedToken !== savedRefreshToken.hashedToken) {
-        res.status(401).json({message: "No autorizado"});
+        return res.status(401).json({message: "No autorizado"});
       }
 
       //Obtener el usuario
       const user = await usuarioService.getUsuario(payload.idUsuario);
       if (!user) {
-        res.status(401).json({message: "No autorizado"})
+        return res.status(401).json({message: "No autorizado"})
       }
-  
+
       //eliminar el refresh token
-      await authService.deleteRefreshToken(savedRefreshToken.id);
+      await authService.deleteRefreshToken(savedRefreshToken.idToken);
       //crear un nuevo token
       const jti = uuidv4();
       const { accessToken, refreshToken: newRefreshToken } = generateTokens(user, jti);
       //añadir el token a la lista de autorizados
-      await addRefreshTokenToWhitelist({ jti, refreshToken: newRefreshToken, idUsuario: user.idUsuario });
+      await authService.addRefreshTokenToWhitelist({ jti, refreshToken: newRefreshToken, idUsuario: user.idUsuario });
   
-      res.status(200).json({
+      return res.status(200).json({
         accessToken,
         refreshToken: newRefreshToken
       });
@@ -141,7 +146,7 @@ class AuthController {
           .status(500)
           .json({ message: `Error. Err: ${err}` });
     }
-  };
+  }
 
 }
 

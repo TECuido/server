@@ -24,7 +24,7 @@ class AuthService {
   async addRefreshTokenToWhitelist({ jti, refreshToken, idUsuario }) {
     return await db.refreshToken.create({
       data: {
-        id: jti,
+        idToken: jti,
         hashedToken: hashToken(refreshToken),
         idUsuario
       },
@@ -41,7 +41,7 @@ class AuthService {
   async findRefreshTokenById(id) {
     return await db.refreshToken.findUnique({
       where: {
-        id,
+        idToken: id,
       },
     });
   }
@@ -54,9 +54,9 @@ class AuthService {
    * @description  Marcar token como revocado
    */
   async deleteRefreshToken(id) {
-    return db.refreshToken.update({
+    return await db.refreshToken.update({
       where: {
-        id,
+        idToken: id,
       },
       data: {
         revoked: true
@@ -74,7 +74,7 @@ class AuthService {
   async revokeTokens(userId) {
     return await db.refreshToken.updateMany({
       where: {
-        userId
+        idUsuario: userId
       },
       data: {
         revoked: true
