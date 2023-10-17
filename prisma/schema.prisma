@@ -15,7 +15,7 @@ model Usuario {
   idUsuario Int @id @unique @default(autoincrement())
   nombre String @db.VarChar(100)
   correo String @db.VarChar(50) @unique
-  password String @db.VarChar(50)
+  password String @db.VarChar(100)
   refreshTokens RefreshToken[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
@@ -23,7 +23,7 @@ model Usuario {
 
 model RefreshToken {
   idToken String @id @unique @default(uuid()) 
-  hashedToken String
+  hashedToken String 
   idUsuario Int
   usuario Usuario @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade)
   revoked Boolean @default(false)
