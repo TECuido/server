@@ -2,8 +2,7 @@ const UsuarioServices = require("../services/usuario.js");
 
 const service = new UsuarioServices();
 
-
-class UsaurioController {
+class UsuarioController {
   constructor() {}
 
   /**
@@ -16,7 +15,7 @@ class UsaurioController {
   async getAllUsuarios(req, res) {
     try {
       const usuarios = await service.getAllUsuarios();
-      return res.status(200).json({ usuarios });
+      return res.status(200).json({ data: usuarios });
     } catch (err) {
       return res
         .status(500)
@@ -29,7 +28,7 @@ class UsaurioController {
    * @version 1.0.1
    * @license Gp
    * @params {int} - id Identificador unico del usuario
-   * @description Funcion que te da todos los usuarios
+   * @description Funcion que te da determinado usuario por id
    */
   async getUsuario(req, res) {
     const id = req.params.id;
@@ -40,7 +39,7 @@ class UsaurioController {
     try {
       const usuario = await service.getUsuario(id);
       if (usuario) {
-        return res.status(200).json({ usuario });
+        return res.status(200).json({ data: usuario });
       } else {
         return res.status(404).json({ message: "No se encontró el usuario" });
       }
@@ -63,7 +62,7 @@ class UsaurioController {
   async addUsuario(req, res) {
     try {
       const usuario = await service.createUsuario(req.body);
-      return res.status(200).json({ usuario });
+      return res.status(200).json({ data: usuario });
     } catch (err) {
       return res
         .status(500)
@@ -88,7 +87,7 @@ class UsaurioController {
     }
     try {
       const usuario = await service.updateUsuario(id, req.body);
-      return res.status(200).json({ usuario });
+      return res.status(200).json({ data: usuario });
     } catch (err) {
       return res
         .status(500)
@@ -121,4 +120,4 @@ class UsaurioController {
   }
 }
 
-module.exports = UsaurioController;
+module.exports = UsuarioController;
