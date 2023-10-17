@@ -8,7 +8,8 @@ const config = {
     dbHost: process.env.DB_HOST || 'localhost',
     dbName: process.env.DB_NAME || 'swiftie',
     dbPort: process.env.DB_PORT || 5432,
-    databaseURL: `postgresql://${dbName}:${dbPassword}@${dbHost}:${dbPort}/${dbName}?schema=public`
+    accessSecret: process.env.JWT_ACCESS_SECRET,
+    refreshSecret: process.env.JWT_REFRESH_SECRET
 }
 
-module.exports = {config}
+module.exports = config

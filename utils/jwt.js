@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-
+const config = require("../config/config")
 
 /**
  * @author Julio Meza
@@ -10,7 +10,7 @@ const jwt = require('jsonwebtoken');
  * @returns 
  */
 function generateAccessToken(user) {
-    return jwt.sign({ idUsuario: user.idUsuario }, process.env.JWT_ACCESS_SECRET, {
+    return jwt.sign({ idUsuario: user.idUsuario }, config.accessSecret, {
       expiresIn: '5m',
     });
   }
@@ -28,7 +28,7 @@ function generateRefreshToken(user, jti) {
     return jwt.sign({
       idUsuario: user.idUsuario,
       jti
-    }, process.env.JWT_REFRESH_SECRET, {
+    }, config.refreshSecret, {
       expiresIn: '24h',
     });
 }
