@@ -45,12 +45,12 @@ class EmergenciaService {
    * @description Funcion que da el emergencia de un id
    */
   async getEmergenciaPorEmisor(idEmisor) {
-    console.log(idEmisor, "Papa");
-    const emergencia = await db.emergencia.findUnique({
+    const emergencia = await db.emergencia.findMany({
       where: {
         idEmisor: Number(idEmisor),
       },
     });
+
     return emergencia;
   }
 

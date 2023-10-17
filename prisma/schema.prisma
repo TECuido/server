@@ -17,6 +17,8 @@ model Usuario {
   correo String @db.VarChar(50) @unique
   password String @db.VarChar(50)
   refreshTokens RefreshToken[]
+  emergencias Emergencia[] @relation("emisorEmergencia")
+  emergenciasReceptor Emergencia[] @relation("receptorEmergencia")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
@@ -29,4 +31,14 @@ model RefreshToken {
   revoked Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
+}
+
+model Emergencia{
+  idEmergencia  Int @id @unique @default(autoincrement())
+  tipo String @db.VarChar(100)
+  descripcion String @db.Text
+  idEmisor Int
+  usuario Usuario @relation("emisorEmergencia", fields: [idEmisor], references: [idUsuario], onDelete: Cascade)
+  idReceptor Int
+  usuarioReceptor Usuario @relation("receptorEmergencia", fields: [idReceptor], references: [idUsuario], onDelete: Cascade)
 }

@@ -61,7 +61,8 @@ class EmergenciaController {
    */
   async getEmergenciaPorEmisor(req, res) {
     const idEmisor = req.params.idEmisor;
-    console.log(idEmisor);
+    console.log(req.params);
+
     // Verificamos que el id no sea un string
     if (!Number.isInteger(parseInt(idEmisor))) {
       return res.status(500).json({ message: "El Id necesita ser entero" });

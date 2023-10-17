@@ -9,6 +9,7 @@ const controller = new EmergenciasController();
 router.get("/", controller.getAllEmergencias);
 router.get("/:id", controller.getEmergencia);
 router.post("/", controller.addEmergencia);
-router.post("/emisor/:id", controller.getEmergenciaPorEmisor);
+// PONGA EL NOMBRE COMPELTO
+router.get("/emisor/:idEmisor", controller.getEmergenciaPorEmisor);
 
 module.exports = router;
