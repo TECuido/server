@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const config = require("../config/config")
+
 
 function isAuthenticated(req, res, next){
     const {authorization} = req.headers;
@@ -8,8 +10,8 @@ function isAuthenticated(req, res, next){
     }
 
     try {
-        const token = authorization.split(' ')[1];
-        const payload = jwt.verify(token, proccess.env.JWT_ACCESS_SECRET);
+        const token = authorization.split(" ")[1];
+        const payload = jwt.verify(token, config.accessSecret);
         req.payload = payload;
     } catch(err) {
         if(err.name === "TokenExpiredError"){
