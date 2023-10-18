@@ -36,7 +36,7 @@ class AuthController {
         //verificar si la contraseña coincide con la contraseña encriptada en la bd
         const validPassword = await bcrypt.compare(password, usuario.password)
         if(!validPassword){
-          return res.status(403).json({message: "Credenciales inválidas"})
+          return res.status(400).json({message: "Credenciales inválidas"})
         }
 
         //Crear token de acceso
