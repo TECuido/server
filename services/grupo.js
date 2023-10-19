@@ -49,7 +49,7 @@ class GrupoService {
     const result = await db.grupo.create({
       data: {
         nombre: nombre,
-        idUsuario :  idUsuario ,
+        idUsuario: idUsuario,
       },
     });
     return result;
@@ -75,8 +75,11 @@ class GrupoService {
    * @params {int} - idGrupo Unico del grupo
    * @description Funcion para darle registro a determinado grupo
    */
-  async createUsuarioGrupo({ idUsuarioAgregado, idGrupo }) {
-    const result = await db.contactogrupo.create({
+  async createUsuarioGrupo(id, idGrupo) {
+    console.log(id.idUsuario);
+    console.log(idGrupo);
+    let idUsuarioAgregado = id.idUsuario;
+    const result = await db.contactoGrupo.create({
       data: {
         idUsuarioAgregado: idUsuarioAgregado,
         idGrupo: idGrupo,
@@ -93,7 +96,7 @@ class GrupoService {
    * @description Funcion que regresa el usuario que tiene un determinado correo
    */
   async getUsuarioPorGrupo(idGrupo) {
-    const contactogrupoo = await db.contactogrupo.findUnique({
+    const contactogrupo = await db.contactoGrupo.findUnique({
       where: {
         idGrupo: idGrupo,
       },
