@@ -9,15 +9,15 @@
  SON DATOS QUE SE PUEDEN REPETIR
 */
 
-const bcrypt = require('bcrypt')
-const { db } = require("../utils/db")
+const bcrypt = require("bcrypt");
+const { db } = require("../utils/db");
 
 /**
- * @author Bernardo de la Sierra
- * @version 1.0.1
+ * @author Bernardo de la Sierra y Julio Meza
+ * @version 2.0.1
  * @license Gp
  * @params Sin parametros
- * @description Aqui estan los metodos de getAll, get determinado usuario, el login, crear el usuario que mas adelante se va a modificar, actualizar el usuario y eliminar determinado usuario
+ * @description Aqui estan los metodos de getAll, get determinado usuario, el login, crear el usuario que mas adelante se va a modificar, actualizar el usuario y eliminar determinado usuario. Se añadio la relacion entre contactos
  */
 class UsuarioService {
   constructor() {}
@@ -56,11 +56,11 @@ class UsuarioService {
    * @params {correo} correo del usuario
    * @description Funcion que regresa el usuario que tiene un determinado correo
    */
-  async getUsuarioPorCorreo(correo){
+  async getUsuarioPorCorreo(correo) {
     const usuario = await db.usuario.findUnique({
       where: {
-        correo: correo
-      }
+        correo: correo,
+      },
     });
     return usuario;
   }
@@ -113,6 +113,23 @@ class UsuarioService {
   async deleteUsuario(id) {
     await db.usuario.delete({
       where: { idUsuario: Number(id) },
+    });
+  }
+  /**
+   * @author Bernardo de la Sierra
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - idUsuarioActual Identificador unico del usuario actual
+   * @params {int} - usuario2 Identificador del usuario que vamos a mandar
+   * @description Funcion que crea las relaciones de contactos
+   */
+  async addContacto(idUsuarioActual, usuario2) {
+    // Creamos el contacto
+    return await db.contacto.create({
+      data: {
+        idUsuario1: idUsuarioActual,
+        idUsuario2: usuario2.idUsuario,
+      },
     });
   }
 }

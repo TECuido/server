@@ -1,9 +1,8 @@
-const { db } = require("../utils/db")
-const {hashToken} = require("../utils/hashToken")
-
+const { db } = require("../utils/db");
+const { hashToken } = require("../utils/hashToken");
 
 /**
- * @author Bernardo de la Sierra
+ * @author Julio Meza
  * @version 1.0.1
  * @license Gp
  * @params Sin parametros
@@ -17,8 +16,8 @@ class AuthService {
    * @version 1.0.1
    * @license Gp
    * @params {jti} - id del token
-   * @params {refreshToken} 
-   * @params {idUsuario} - id del usuario 
+   * @params {refreshToken}
+   * @params {idUsuario} - id del usuario
    * @description  Funcion para añadir un refresh token a la lista de tokens autorizados
    */
   async addRefreshTokenToWhitelist({ jti, refreshToken, idUsuario }) {
@@ -26,12 +25,12 @@ class AuthService {
       data: {
         idToken: jti,
         hashedToken: hashToken(refreshToken),
-        idUsuario
+        idUsuario,
       },
     });
   }
 
-   /**
+  /**
    * @author Julio Meza
    * @version 1.0.1
    * @license Gp
@@ -59,8 +58,8 @@ class AuthService {
         idToken: id,
       },
       data: {
-        revoked: true
-      }
+        revoked: true,
+      },
     });
   }
 
@@ -74,15 +73,13 @@ class AuthService {
   async revokeTokens(userId) {
     return await db.refreshToken.updateMany({
       where: {
-        idUsuario: userId
+        idUsuario: userId,
       },
       data: {
-        revoked: true
-      }
+        revoked: true,
+      },
     });
   }
-
-  
 }
 
 module.exports = AuthService;

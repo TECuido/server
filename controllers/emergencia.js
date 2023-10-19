@@ -2,6 +2,13 @@ const EmergenciaServices = require("../services/emergencia.js");
 
 const service = new EmergenciaServices();
 
+/**
+ * @author Bernardo de la Sierra
+ * @version 1.0.1
+ * @license Gp
+ * @params Sin parametros
+ * @description Aqui estan los metodos de getAll, get determinado emergencia, el login, crear el emergencia que mas adelante se va a modificar, actualizar el emergencia y eliminar determinado emergencia. Además, esta clase pasa todas las emergencias
+ */
 class EmergenciaController {
   constructor() {}
 
