@@ -2,6 +2,13 @@ const UsuarioServices = require("../services/usuario.js");
 
 const service = new UsuarioServices();
 
+/**
+ * @author Bernardo de la Sierra y Julio Meza
+ * @version 2.0.1
+ * @license Gp
+ * @params Sin parametros
+ * @description Aqui estan los metodos de getAll, get determinado usuario, el login, crear el usuario que mas adelante se va a modificar, actualizar el usuario y eliminar determinado usuario. Se añadio la relacion entre contactos
+ */
 class UsuarioController {
   constructor() {}
 
@@ -118,6 +125,7 @@ class UsuarioController {
         .json({ message: `Error al obtener los usuarios. Err: ${err}` });
     }
   }
+ 
 }
 
 module.exports = UsuarioController;

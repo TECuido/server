@@ -6,7 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("SERVER_DATABASE_URL")
+  url      = env("LOCAL_DATABASE_URL")
 }
 
 
@@ -19,6 +19,10 @@ model Usuario {
   refreshTokens RefreshToken[]
   emergencias Emergencia[] @relation("emisorEmergencia")
   emergenciasReceptor Emergencia[] @relation("receptorEmergencia")
+  usuarioAgrega Contacto[] @relation("usuarioAgrega")
+  usuarioAgregado Contacto[] @relation("usuarioAgregado")
+  creadorGrupo Grupo[] @relation("usuarioGrupo")
+  miembroGrupo UsuarioGrupo[] @relation("miembroGrupo")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
@@ -41,4 +45,30 @@ model Emergencia{
   usuario Usuario @relation("emisorEmergencia", fields: [idEmisor], references: [idUsuario], onDelete: Cascade)
   idReceptor Int
   usuarioReceptor Usuario @relation("receptorEmergencia", fields: [idReceptor], references: [idUsuario], onDelete: Cascade)
+
+}
+
+model Contacto{
+  idContacto Int @id @unique @default(autoincrement())
+  idAgrega Int
+  usuarioAgrega Usuario @relation("usuarioAgrega", fields: [idAgrega], references: [idUsuario], onDelete: Cascade)
+  idAgregado Int
+  usuarioAgregado Usuario @relation("usuarioAgregado", fields: [idAgregado], references: [idUsuario], onDelete: Cascade)
+}
+
+model Grupo{
+    idGrupo Int @id @unique @default(autoincrement())
+    nombre String @db.VarChar(150)
+    grupo UsuarioGrupo[] @relation("grupo")
+    idCreador Int
+    creadorGrupo Usuario @relation("usuarioGrupo", fields: [idCreador], references: [idUsuario], onDelete: Cascade)
+}
+
+model UsuarioGrupo{
+  idContactoGrupo Int @id @unique @default(autoincrement())
+  idMiembro Int 
+  miembroGrupo Usuario @relation("miembroGrupo", fields: [idMiembro], references: [idUsuario], onDelete: Cascade)
+  idGrupo Int 
+  grupo Grupo @relation("grupo", fields: [idGrupo], references: [idGrupo], onDelete: Cascade)
+ 
 }

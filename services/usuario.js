@@ -9,15 +9,15 @@
  SON DATOS QUE SE PUEDEN REPETIR
 */
 
-const bcrypt = require('bcrypt')
-const { db } = require("../utils/db")
+const bcrypt = require("bcrypt");
+const { db } = require("../utils/db");
 
 /**
- * @author Bernardo de la Sierra
- * @version 1.0.1
+ * @author Bernardo de la Sierra y Julio Meza
+ * @version 2.0.1
  * @license Gp
  * @params Sin parametros
- * @description Aqui estan los metodos de getAll, get determinado usuario, el login, crear el usuario que mas adelante se va a modificar, actualizar el usuario y eliminar determinado usuario
+ * @description Aqui estan los metodos de getAll, get determinado usuario, el login, crear el usuario que mas adelante se va a modificar, actualizar el usuario y eliminar determinado usuario. Se añadio la relacion entre contactos
  */
 class UsuarioService {
   constructor() {}
@@ -53,14 +53,15 @@ class UsuarioService {
    * @author Julio Emmanuel Meza Rangel
    * @version 1.0.1
    * @license Gp
-   * @params {correo} correo del usuario
+   * @params {string} - correo correo del usuario
    * @description Funcion que regresa el usuario que tiene un determinado correo
    */
-  async getUsuarioPorCorreo(correo){
+  async getUsuarioPorCorreo(correo) {
+
     const usuario = await db.usuario.findUnique({
       where: {
-        correo: correo
-      }
+        correo: correo.toLower(),
+      },
     });
     return usuario;
   }
@@ -78,7 +79,7 @@ class UsuarioService {
     const result = await db.usuario.create({
       data: {
         nombre: nombre,
-        correo: correo,
+        correo: correo.toLower(),
         password: bcrypt.hashSync(password, 12),
       },
     });
@@ -96,6 +97,7 @@ class UsuarioService {
    * @description Funcion para actualizar un determinado usuario
    */
   async updateUsuario(id, { nombre, correo, password }) {
+    correo = correo.toLower()
     const usuario = await db.usuario.update({
       where: { idUsuario: Number(id) },
       data: { nombre, correo, password },
@@ -115,6 +117,7 @@ class UsuarioService {
       where: { idUsuario: Number(id) },
     });
   }
+  
 }
 
 module.exports = UsuarioService;
