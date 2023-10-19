@@ -57,9 +57,10 @@ class UsuarioService {
    * @description Funcion que regresa el usuario que tiene un determinado correo
    */
   async getUsuarioPorCorreo(correo) {
+
     const usuario = await db.usuario.findUnique({
       where: {
-        correo: correo,
+        correo: correo.toLower(),
       },
     });
     return usuario;
@@ -78,7 +79,7 @@ class UsuarioService {
     const result = await db.usuario.create({
       data: {
         nombre: nombre,
-        correo: correo,
+        correo: correo.toLower(),
         password: bcrypt.hashSync(password, 12),
       },
     });
@@ -96,6 +97,7 @@ class UsuarioService {
    * @description Funcion para actualizar un determinado usuario
    */
   async updateUsuario(id, { nombre, correo, password }) {
+    correo = correo.toLower()
     const usuario = await db.usuario.update({
       where: { idUsuario: Number(id) },
       data: { nombre, correo, password },
@@ -115,23 +117,7 @@ class UsuarioService {
       where: { idUsuario: Number(id) },
     });
   }
-  /**
-   * @author Bernardo de la Sierra
-   * @version 1.0.1
-   * @license Gp
-   * @params {int} - idUsuarioActual Identificador unico del usuario actual
-   * @params {int} - usuario2 Identificador del usuario que vamos a mandar
-   * @description Funcion que crea las relaciones de contactos
-   */
-  async addContacto(idUsuarioActual, usuario2) {
-    // Creamos el contacto
-    return await db.contacto.create({
-      data: {
-        idUsuario1: idUsuarioActual,
-        idUsuario2: usuario2.idUsuario,
-      },
-    });
-  }
+  
 }
 
 module.exports = UsuarioService;

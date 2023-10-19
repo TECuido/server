@@ -19,9 +19,10 @@ model Usuario {
   refreshTokens RefreshToken[]
   emergencias Emergencia[] @relation("emisorEmergencia")
   emergenciasReceptor Emergencia[] @relation("receptorEmergencia")
-  usuario1 Contacto[] @relation("usuario1")
-  usuario2 Contacto[] @relation("usuario2")
-  usuario Grupo[] @relation("usuarioGrupo")
+  usuarioAgrega Contacto[] @relation("usuarioAgrega")
+  usuarioAgregado Contacto[] @relation("usuarioAgregado")
+  creadorGrupo Grupo[] @relation("usuarioGrupo")
+  miembroGrupo UsuarioGrupo[] @relation("miembroGrupo")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
@@ -49,26 +50,25 @@ model Emergencia{
 
 model Contacto{
   idContacto Int @id @unique @default(autoincrement())
-  idUsuario1 Int
-  usuario1 Usuario @relation("usuario1", fields: [idUsuario1], references: [idUsuario], onDelete: Cascade)
-  idUsuario2 Int @unique
-  usuario2 Usuario @relation("usuario2", fields: [idUsuario2], references: [idUsuario], onDelete: Cascade)
-  contacto ContactoGrupo[] @relation("contacto")
+  idAgrega Int
+  usuarioAgrega Usuario @relation("usuarioAgrega", fields: [idAgrega], references: [idUsuario], onDelete: Cascade)
+  idAgregado Int
+  usuarioAgregado Usuario @relation("usuarioAgregado", fields: [idAgregado], references: [idUsuario], onDelete: Cascade)
 }
 
 model Grupo{
     idGrupo Int @id @unique @default(autoincrement())
     nombre String @db.VarChar(150)
-    grupo ContactoGrupo[] @relation("grupo")
-    idUsuario Int
-    usuario Usuario @relation("usuarioGrupo", fields: [idUsuario], references: [idUsuario], onDelete: Cascade)
+    grupo UsuarioGrupo[] @relation("grupo")
+    idCreador Int
+    creadorGrupo Usuario @relation("usuarioGrupo", fields: [idCreador], references: [idUsuario], onDelete: Cascade)
 }
 
-model ContactoGrupo{
+model UsuarioGrupo{
   idContactoGrupo Int @id @unique @default(autoincrement())
-  idUsuarioAgregado Int 
-  contacto Contacto @relation("contacto", fields: [idUsuarioAgregado], references: [idUsuario2 ], onDelete: Cascade)
-  idGrupo Int @unique
+  idMiembro Int 
+  miembroGrupo Usuario @relation("miembroGrupo", fields: [idMiembro], references: [idUsuario], onDelete: Cascade)
+  idGrupo Int 
   grupo Grupo @relation("grupo", fields: [idGrupo], references: [idGrupo], onDelete: Cascade)
  
 }

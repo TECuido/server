@@ -125,36 +125,7 @@ class UsuarioController {
         .json({ message: `Error al obtener los usuarios. Err: ${err}` });
     }
   }
-  /**
-   * @author Bernardo de la Sierra
-   * @version 1.0.1
-   * @license Gp
-   * @params {int} - idUsuarioActual Identificador del usuario que esta registrando el contacto
-   * @params {string} - correo es el correo del usuario a añadir en la relacion
-   * @description  Funcion que crea las relaciones de contactos
-   */
-  async addContacto(req, res) {
-    const { idUsuarioActual, correo } = req.body;
-
-    try {
-      //buscar si el correo está registrado para evitar registrar de nuevo
-      const usuario2 = await service.getUsuarioPorCorreo(correo);
-      console.log(usuario2);
-      if (!usuario2) {
-        return res
-          .status(400)
-          .json({ message: "El usuario no se encuentra registrado" });
-      }
-      const contactoCreado = await service.addContacto(
-        idUsuarioActual,
-        usuario2
-      );
-      console.log(contactoCreado);
-      res.status(200).json(contactoCreado);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
+ 
 }
 
 module.exports = UsuarioController;
