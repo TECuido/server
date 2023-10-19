@@ -1,4 +1,4 @@
-const GrupoServices = require("../services/grupojs");
+const GrupoServices = require("../services/grupo.js");
 
 const service = new GrupoServices();
 
@@ -20,7 +20,7 @@ class GrupoController {
    */
   async getAllGrupos(req, res) {
     try {
-      const grupos = await service.getAllGrupo();
+      const grupos = await service.getAllGrupos();
       return res.status(200).json({ data: grupos });
     } catch (err) {
       return res
@@ -95,6 +95,25 @@ class GrupoController {
       return res
         .status(500)
         .json({ message: `Error al obtener los grupos. Err: ${err}` });
+    }
+  }
+
+  /**
+   * @author Bernardo de la Sierra
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} -  idUsuarioAgregado Usuario al que se va agregar al grupo
+   * @params {int} - idGrupo Unico del grupo
+   * @description Funcion para darle registro a determinado grupo
+   */
+  async addUsuarioGrupo(req, res) {
+    try {
+      const grupo = await service.createUsuarioGrupo(req.body);
+      return res.status(200).json({ data: grupo });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al crear el grupo. Err: ${err}` });
     }
   }
 }

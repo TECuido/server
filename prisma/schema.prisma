@@ -66,8 +66,8 @@ model Grupo{
 
 model ContactoGrupo{
   idContactoGrupo Int @id @unique @default(autoincrement())
-  usuarioAgregado Int
-  contacto Contacto @relation("contacto", fields: [usuarioAgregado], references: [idUsuario2 ], onDelete: Cascade)
+  idUsuarioAgregado Int
+  contacto Contacto @relation("contacto", fields: [idUsuarioAgregado], references: [idUsuario2 ], onDelete: Cascade)
   idGrupo Int
   grupo Grupo @relation("grupo", fields: [idGrupo], references: [idGrupo], onDelete: Cascade)
  

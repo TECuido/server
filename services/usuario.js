@@ -53,7 +53,7 @@ class UsuarioService {
    * @author Julio Emmanuel Meza Rangel
    * @version 1.0.1
    * @license Gp
-   * @params {correo} correo del usuario
+   * @params {string} - correo correo del usuario
    * @description Funcion que regresa el usuario que tiene un determinado correo
    */
   async getUsuarioPorCorreo(correo) {
