@@ -72,8 +72,10 @@ class ContactoService {
   async getContactoPorUsuarios(idAgrega, idAgregado) {
     const contacto = await db.contacto.findUnique({
       where: {
-        idAgrega: idAgrega,
-        idAgregado: idAgregado
+        idAgrega_idAgregado: {
+          idAgrega: idAgrega,
+          idAgregado: idAgregado
+        }
       },
     });
     return contacto;
