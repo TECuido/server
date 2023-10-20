@@ -54,6 +54,7 @@ model Contacto{
   usuarioAgrega Usuario @relation("usuarioAgrega", fields: [idAgrega], references: [idUsuario], onDelete: Cascade)
   idAgregado Int
   usuarioAgregado Usuario @relation("usuarioAgregado", fields: [idAgregado], references: [idUsuario], onDelete: Cascade)
+  @@unique([idAgrega, idAgregado])
 }
 
 model Grupo{
@@ -70,5 +71,5 @@ model UsuarioGrupo{
   miembroGrupo Usuario @relation("miembroGrupo", fields: [idMiembro], references: [idUsuario], onDelete: Cascade)
   idGrupo Int 
   grupo Grupo @relation("grupo", fields: [idGrupo], references: [idGrupo], onDelete: Cascade)
- 
+  @@unique([idMiembro, idGrupo])
 }

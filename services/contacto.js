@@ -29,7 +29,7 @@ class ContactoService {
    * @description Funcion que da el contacto de un id
    */
   async getContacto(id) {
-    const contacto = await db.contacto.findMany({
+    const contacto = await db.contacto.findUnique({
       where: {
         idContacto: Number(id),
       },
