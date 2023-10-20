@@ -70,12 +70,10 @@ class ContactoService {
    * @description Funcion que da un contacto a partir de los usuarios involucrados
    */
   async getContactoPorUsuarios(idAgrega, idAgregado) {
-    const contacto = await db.contacto.findUnique({
+    const contacto = await db.contacto.findMany({
       where: {
-        idAgrega_idAgregado: {
-          idAgrega: idAgrega,
-          idAgregado: idAgregado
-        }
+        idAgrega: idAgrega,
+        idAgregado: idAgregado
       },
     });
     return contacto;
