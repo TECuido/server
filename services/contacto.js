@@ -70,7 +70,7 @@ class ContactoService {
    * @description Funcion que da un contacto a partir de los usuarios involucrados
    */
   async getContactoPorUsuarios(idAgrega, idAgregado) {
-    const contacto = await db.contacto.findMany({
+    const contacto = await db.contacto.findFirst({
       where: {
           AND: [
             { idAgrega: idAgrega },
@@ -79,6 +79,7 @@ class ContactoService {
         }
       },
     );
+    console.log(contacto)
     return contacto;
   }
 

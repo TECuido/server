@@ -150,6 +150,7 @@ class ContactoController {
 
        //buscar que no se haya registrado ya el contacto
        const contacto = await service.getContactoPorUsuarios(idUsuarioActual, usuarioAgregado.idUsuario)
+       console.log(contacto)
        if(contacto) {
           return res
           .status(400)
