@@ -73,14 +73,16 @@ class UsuarioService {
    * @params {string} - password Contraseña unica del usuario
    * @params {string} - nombre Nombre del usuario
    * @params {string} - correo Unico del usuario
+   * @params {int} - id del tipo
    * @description Funcion para darle registro a determinado usuario
    */
-  async createUsuario({ nombre, correo, password }) {
+  async createUsuario({ nombre, correo, password, idTipo }) {
     const result = await db.usuario.create({
       data: {
         nombre: nombre,
         correo: correo.toLowerCase(),
         password: bcrypt.hashSync(password, 12),
+        idTipo: Number(idTipo)
       },
     });
     return result;
