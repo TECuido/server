@@ -72,10 +72,13 @@ class ContactoService {
   async getContactoPorUsuarios(idAgrega, idAgregado) {
     const contacto = await db.contacto.findMany({
       where: {
-        idAgrega: idAgrega,
-        idAgregado: idAgregado
+          AND: [
+            { idAgrega: idAgrega },
+            { idAgregado: idAgregado }
+          ]
+        }
       },
-    });
+    );
     return contacto;
   }
 
