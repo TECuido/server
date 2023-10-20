@@ -49,6 +49,14 @@ class ContactoService {
       where: {
         idAgrega: Number(idAgrega)
       },
+      select: {
+        usuarioAgregado: {
+          select:{
+            nombre: true,
+            correo: true
+          }
+        }
+      }
     });
     return contactos;
   }

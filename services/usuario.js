@@ -60,7 +60,7 @@ class UsuarioService {
 
     const usuario = await db.usuario.findUnique({
       where: {
-        correo: correo.toLower(),
+        correo: correo.toLowerCase(),
       },
     });
     return usuario;
@@ -79,7 +79,7 @@ class UsuarioService {
     const result = await db.usuario.create({
       data: {
         nombre: nombre,
-        correo: correo.toLower(),
+        correo: correo.toLowerCase(),
         password: bcrypt.hashSync(password, 12),
       },
     });
@@ -97,7 +97,7 @@ class UsuarioService {
    * @description Funcion para actualizar un determinado usuario
    */
   async updateUsuario(id, { nombre, correo, password }) {
-    correo = correo.toLower()
+    correo = correo.toLowerCase()
     const usuario = await db.usuario.update({
       where: { idUsuario: Number(id) },
       data: { nombre, correo, password },
