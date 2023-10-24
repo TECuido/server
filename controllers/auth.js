@@ -165,6 +165,7 @@ class AuthController {
       });
 
       return res.status(200).json({
+        id: user.idUsuario,
         accessToken,
         refreshToken: newRefreshToken,
       });
