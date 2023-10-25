@@ -73,8 +73,8 @@ class ContactoService {
     const contacto = await db.contacto.findFirst({
       where: {
           AND: [
-            { idAgrega: idAgrega },
-            { idAgregado: idAgregado }
+            { idAgrega: Number(idAgrega) },
+            { idAgregado: Number(idAgregado) }
           ]
         }
       },
