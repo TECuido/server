@@ -127,7 +127,9 @@ class ContactoController {
    * @description  Funcion que crea las relaciones de contactos
    */
    async addContacto(req, res) {
-    const { idUsuarioActual, correo } = req.body;
+
+    const idUsuarioActual = req.params.id;
+    const { correo } = req.body;
 
     try {
 

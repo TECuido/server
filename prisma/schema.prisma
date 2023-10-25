@@ -9,8 +9,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 model Usuario {
   idUsuario Int @id @unique @default(autoincrement())
   nombre String @db.VarChar(100)
@@ -68,11 +66,11 @@ model Contacto{
 }
 
 model Grupo{
-    idGrupo Int @id @unique @default(autoincrement())
-    nombre String @db.VarChar(150)
-    grupo UsuarioGrupo[] @relation("grupo")
-    idCreador Int
-    creadorGrupo Usuario @relation("usuarioGrupo", fields: [idCreador], references: [idUsuario], onDelete: Cascade)
+  idGrupo Int @id @unique @default(autoincrement())
+  nombre String @db.VarChar(150)
+  grupo UsuarioGrupo[] @relation("grupo")
+  idCreador Int
+  creadorGrupo Usuario @relation("usuarioGrupo", fields: [idCreador], references: [idUsuario], onDelete: Cascade)
 }
 
 model UsuarioGrupo{

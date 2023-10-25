@@ -10,6 +10,6 @@ router.get("/", controller.getAllContactos);
 router.get("/:id", controller.getContacto);
 router.get("/usuario/:id", controller.getAllContactosUsuario);
 router.delete("/:id", controller.deleteContacto);
-router.post("/", controller.addContacto);
+router.post("/usuario/:id", controller.addContacto);
 
 module.exports = router;
