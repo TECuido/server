@@ -109,8 +109,8 @@ class ContactoService {
     // Creamos el contacto
     return await db.contacto.create({
       data: {
-        idAgrega: idUsuarioActual,
-        idAgregado: idusuarioAgregado,
+        idAgrega: Number(idUsuarioActual),
+        idAgregado: Number(idusuarioAgregado),
       },
     });
   }
