@@ -136,7 +136,7 @@ class GrupoController {
   }
 
   /**
-   * @author Bernardo de la Sierra
+   * @author Julio Meza
    * @version 1.0.1
    * @license Gp
    * @params {int} - id Identificador unico del grupo
@@ -161,6 +161,37 @@ class GrupoController {
       return res
         .status(500)
         .json({ message: `Error al obtener los contactoGrupo. Err: ${err}` });
+    }
+  }
+
+
+  
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id Identificador del usuario
+   * @description Funcion que nos va a permitir ver todos los grupos que ha creado un usuario
+   */
+  async getGruposUsuario(req, res) {
+    const id = req.params.id;
+    // Verificamos que el id no sea un string
+    if (!Number.isInteger(parseInt(id))) {
+      return res.status(500).json({ message: "El id necesita ser entero" });
+    }
+    try {
+      const grupos = await service.getGruposUsuario(id);
+      if (grupos) {
+        return res.status(200).json({ data: grupos });
+      } else {
+        return res
+          .status(404)
+          .json({ message: "No se encontraron los grupos" });
+      }
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al obtener grupos. Err: ${err}` });
     }
   }
 }
