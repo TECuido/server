@@ -52,6 +52,7 @@ class ContactoService {
       select: {
         usuarioAgregado: {
           select:{
+            idUsuario: true,
             nombre: true,
             correo: true
           }
