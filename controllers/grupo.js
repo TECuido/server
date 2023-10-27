@@ -115,26 +115,26 @@ class GrupoController {
    * @description Funcion para darle registro a determinado grupo
    */
   async addUsuarioToGrupo(req, res) {
-    const { idUsuario, idGrupo } = req.body;
+    const { idMiembro, idGrupo } = req.body;
 
     try {
       //buscar si el usuario está registrado
-      const id = await usuarioService.getUsuario(idUsuario);
+      const id = await usuarioService.getUsuario(idMiembro);
       if (!id) {
         return res
           .status(400)
           .json({ message: "El usuario no se encuentra registrado" });
       }
 
-      const miembro = await service.getGrupoMiembro(idUsuario, idGrupo);
+      const miembro = await service.getGrupoMiembro(idMiembro, idGrupo);
       if(miembro){
         return res
         .status(400)
         .json({ message: "El usuario ya es miembro de este grupo"})
       }
 
-      const grupo = await service.addUsuarioGrupo(idUsuario, idGrupo);
-      return res.status(200).json({ grupo });
+      const grupo = await service.addUsuarioGrupo(idMiembro, idGrupo);
+      return res.status(200).json({ data: grupo });
     } catch (err) {
       return res
         .status(500)
