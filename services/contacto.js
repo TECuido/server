@@ -80,7 +80,6 @@ class ContactoService {
         }
       },
     );
-    console.log(contacto)
     return contacto;
   }
 

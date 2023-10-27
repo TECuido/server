@@ -126,6 +126,13 @@ class GrupoController {
           .json({ message: "El usuario no se encuentra registrado" });
       }
 
+      const miembro = await service.getGrupoMiembro(idUsuario, idGrupo);
+      if(miembro){
+        return res
+        .status(400)
+        .json({ message: "El usuario ya es miembro de este grupo"})
+      }
+
       const grupo = await service.addUsuarioGrupo(idUsuario, idGrupo);
       return res.status(200).json({ grupo });
     } catch (err) {
