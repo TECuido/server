@@ -6,6 +6,7 @@ const GrupoController = require("../controllers/grupo");
 
 const controller = new GrupoController();
 
+// Ruteo de la parte de grupo
 router.post("/", controller.addGrupo);
 router.get("/", controller.getAllGrupos);
 router.get("/:id", controller.getGrupo);
