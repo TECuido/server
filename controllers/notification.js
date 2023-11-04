@@ -1,6 +1,6 @@
-const NotificationService = require("../services/notification");
+const NotificationService = require("../services/notification.js");
 
-const service = new NotificationServices();
+const service = new NotificationService();
 
 /**
  * @author Julio Meza
@@ -9,7 +9,7 @@ const service = new NotificationServices();
  * @params Sin parametros
  * @description Aqui se hacen los metodos relacionados con las notificaciones remotas */
 
-class GrupoController {
+class NotificationController {
   constructor() {}
   /**
    * @author Julio Meza
@@ -18,10 +18,10 @@ class GrupoController {
    * @params Sin parametros
    * @description Funcion que te da todos los grupos
    */
-  async postNotificationToken(req, res) {
+  async addNotificationToken(req, res) {
     try {
-      const notificationToken = await service.postNotificationToken(req.body);
-      return res.status(200).json({ data: notificationToken });
+      const usuario = await service.addNotificationToken(req.body);
+      return res.status(200).json({ data: { idUsuario: usuario.idUsuario, token: usuario.token } });
     } catch (err) {
       return res
         .status(500)
@@ -30,4 +30,4 @@ class GrupoController {
   }
 }
 
-module.exports = GrupoController;
+module.exports = NotificationController;

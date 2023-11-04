@@ -10,7 +10,7 @@ class NotificationService {
      * @description Funcion que agrega un token de notificacion a un usuario
      */
     async addNotificationToken({idUsuario, token}) {
-      const usuarios = await db.usuario.update({
+      const usuario = await db.usuario.update({
         where: {
           idUsuario: idUsuario
         },
@@ -18,7 +18,7 @@ class NotificationService {
           token: token
         }
       });
-      return usuarios;
+      return usuario;
     }
 }
 
