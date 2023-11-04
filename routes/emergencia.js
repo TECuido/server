@@ -6,6 +6,7 @@ const EmergenciasController = require("../controllers/emergencia");
 
 const controller = new EmergenciasController();
 
+// Ruteo de la parte de emergencia
 router.get("/", controller.getAllEmergencias);
 router.get("/:id", controller.getEmergencia);
 router.post("/", controller.addEmergencia);
