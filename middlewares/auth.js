@@ -1,6 +1,13 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 
+/**
+ * @author Julio Meza
+ * @version 1.0.1
+ * @license Gp
+ * @params Sin parametros
+ * @description Aqui checamos que el usuario sea valido
+ */
 function isAuthenticated(req, res, next) {
   const { authorization } = req.headers;
 

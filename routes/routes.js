@@ -4,6 +4,13 @@ const emergenciasRouter = require("./emergencia.js");
 const contactosRouter = require("./contacto.js");
 const gruposRouter = require("./grupo.js");
 
+/**
+ * @author Julio Meza y Bernardo de la Sierra
+ * @version 1.0.1
+ * @license Gp
+ * @params Sin parametros
+ * @description Aqui ligamos todos los servicios
+ */
 function routerApi(app) {
   app.use("/", authRouter);
   app.use("/usuarios", usuariosRouter);
