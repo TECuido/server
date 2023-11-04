@@ -18,6 +18,7 @@ model Usuario {
   password String @db.VarChar(100)
   idTipo Int
   tipo TipoUsuario @relation(fields: [idTipo], references: [idTipo])
+  token  String? @db.VarChar(64)
   refreshTokens RefreshToken[]
   emergencias Emergencia[] @relation("emisorEmergencia")
   emergenciasReceptor Emergencia[] @relation("receptorEmergencia")
