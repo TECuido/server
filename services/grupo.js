@@ -37,6 +37,28 @@ class GrupoService {
     return grupo;
   }
 
+  
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id del usuario que se agrega al grupo
+   * @params {int} - id del grupo
+   * @description Funcion que regresa si ya esta una entrada con el usuario y el grupo
+   */
+  async getGrupoMiembro(idMiembro, idGrupo) {
+    const miembro = await  db.usuarioGrupo.findFirst({
+      where: {
+        AND: [
+          { idMiembro: Number(idMiembro)  },
+          { idGrupo: Number(idGrupo) }
+        ]
+      }
+    });
+    return miembro;
+  }
+
+
   /**
    * @author Bernardo de la Sierra
    * @version 1.0.1
@@ -45,11 +67,11 @@ class GrupoService {
    * @params {int} -  idUsuario  Unico del grupo
    * @description Funcion para darle registro a determinado grupo
    */
-  async createGrupo({ nombre, idUsuario }) {
+  async createGrupo({ nombre, idCreador }) {
     const result = await db.grupo.create({
       data: {
         nombre: nombre,
-        idCreador: idUsuario,
+        idCreador: idCreador,
       },
     });
     return result;
@@ -78,8 +100,8 @@ class GrupoService {
   async addUsuarioGrupo(idUsuario, idGrupo) {
     const result = await db.usuarioGrupo.create({
       data: {
-        idMiembro: idUsuario,
-        idGrupo: idGrupo
+        idMiembro: Number(idUsuario),
+        idGrupo: Number(idGrupo)
       },
     });
     return result;
@@ -110,6 +132,28 @@ class GrupoService {
     });
     return usuariosGrupo;
   }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - idUsuario es el id del usuario
+   * @description Funcion que regresa los grupos que ha creado un usuario
+   */
+  async getGruposUsuario(idUsuario) {
+    const grupos = await db.grupo.findMany({
+      where: {
+        idCreador: Number(idUsuario)
+      },
+      
+      select: {
+        idGrupo: true,
+        nombre: true,
+      }
+    });
+    return grupos;
+  }
+
 }
 
 module.exports = GrupoService;

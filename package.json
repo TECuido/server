@@ -2,6 +2,9 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "main": "index.js",
   "scripts": {
     "build": "npm install && npx  prisma migrate deploy --schema=./prisma/schema.prisma",
@@ -33,4 +36,5 @@
     "prettier": "^3.0.3",
     "prisma": "^5.4.2"
   }
+  
 }

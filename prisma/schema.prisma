@@ -11,13 +11,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 model Usuario {
   idUsuario Int @id @unique @default(autoincrement())
   nombre String @db.VarChar(100)
   correo String @db.VarChar(50) @unique
   password String @db.VarChar(100)
+  idTipo Int
+  tipo TipoUsuario @relation(fields: [idTipo], references: [idTipo])
   refreshTokens RefreshToken[]
   emergencias Emergencia[] @relation("emisorEmergencia")
   emergenciasReceptor Emergencia[] @relation("receptorEmergencia")
@@ -25,6 +25,14 @@ model Usuario {
   usuarioAgregado Contacto[] @relation("usuarioAgregado")
   creadorGrupo Grupo[] @relation("usuarioGrupo")
   miembroGrupo UsuarioGrupo[] @relation("miembroGrupo")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}
+
+model TipoUsuario {
+  idTipo Int @id @unique @default(autoincrement())
+  nombre String @unique @db.VarChar(30)
+  usuario Usuario[] @relation() 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
@@ -56,14 +64,15 @@ model Contacto{
   usuarioAgrega Usuario @relation("usuarioAgrega", fields: [idAgrega], references: [idUsuario], onDelete: Cascade)
   idAgregado Int
   usuarioAgregado Usuario @relation("usuarioAgregado", fields: [idAgregado], references: [idUsuario], onDelete: Cascade)
+  @@unique([idAgrega, idAgregado])
 }
 
 model Grupo{
-    idGrupo Int @id @unique @default(autoincrement())
-    nombre String @db.VarChar(150)
-    grupo UsuarioGrupo[] @relation("grupo")
-    idCreador Int
-    creadorGrupo Usuario @relation("usuarioGrupo", fields: [idCreador], references: [idUsuario], onDelete: Cascade)
+  idGrupo Int @id @unique @default(autoincrement())
+  nombre String @db.VarChar(150)
+  grupo UsuarioGrupo[] @relation("grupo")
+  idCreador Int
+  creadorGrupo Usuario @relation("usuarioGrupo", fields: [idCreador], references: [idUsuario], onDelete: Cascade)
 }
 
 model UsuarioGrupo{
@@ -72,5 +81,5 @@ model UsuarioGrupo{
   miembroGrupo Usuario @relation("miembroGrupo", fields: [idMiembro], references: [idUsuario], onDelete: Cascade)
   idGrupo Int 
   grupo Grupo @relation("grupo", fields: [idGrupo], references: [idGrupo], onDelete: Cascade)
- 
+  @@unique([idMiembro, idGrupo])
 }

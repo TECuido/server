@@ -23,6 +23,7 @@ npm install
 El siguiente comando de prisma permite actualizar la base de datos
 Usálo después de hacer cambios en schema.prisma y TAMBIÉN después de hacer pull del proyecto
 
-- npx prisma migrate dev --name init
+- npx prisma migrate dev --name init 
+- npx prisma db seed
 
 En el caso del .env le ponemos las credenciales vacias para que el usuaria pueda cambiar entre localhost y render que es nuestro servicio de web.

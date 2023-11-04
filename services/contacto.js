@@ -52,6 +52,7 @@ class ContactoService {
       select: {
         usuarioAgregado: {
           select:{
+            idUsuario: true,
             nombre: true,
             correo: true
           }
@@ -70,12 +71,15 @@ class ContactoService {
    * @description Funcion que da un contacto a partir de los usuarios involucrados
    */
   async getContactoPorUsuarios(idAgrega, idAgregado) {
-    const contacto = await db.contacto.findUnique({
+    const contacto = await db.contacto.findFirst({
       where: {
-        idAgrega: idAgrega,
-        idAgregado: idAgregado
+          AND: [
+            { idAgrega: Number(idAgrega) },
+            { idAgregado: Number(idAgregado) }
+          ]
+        }
       },
-    });
+    );
     return contacto;
   }
 
@@ -105,8 +109,8 @@ class ContactoService {
     // Creamos el contacto
     return await db.contacto.create({
       data: {
-        idAgrega: idUsuarioActual,
-        idAgregado: idusuarioAgregado,
+        idAgrega: Number(idUsuarioActual),
+        idAgregado: Number(idusuarioAgregado),
       },
     });
   }

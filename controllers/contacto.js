@@ -127,7 +127,9 @@ class ContactoController {
    * @description  Funcion que crea las relaciones de contactos
    */
    async addContacto(req, res) {
-    const { idUsuarioActual, correo } = req.body;
+
+    const idUsuarioActual = req.params.id;
+    const { correo } = req.body;
 
     try {
 
@@ -150,6 +152,7 @@ class ContactoController {
 
        //buscar que no se haya registrado ya el contacto
        const contacto = await service.getContactoPorUsuarios(idUsuarioActual, usuarioAgregado.idUsuario)
+       console.log(contacto)
        if(contacto) {
           return res
           .status(400)
