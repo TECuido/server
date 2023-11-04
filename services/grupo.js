@@ -1,7 +1,7 @@
 const { db } = require("../utils/db");
 
 /**
- * @author Bernardo de la Sierra
+ * @author Julio Meza
  * @version 1.0.1
  * @license Gp
  * @params Sin parametros
