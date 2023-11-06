@@ -11,6 +11,8 @@ router.get("/", controller.getAllUsuarios);
 router.get("/:id", controller.getUsuario);
 router.post("/", controller.addUsuario);
 router.put("/:id", controller.updateUsuario);
+router.put("/:id/notification/token", controller.addNotificationToken);
 router.delete("/:id", controller.deleteUsuario);
+
 
 module.exports = router;

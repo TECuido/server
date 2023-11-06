@@ -108,6 +108,25 @@ class UsuarioService {
   }
 
   /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id Identificador unico del usuario
+   * @params {string} - token del dispositivo
+   */
+  async addNotificationToken(idUsuario, token) {
+    const usuario = await db.usuario.update({
+      where: {
+        idUsuario: Number(idUsuario)
+      },
+      data: {
+        token: token
+      }
+    });
+    return usuario;
+  }
+
+  /**
    * @author Bernardo de la Sierra
    * @version 1.0.1
    * @license Gp
