@@ -53,6 +53,8 @@ model Emergencia{
   tipo String @db.VarChar(100)
   descripcion String @db.Text
   idEmisor Int
+  longitud Float?
+  latitud Float? 
   usuario Usuario @relation("emisorEmergencia", fields: [idEmisor], references: [idUsuario], onDelete: Cascade)
   idReceptor Int
   usuarioReceptor Usuario @relation("receptorEmergencia", fields: [idReceptor], references: [idUsuario], onDelete: Cascade)

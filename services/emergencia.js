@@ -64,12 +64,21 @@ class EmergenciaService {
    * @params {int} - idReceptor quien lo recibe
    * @description Funcion para darle registro a determinado emergencia
    */
-  async createEmergencia({ tipo, descripcion, idEmisor, idReceptor }) {
+  async createEmergencia({
+    tipo,
+    descripcion,
+    idEmisor,
+    longitud,
+    latitud,
+    idReceptor,
+  }) {
     const result = await db.emergencia.create({
       data: {
         tipo: tipo,
         descripcion: descripcion,
         idEmisor: idEmisor,
+        longitud: longitud,
+        latitud: latitud,
         idReceptor: idReceptor,
       },
     });
