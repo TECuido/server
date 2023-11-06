@@ -103,6 +103,28 @@ class UsuarioController {
   }
 
   /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params Sin parametros
+   * @description Funcion que te da todos los grupos
+   */
+  async addNotificationToken(req, res) {
+    const id = req.params.id;
+    if (!Number.isInteger(parseInt(id))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+    try {
+      const usuario = await service.addNotificationToken(id, req.body.token);
+      return res.status(200).json({ data: { idUsuario: usuario.idUsuario, token: usuario.token } });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al enviar la notificacion. Err: ${err}` });
+    }
+  }
+
+  /**
    * @author Bernardo de la Sierra
    * @version 1.0.1
    * @license Gp
