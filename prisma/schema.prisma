@@ -56,7 +56,6 @@ model Emergencia{
   longitud Float?
   latitud Float? 
   usuarioEmisor Usuario @relation("emisorEmergencia", fields: [idEmisor], references: [idUsuario], onDelete: Cascade)
-  idReceptor Int
   emergenciasRecibidas UsuarioEmergencia[] @relation("emergenciaRecibida")
 }
 
