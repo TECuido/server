@@ -109,7 +109,7 @@ class EmergenciaController {
       const miembros = await grupoService.getUsuariosGrupo(idGrupo);
 
       for(let i = 0; i < miembros.length; i++){
-        await service.addEmergenciaReceptor(idGrupo, miembros[i].idUsuario);
+        await service.addEmergenciaReceptor(idGrupo, miembros[i].miembroGrupo.idUsuario);
       }
 
       return res.status(200).json({ data: emergencia });
