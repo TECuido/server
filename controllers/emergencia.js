@@ -130,11 +130,14 @@ class EmergenciaController {
       note.payload = {'idEmergencia': emergencia.idEmergencia};
       note.topic = "com.itesm.TECuidoDES";
 
+      console.log(note);
+
       //enviar notificacion a los usuarios
       const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
       miembrosTokens.forEach(miembro => {
         if(miembro.miembroGrupo.token){
           let token = miembro.miembroGrupo.token;
+          console.log(token);
           apnProvider.send(note, token).then( (result) => {
             if(result.failed && result.failed.length > 0){
                 console.log(`Error sending push notification: ${result.sent[0].device}`);
