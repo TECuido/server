@@ -20,8 +20,9 @@ model Usuario {
   tipo TipoUsuario @relation(fields: [idTipo], references: [idTipo])
   token  String? @db.VarChar(64)
   refreshTokens RefreshToken[]
-  emergencias Emergencia[] @relation("emisorEmergencia")
   emergenciasReceptor Emergencia[] @relation("receptorEmergencia")
+  emergenciasEnviadas Emergencia[] @relation("emisorEmergencia")
+  emergenciasRecibidas UsuarioEmergencia[]  @relation("receptorEmergencia")
   usuarioAgrega Contacto[] @relation("usuarioAgrega")
   usuarioAgregado Contacto[] @relation("usuarioAgregado")
   creadorGrupo Grupo[] @relation("usuarioGrupo")
@@ -51,12 +52,13 @@ model RefreshToken {
 model Emergencia{
   idEmergencia  Int @id @unique @default(autoincrement())
   tipo String @db.VarChar(100)
-  descripcion String @db.Text
+  descripcion String? @db.Text
   idEmisor Int
-  usuario Usuario @relation("emisorEmergencia", fields: [idEmisor], references: [idUsuario], onDelete: Cascade)
+  longitud Float?
+  latitud Float? 
+  usuarioEmisor Usuario @relation("emisorEmergencia", fields: [idEmisor], references: [idUsuario], onDelete: Cascade)
   idReceptor Int
-  usuarioReceptor Usuario @relation("receptorEmergencia", fields: [idReceptor], references: [idUsuario], onDelete: Cascade)
-
+  emergenciasRecibidas UsuarioEmergencia[] @relation("emergenciaRecibida")
 }
 
 model Contacto{
@@ -83,4 +85,12 @@ model UsuarioGrupo{
   idGrupo Int 
   grupo Grupo @relation("grupo", fields: [idGrupo], references: [idGrupo], onDelete: Cascade)
   @@unique([idMiembro, idGrupo])
+}
+
+model UsuarioEmergencia {
+  idEmergencia Int
+  emergencia Emergencia @relation("emergenciaRecibida", fields: [idEmergencia], references: [idEmergencia], onDelete: Cascade)
+  idReceptor Int
+  receptorEmergencia Usuario @relation("receptorEmergencia", fields: [idReceptor], references: [idUsuario], onDelete: Cascade)
+  @@unique([idReceptor, idEmergencia])
 }

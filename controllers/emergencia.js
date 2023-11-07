@@ -1,6 +1,8 @@
 const EmergenciaServices = require("../services/emergencia.js");
+const GrupoService = require("../services/grupo.js");
 
 const service = new EmergenciaServices();
+const grupoService = new GrupoService();
 
 /**
  * @author Bernardo de la Sierra
@@ -100,9 +102,16 @@ class EmergenciaController {
    * @params {int} - idReceptor quien lo recibe
    * @description Funcion para darle registro a determinado emergencia
    */
-  async addEmergencia(req, res) {
+  async addEmergenciaGrupo(req, res) {
     try {
       const emergencia = await service.createEmergencia(req.body);
+      const idGrupo = req.body.idGrupo;
+      const miembros = await grupoService.getUsuariosGrupo(idGrupo);
+
+      for(let i = 0; i < miembros.length; i++){
+        await service.addEmergenciaReceptor(idGrupo, miembros[i].idUsuario);
+      }
+
       return res.status(200).json({ data: emergencia });
     } catch (err) {
       return res

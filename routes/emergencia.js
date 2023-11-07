@@ -8,7 +8,7 @@ const controller = new EmergenciasController();
 
 router.get("/", controller.getAllEmergencias);
 router.get("/:id", controller.getEmergencia);
-router.post("/", controller.addEmergencia);
+router.post("/grupo", controller.addEmergenciaGrupo);
 // PONGA EL NOMBRE COMPLETO
 router.get("/emisor/:idEmisor", controller.getEmergenciaPorEmisor);
 
