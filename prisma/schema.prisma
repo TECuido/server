@@ -57,6 +57,8 @@ model Emergencia{
   latitud Float? 
   usuarioEmisor Usuario @relation("emisorEmergencia", fields: [idEmisor], references: [idUsuario], onDelete: Cascade)
   emergenciasRecibidas UsuarioEmergencia[] @relation("emergenciaRecibida")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
 }
 
 model Contacto{
@@ -65,6 +67,8 @@ model Contacto{
   usuarioAgrega Usuario @relation("usuarioAgrega", fields: [idAgrega], references: [idUsuario], onDelete: Cascade)
   idAgregado Int
   usuarioAgregado Usuario @relation("usuarioAgregado", fields: [idAgregado], references: [idUsuario], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
   @@unique([idAgrega, idAgregado])
 }
 
@@ -74,6 +78,8 @@ model Grupo{
   grupo UsuarioGrupo[] @relation("grupo")
   idCreador Int
   creadorGrupo Usuario @relation("usuarioGrupo", fields: [idCreador], references: [idUsuario], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
 }
 
 model UsuarioGrupo{
@@ -82,6 +88,8 @@ model UsuarioGrupo{
   miembroGrupo Usuario @relation("miembroGrupo", fields: [idMiembro], references: [idUsuario], onDelete: Cascade)
   idGrupo Int 
   grupo Grupo @relation("grupo", fields: [idGrupo], references: [idGrupo], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
   @@unique([idMiembro, idGrupo])
 }
 
@@ -90,5 +98,7 @@ model UsuarioEmergencia {
   emergencia Emergencia @relation("emergenciaRecibida", fields: [idEmergencia], references: [idEmergencia], onDelete: Cascade)
   idReceptor Int
   receptorEmergencia Usuario @relation("receptorEmergencia", fields: [idReceptor], references: [idUsuario], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
   @@unique([idReceptor, idEmergencia])
 }
