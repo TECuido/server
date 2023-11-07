@@ -14,3 +14,4 @@ var options = {
 };
   
 var apnProvider = new apn.Provider(options);
+module.exports = {apnProvider}
