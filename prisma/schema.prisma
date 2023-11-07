@@ -18,7 +18,6 @@ model Usuario {
   password String @db.VarChar(100)
   idTipo Int
   tipo TipoUsuario @relation(fields: [idTipo], references: [idTipo])
-  token  String? @db.VarChar(64)
   refreshTokens RefreshToken[]
   emergenciasEnviadas Emergencia[] @relation("emisorEmergencia")
   emergenciasRecibidas UsuarioEmergencia[]  @relation("receptorEmergencia")
@@ -26,6 +25,8 @@ model Usuario {
   usuarioAgregado Contacto[] @relation("usuarioAgregado")
   creadorGrupo Grupo[] @relation("usuarioGrupo")
   miembroGrupo UsuarioGrupo[] @relation("miembroGrupo")
+  usuarioEmisor Llamada[] @relation("usuarioEmisor")
+  usuarioReceptor Llamada[] @relation("usuarioReceptor")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
@@ -101,4 +102,13 @@ model UsuarioEmergencia {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
   @@unique([idReceptor, idEmergencia])
+}
+
+model Llamada{
+  idLlamada String @id @unique 
+  idusuarioEmisor Int
+  usuarioEmisor Usuario @relation("usuarioEmisor", fields: [idusuarioEmisor], references: [idUsuario], onDelete: Cascade)
+  idusuarioReceptor Int
+  usuarioReceptor Usuario @relation("usuarioReceptor", fields: [idusuarioReceptor], references: [idUsuario], onDelete: Cascade)
+  @@unique([idusuarioEmisor, idusuarioReceptor])
 }
