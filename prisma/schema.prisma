@@ -20,7 +20,6 @@ model Usuario {
   tipo TipoUsuario @relation(fields: [idTipo], references: [idTipo])
   token  String? @db.VarChar(64)
   refreshTokens RefreshToken[]
-  emergenciasReceptor Emergencia[] @relation("receptorEmergencia")
   emergenciasEnviadas Emergencia[] @relation("emisorEmergencia")
   emergenciasRecibidas UsuarioEmergencia[]  @relation("receptorEmergencia")
   usuarioAgrega Contacto[] @relation("usuarioAgrega")
