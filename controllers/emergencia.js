@@ -2,7 +2,7 @@ const apn = require("apn")
 
 const EmergenciaServices = require("../services/emergencia.js");
 const GrupoService = require("../services/grupo.js");
-const apnProvider = require("../utils/apnProv.js");
+const {apnProvider} = require("../utils/apnProv.js");
 
 const service = new EmergenciaServices();
 const grupoService = new GrupoService();
@@ -125,7 +125,7 @@ class EmergenciaController {
       note.sound = "ping.aiff";
       note.alert = {
           title: "Alerta de emergencia",
-          body: `Emergencia de ${emergencia.tipo}`
+          body: `Emergencia de tipo ${emergencia.tipo}`
       };
       note.payload = {'idEmergencia': emergencia.idEmergencia};
       note.topic = "com.itesm.TECuidoDES";
