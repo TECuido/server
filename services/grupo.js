@@ -112,7 +112,7 @@ class GrupoService {
    * @version 1.0.1
    * @license Gp
    * @params {int} - idGrupo es el id del grupo
-   * @description Funcion que regresa el usuario que tiene un determinado correo
+   * @description Funcion que regresa los usuarios de su grupo
    */
   async getUsuariosGrupo(idGrupo) {
     const usuariosGrupo = await db.usuarioGrupo.findMany({
@@ -126,6 +126,31 @@ class GrupoService {
             idUsuario: true,
             nombre: true,
             correo: true
+          }
+        }
+      }
+    });
+    return usuariosGrupo;
+  }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - idGrupo es el id del grupo
+   * @description Funcion que regresa los usuarios de un grupo con sus tokens de notificacion
+   */
+  async getUsuariosGrupoTokens(idGrupo) {
+    const usuariosGrupo = await db.usuarioGrupo.findMany({
+      where: {
+        idGrupo: Number(idGrupo)
+      },
+      
+      select: {
+        miembroGrupo: {
+          select: {
+            idUsuario: true,
+            token: true
           }
         }
       }

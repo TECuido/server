@@ -1,6 +1,11 @@
+const apn = require("apn")
+
 const EmergenciaServices = require("../services/emergencia.js");
+const GrupoService = require("../services/grupo.js");
+const {apnProvider} = require("../utils/apnProv.js");
 
 const service = new EmergenciaServices();
+const grupoService = new GrupoService();
 
 /**
  * @author Bernardo de la Sierra
@@ -100,9 +105,51 @@ class EmergenciaController {
    * @params {int} - idReceptor quien lo recibe
    * @description Funcion para darle registro a determinado emergencia
    */
-  async addEmergencia(req, res) {
+  async addEmergenciaGrupo(req, res) {
     try {
+      //crear emergencia
       const emergencia = await service.createEmergencia(req.body);
+      const idGrupo = req.body.idGrupo;
+
+      //agregar a los receptores
+      const miembros = await grupoService.getUsuariosGrupo(idGrupo);
+
+      for(let i = 0; i < miembros.length; i++){
+        await service.addEmergenciaReceptor(emergencia.idEmergencia, miembros[i].miembroGrupo.idUsuario);
+      }
+
+      //generar notificacion
+      var note = new apn.Notification();
+      note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
+      note.badge = 1;
+      note.sound = "ping.aiff";
+      note.alert = {
+          title: "Alerta de emergencia",
+          body: `Emergencia de tipo ${emergencia.tipo}`
+      };
+      note.payload = {'idEmergencia': emergencia.idEmergencia};
+      note.topic = "com.itesm.TECuidoDES";
+
+      console.log(note);
+
+      //enviar notificacion a los usuarios
+      const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
+      miembrosTokens.forEach(miembro => {
+        if(miembro.miembroGrupo.token){
+          let token = miembro.miembroGrupo.token;
+          console.log(token);
+          apnProvider.send(note, token).then( (result) => {
+            if(result.failed && result.failed.length > 0){
+                console.log(`Error sending push notification: ${result.sent[0].device}`);
+            } else if(result.sent && result.sent.length > 0){
+                console.log(`Push Notification sent to devide: ${result.sent[0].device}`);
+            } else {
+                console.log(`Unknown error while sending push notification`);
+            }
+          });  
+        }
+      })
+      
       return res.status(200).json({ data: emergencia });
     } catch (err) {
       return res

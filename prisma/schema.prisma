@@ -19,8 +19,8 @@ model Usuario {
   idTipo Int
   tipo TipoUsuario @relation(fields: [idTipo], references: [idTipo])
   refreshTokens RefreshToken[]
-  emergencias Emergencia[] @relation("emisorEmergencia")
-  emergenciasReceptor Emergencia[] @relation("receptorEmergencia")
+  emergenciasEnviadas Emergencia[] @relation("emisorEmergencia")
+  emergenciasRecibidas UsuarioEmergencia[]  @relation("receptorEmergencia")
   usuarioAgrega Contacto[] @relation("usuarioAgrega")
   usuarioAgregado Contacto[] @relation("usuarioAgregado")
   creadorGrupo Grupo[] @relation("usuarioGrupo")
@@ -52,14 +52,14 @@ model RefreshToken {
 model Emergencia{
   idEmergencia  Int @id @unique @default(autoincrement())
   tipo String @db.VarChar(100)
-  descripcion String @db.Text
+  descripcion String? @db.Text
   idEmisor Int
   longitud Float?
   latitud Float? 
-  usuario Usuario @relation("emisorEmergencia", fields: [idEmisor], references: [idUsuario], onDelete: Cascade)
-  idReceptor Int
-  usuarioReceptor Usuario @relation("receptorEmergencia", fields: [idReceptor], references: [idUsuario], onDelete: Cascade)
-
+  usuarioEmisor Usuario @relation("emisorEmergencia", fields: [idEmisor], references: [idUsuario], onDelete: Cascade)
+  emergenciasRecibidas UsuarioEmergencia[] @relation("emergenciaRecibida")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
 }
 
 model Contacto{
@@ -68,6 +68,8 @@ model Contacto{
   usuarioAgrega Usuario @relation("usuarioAgrega", fields: [idAgrega], references: [idUsuario], onDelete: Cascade)
   idAgregado Int
   usuarioAgregado Usuario @relation("usuarioAgregado", fields: [idAgregado], references: [idUsuario], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
   @@unique([idAgrega, idAgregado])
 }
 
@@ -77,6 +79,8 @@ model Grupo{
   grupo UsuarioGrupo[] @relation("grupo")
   idCreador Int
   creadorGrupo Usuario @relation("usuarioGrupo", fields: [idCreador], references: [idUsuario], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
 }
 
 model UsuarioGrupo{
@@ -85,9 +89,20 @@ model UsuarioGrupo{
   miembroGrupo Usuario @relation("miembroGrupo", fields: [idMiembro], references: [idUsuario], onDelete: Cascade)
   idGrupo Int 
   grupo Grupo @relation("grupo", fields: [idGrupo], references: [idGrupo], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
   @@unique([idMiembro, idGrupo])
 }
 
+model UsuarioEmergencia {
+  idEmergencia Int
+  emergencia Emergencia @relation("emergenciaRecibida", fields: [idEmergencia], references: [idEmergencia], onDelete: Cascade)
+  idReceptor Int
+  receptorEmergencia Usuario @relation("receptorEmergencia", fields: [idReceptor], references: [idUsuario], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+  @@unique([idReceptor, idEmergencia])
+}
 
 model Llamada{
   idLlamada String @id @unique 

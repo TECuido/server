@@ -69,8 +69,7 @@ class EmergenciaService {
     descripcion,
     idEmisor,
     longitud,
-    latitud,
-    idReceptor,
+    latitud
   }) {
     const result = await db.emergencia.create({
       data: {
@@ -78,12 +77,34 @@ class EmergenciaService {
         descripcion: descripcion,
         idEmisor: idEmisor,
         longitud: longitud,
-        latitud: latitud,
-        idReceptor: idReceptor,
+        latitud: latitud
       },
     });
     return result;
   }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id de la emergencia
+   * @params {int} - id del receptor
+   * @description Funcion para agregar un receptor de la emergencia
+   */
+  async addEmergenciaReceptor (
+    idEmergencia,
+    idReceptor
+  ) {
+    const result = await db.usuarioEmergencia.create({
+      data: {
+        idEmergencia: idEmergencia,
+        idReceptor: idReceptor
+      },
+    });
+    return result;
+  }
+  
 }
+
 
 module.exports = EmergenciaService;
