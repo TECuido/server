@@ -105,14 +105,14 @@ class EmergenciaController {
    * @description Funcion que da la ultima emergencia en las 24 horas pasadas
    */
    async getEmergenciaUltimas24Horas(req, res) {
-    const id = req.params.idReceptor;
+    const idReceptor = req.params.id;
 
     // Verificamos que el id no sea un string
-    if (!Number.isInteger(parseInt(id))) {
+    if (!Number.isInteger(parseInt(idReceptor))) {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }
     try {
-      const emergencia = await service.getEmergenciasUltimas24Horas(id)
+      const emergencia = await service.getEmergenciasUltimas24Horas(idReceptor)
 
       //obtener usuario emisor
       const usuario = await usuarioService.getUsuario(emergencia.idEmisor);
