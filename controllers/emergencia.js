@@ -2,10 +2,13 @@ const apn = require("apn")
 
 const EmergenciaServices = require("../services/emergencia.js");
 const GrupoService = require("../services/grupo.js");
+const UsuarioService = require("../services/usuario.js");
 const {apnProvider} = require("../utils/apnProv.js");
+
 
 const service = new EmergenciaServices();
 const grupoService = new GrupoService();
+const usuarioService = new UsuarioService();
 
 /**
  * @author Bernardo de la Sierra
@@ -118,6 +121,8 @@ class EmergenciaController {
         await service.addEmergenciaReceptor(emergencia.idEmergencia, miembros[i].miembroGrupo.idUsuario);
       }
 
+      const usuario = await usuarioService.getUsuario(emergencia.idEmisor);
+
       //generar notificacion
       var note = new apn.Notification();
       note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
@@ -127,7 +132,15 @@ class EmergenciaController {
           title: "Alerta de emergencia",
           body: `Emergencia de tipo ${emergencia.tipo}`
       };
-      note.payload = {'idEmergencia': emergencia.idEmergencia};
+      note.payload = {
+        'idEmergencia': emergencia.idEmergencia, 
+        'tipo': emergencia.tipo,
+        'descripcion': emergencia.descripcion,
+        'idEmisor': usuario.idEmisor,
+        'longitud': emergencia.longitud,
+        'latitud': emergencia.latitud,
+        'emisor': usuario.nombre 
+      };
       note.topic = "com.itesm.TECuidoDES";
 
       console.log(note);
