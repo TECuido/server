@@ -55,6 +55,44 @@ class EmergenciaService {
   }
 
   /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id del receptor
+   * @description Funcion que regresa la ultima emergenca en las 24 horas
+   */
+  async getEmergenciasUltimas24Horas(idReceptor) {
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); // Calculate the date 24 hours ago
+    const emergencia = await db.usuarioEmergencia.findFirst ({
+      where: {
+        AND: [
+          { idReceptor: Number(idReceptor)},
+          { createdAt: {
+            gte: twentyFourHoursAgo
+          } }
+        ]
+      },
+      select: {
+        emergencia: {
+          select: {
+            idEmergencia: true,
+            tipo: true,
+            descripcion: true,
+            idEmisor: true,
+            longitud: true,
+            latitud: true,
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    return emergencia;
+  }
+
+  /**
    * @author Bernardo de la Sierra
    * @version 1.0.1
    * @license Gp

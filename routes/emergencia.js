@@ -12,5 +12,6 @@ router.get("/:id", controller.getEmergencia);
 router.post("/grupo", controller.addEmergenciaGrupo);
 // PONGA EL NOMBRE COMPLETO
 router.get("/emisor/:idEmisor", controller.getEmergenciaPorEmisor);
+router.get("/receptor/id", controller.getEmergenciaUltimas24Horas);
 
 module.exports = router;
