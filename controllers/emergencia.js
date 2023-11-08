@@ -114,14 +114,12 @@ class EmergenciaController {
     try {
       const emergencia = await service.getEmergenciasUltimas24Horas(idReceptor)
 
-      //obtener usuario emisor
-      const usuario = await usuarioService.getUsuario(emergencia.emergencia.idEmisor);
-
-      emergencia = emergencia.emergencia
-      emergencia.emisor = usuario.nombre
-
+    
       if (emergencia) {
-        return res.status(200).json({ data: emergencia });
+        //obtener usuario emisor
+        const usuario = await usuarioService.getUsuario(emergencia.emergencia.idEmisor);
+        emergencia.emergencia.emisor = usuario.nombre
+        return res.status(200).json({ data: emergencia.emergencia });
       } else {
         return res
           .status(200)
