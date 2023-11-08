@@ -29,7 +29,7 @@ function crearNotificacionEmergencia(emergencia, usuario){
     'idEmergencia': emergencia.idEmergencia, 
     'tipo': emergencia.tipo,
     'descripcion': emergencia.descripcion,
-    'idEmisor': usuario.idEmisor,
+    'idEmisor': emergencia.idEmisor,
     'longitud': emergencia.longitud,
     'latitud': emergencia.latitud,
     'emisor': usuario.nombre 
