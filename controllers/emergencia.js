@@ -2,10 +2,13 @@ const apn = require("apn")
 
 const EmergenciaServices = require("../services/emergencia.js");
 const GrupoService = require("../services/grupo.js");
-const {apnProvider} = require("../utils/apnProv.js");
+const UsuarioService = require("../services/usuario.js");
+const {apnProvider, crearNotificacionEmergencia} = require("../utils/apnProv.js");
+
 
 const service = new EmergenciaServices();
 const grupoService = new GrupoService();
+const usuarioService = new UsuarioService();
 
 /**
  * @author Bernardo de la Sierra
@@ -73,7 +76,6 @@ class EmergenciaController {
    */
   async getEmergenciaPorEmisor(req, res) {
     const idEmisor = req.params.idEmisor;
-    console.log(req.params);
 
     // Verificamos que el id no sea un string
     if (!Number.isInteger(parseInt(idEmisor))) {
@@ -95,15 +97,51 @@ class EmergenciaController {
     }
   }
 
+   /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id Identificador unico del receptor
+   * @description Funcion que da la ultima emergencia en las 24 horas pasadas
+   */
+   async getEmergenciaUltimas24Horas(req, res) {
+    const idReceptor = req.params.id;
+
+    // Verificamos que el id no sea un string
+    if (!Number.isInteger(parseInt(idReceptor))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+    try {
+      const emergencia = await service.getEmergenciasUltimas24Horas(idReceptor)
+
+    
+      if (emergencia) {
+        //obtener usuario emisor
+        const usuario = await usuarioService.getUsuario(emergencia.emergencia.idEmisor);
+        emergencia.emergencia.emisor = usuario.nombre
+        return res.status(200).json({ data: emergencia.emergencia });
+      } else {
+        return res
+          .status(200)
+          .json({ message: "No se encontraron emergencias" });
+      }
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al obtener emergencias. Err: ${err}` });
+    }
+  }
+
+
   /**
-   * @author Bernardo de la Sierra
+   * @author Julio Meza
    * @version 1.0.1
    * @license Gp
    * @params {string} - tipo es que una breve descripcion de la emergencia
    * @params {string} - descripcion es que esta pasando
    * @params {int} - idEmisor quien lo envia
    * @params {int} - idReceptor quien lo recibe
-   * @description Funcion para darle registro a determinado emergencia
+   * @description Funcion para darle registro a determinado emergencia y agregarla a los miembros de un grupo
    */
   async addEmergenciaGrupo(req, res) {
     try {
@@ -118,26 +156,17 @@ class EmergenciaController {
         await service.addEmergenciaReceptor(emergencia.idEmergencia, miembros[i].miembroGrupo.idUsuario);
       }
 
+      //obtener usuario emisor
+      const usuario = await usuarioService.getUsuario(emergencia.idEmisor);
+
       //generar notificacion
-      var note = new apn.Notification();
-      note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-      note.badge = 1;
-      note.sound = "ping.aiff";
-      note.alert = {
-          title: "Alerta de emergencia",
-          body: `Emergencia de tipo ${emergencia.tipo}`
-      };
-      note.payload = {'idEmergencia': emergencia.idEmergencia};
-      note.topic = "com.itesm.TECuidoDES";
-
-      console.log(note);
-
+      const note = crearNotificacionEmergencia(emergencia, usuario)
+      
       //enviar notificacion a los usuarios
       const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
       miembrosTokens.forEach(miembro => {
         if(miembro.miembroGrupo.token){
           let token = miembro.miembroGrupo.token;
-          console.log(token);
           apnProvider.send(note, token).then( (result) => {
             if(result.failed && result.failed.length > 0){
                 console.log(`Error sending push notification: ${result.sent[0].device}`);

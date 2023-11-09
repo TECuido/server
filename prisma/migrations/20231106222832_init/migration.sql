@@ -1,9 +1,6 @@
 -- DropForeignKey
 ALTER TABLE "Emergencia" DROP CONSTRAINT "Emergencia_idReceptor_fkey";
 
-ALTER TABLE "Emergencia" ADD COLUMN  "latitud" FLOAT;
-ALTER TABLE "Emergencia" ADD COLUMN  "longitud" FLOAT;
-
 -- AlterTable
 ALTER TABLE "Emergencia" ALTER COLUMN "descripcion" DROP NOT NULL,
 ALTER COLUMN "latitud" DROP NOT NULL,
