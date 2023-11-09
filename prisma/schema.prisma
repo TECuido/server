@@ -107,9 +107,9 @@ model UsuarioEmergencia {
 
 model Llamada{
   idLlamada String @id @unique 
-  idusuarioEmisor Int
-  usuarioEmisor Usuario @relation("usuarioEmisor", fields: [idusuarioEmisor], references: [idUsuario], onDelete: Cascade)
-  idusuarioReceptor Int
-  usuarioReceptor Usuario @relation("usuarioReceptor", fields: [idusuarioReceptor], references: [idUsuario], onDelete: Cascade)
-  @@unique([idusuarioEmisor, idusuarioReceptor])
+  idUsuarioEmisor Int
+  usuarioEmisor Usuario @relation("usuarioEmisor", fields: [idUsuarioEmisor], references: [idUsuario], onDelete: Cascade)
+  idUsuarioReceptor Int
+  usuarioReceptor Usuario @relation("usuarioReceptor", fields: [idUsuarioReceptor], references: [idUsuario], onDelete: Cascade)
+  @@unique([idUsuarioEmisor, idUsuarioReceptor])
 }

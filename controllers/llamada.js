@@ -102,7 +102,7 @@ class LlamadaController {
    */
   async addLlamada(req, res) {
     const idUsuarioActual = req.params.id;
-    const { idusuarioReceptor } = req.body;
+    const { idUsuarioReceptor } = req.body;
 
     try {
       //si no existe el usuario lanzar un error
@@ -131,7 +131,7 @@ class LlamadaController {
       const llamadaCreada = await service.addLlamada(
         idLlamada,
         idUsuarioActual,
-        idusuarioReceptor
+        idUsuarioReceptor
       );
 
       res.status(200).json(llamadaCreada);
