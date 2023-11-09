@@ -139,7 +139,7 @@ class LlamadaController {
         idUsuarioReceptor
       );
 
-      res.status(200).json(llamadaCreada);
+      res.status(200).json({data: llamadaCreada});
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
