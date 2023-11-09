@@ -101,19 +101,18 @@ class LlamadaController {
    * @description  Funcion que crea las relaciones de llamadas, en la segunda version se agrego el llamada
    */
   async addLlamada(req, res) {
-    const idUsuarioActual = req.params.id;
     const { idUsuarioReceptor } = req.body;
 
     try {
       //si no existe el usuario lanzar un error
-      if (!idusuarioReceptor) {
+      if (!idUsuarioReceptor) {
         return res
           .status(400)
           .json({ message: "El usuario no se encuentra registrado" });
       }
 
       //si el usuario que se agrega como llamada es el mismo usuario lanzar un error
-      if (idusuarioReceptor == idUsuarioActual) {
+      if (idUsuarioReceptor == idUsuarioActual) {
         return res
           .stauts(400)
           .json({ message: "No se puede agregar el mismo usuario" });
