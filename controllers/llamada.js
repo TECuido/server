@@ -1,6 +1,8 @@
 const LlamadaServices = require("../services/llamada.js");
+const UsuarioServices = require("../services/usuario.js");
 
 const service = new LlamadaServices();
+const usuarioService = new UsuarioServices();
 
 /**
  * @author Bernardo de la Sierra
@@ -101,11 +103,15 @@ class LlamadaController {
    * @description  Funcion que crea las relaciones de llamadas, en la segunda version se agrego el llamada
    */
   async addLlamada(req, res) {
+    const idUsuarioActual = req.params.id;
     const { idUsuarioReceptor } = req.body;
 
     try {
       //si no existe el usuario lanzar un error
-      if (!idUsuarioReceptor) {
+      const usuarioReceptor = await usuarioService.getUsuario(idUsuarioReceptor);
+      const usuarioEmisor = await usuarioService.getUsuario(idUsuarioActual);
+
+      if (!usuarioReceptor || !usuarioEmisor) {
         return res
           .status(400)
           .json({ message: "El usuario no se encuentra registrado" });
