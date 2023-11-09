@@ -7,10 +7,10 @@ const service = new LlamadaServices();
  * @version 1.0.1
  * @license Gp
  * @params {int} tamañon del codigo a generar
- * @description Función para generar un código único de 5 letras
+ * @description Función para generar un código único de n letras
  */
 function generateUniqueCode(length) {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
   let code = "";
 
   while (code.length < length) {
@@ -113,7 +113,6 @@ class LlamadaController {
       }
 
       //si el usuario que se agrega como llamada es el mismo usuario lanzar un error
-
       if (idusuarioReceptor == idUsuarioActual) {
         return res
           .stauts(400)
@@ -121,14 +120,13 @@ class LlamadaController {
       }
       // Generar el idLlamada
       let idLlamada = generateUniqueCode(8);
-      console.log(idLlamada);
 
       let llamadaRepetida = await service.getLlamada(idLlamada);
       while (llamadaRepetida) {
         idLlamada = generateUniqueCode(8);
         llamadaRepetida = await service.getLlamada(idLlamada);
       }
-      console.log(llamadaRepetida);
+
       //crear el llamada
       const llamadaCreada = await service.addLlamada(
         idLlamada,
