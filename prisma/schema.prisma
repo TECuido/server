@@ -111,5 +111,6 @@ model Llamada{
   usuarioEmisor Usuario @relation("usuarioEmisor", fields: [idUsuarioEmisor], references: [idUsuario], onDelete: Cascade)
   idUsuarioReceptor Int
   usuarioReceptor Usuario @relation("usuarioReceptor", fields: [idUsuarioReceptor], references: [idUsuario], onDelete: Cascade)
-  @@unique([idUsuarioEmisor, idUsuarioReceptor])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
 }
