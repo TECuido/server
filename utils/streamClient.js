@@ -6,7 +6,7 @@ async function createUser(name, userId) {
     client = new StreamClient(config.streamApiKey, config.streamSecret, { timeout: 3000 });
 
     const newUser = {
-        id: userId,
+        id: String(userId),
         role: 'user',
         name: name,
         image: null
@@ -14,19 +14,17 @@ async function createUser(name, userId) {
 
       await client.upsertUsers({
         users: {
-          [newUser.id]: newUser,
+          [String(newUser.id)]: newUser,
         },
     });
 
-    const exp = Math.round(new Date().getTime() / 1000) + 60 * 60;
-    client.createToken(userId, exp);
 }
 
 function createToken(userId){
     client = new StreamClient(config.streamApiKey, config.streamSecret, { timeout: 3000 });
 
     const exp = Math.round(new Date().getTime() / 1000) + 60 * 60;
-    client.createToken(userId, exp);
+    return client.createToken(String(userId), exp);
 }
 
 module.exports = {createUser, createToken}

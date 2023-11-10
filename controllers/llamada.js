@@ -134,8 +134,6 @@ class LlamadaController {
         llamadaRepetida = await service.getLlamada(idLlamada);
       }
 
-      streamClient.createToken(usuarioEmisor.idUsuario)
-
       //crear el llamada
       const llamadaCreada = await service.addLlamada(
         idLlamada,
@@ -156,25 +154,23 @@ class LlamadaController {
    * @params Sin parametros
    * @description Funcion para conectar un usuario a una llamada existente
    */
-  async connectLlamada(req, res) {
-    const {idUsuario, idLlamada} = req.body;
+  async generateToken(req, res) {
+    const idUsuario = req.params.id;
 
     try {
 
-      streamClient.createToken(idUsuario);
-      const llamada = await service.getLlamada(idLlamada);
-      if (llamada) {
-        if(llamada.idUsuarioReceptor != idUsuario){
-          return res.status(404).json({ message: "No tienes acceso a esta llamada" });
-        }
-        return res.status(200).json({ data: llamada });
-      } else {
-        return res.status(404).json({ message: "No se encontró la llamada" });
+      const usuario = await usuarioService.getUsuario(idUsuario);
+
+      if (!usuario) {
+        return res.status(404).json({ message: "Error al generar el token" });
       }
+
+      const token = streamClient.createToken(idUsuario);
+      return res.status(200).json({ data: {token: token} });
     } catch (err) {
       return res
         .status(500)
-        .json({ message: `Error al obtener el llamada. Err: ${err}` });
+        .json({ message: `Error al generar el token. Err: ${err}` });
     }
   }
 }
