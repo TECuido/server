@@ -4,6 +4,8 @@ const UsuarioServices = require("../services/usuario.js");
 const service = new LlamadaServices();
 const usuarioService = new UsuarioServices();
 
+const streamClient = require("../utils/streamClient.js");
+
 /**
  * @author Bernardo de la Sierra
  * @version 1.0.1
@@ -85,7 +87,7 @@ class LlamadaController {
       if (llamada) {
         return res.status(200).json({ data: llamada });
       } else {
-        return res.status(404).json({ message: "No se encontró el llamada" });
+        return res.status(404).json({ message: "No se encontró la llamada" });
       }
     } catch (err) {
       return res
@@ -132,6 +134,8 @@ class LlamadaController {
         llamadaRepetida = await service.getLlamada(idLlamada);
       }
 
+      streamClient.createToken(usuarioEmisor.idUsuario)
+
       //crear el llamada
       const llamadaCreada = await service.addLlamada(
         idLlamada,
@@ -142,6 +146,35 @@ class LlamadaController {
       res.status(200).json({data: llamadaCreada});
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params Sin parametros
+   * @description Funcion para conectar un usuario a una llamada existente
+   */
+  async connectLlamada(req, res) {
+    const {idUsuario, idLlamada} = req.body;
+
+    try {
+
+      streamClient.createToken(idUsuario);
+      const llamada = await service.getLlamada(idLlamada);
+      if (llamada) {
+        if(llamada.idUsuarioReceptor != idUsuario){
+          return res.status(404).json({ message: "No tienes acceso a esta llamada" });
+        }
+        return res.status(200).json({ data: llamada });
+      } else {
+        return res.status(404).json({ message: "No se encontró la llamada" });
+      }
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al obtener el llamada. Err: ${err}` });
     }
   }
 }
