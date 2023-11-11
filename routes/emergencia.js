@@ -10,7 +10,7 @@ const controller = new EmergenciasController();
 router.get("/", controller.getAllEmergencias);
 router.get("/:id", controller.getEmergencia);
 router.post("/grupo", controller.addEmergenciaGrupo);
-// PONGA EL NOMBRE COMPLETO
+router.post("/allgrupo", controller.addEmergenciaContacto);
 router.get("/emisor/:idEmisor", controller.getEmergenciaPorEmisor);
 router.get("/receptor/:id", controller.getEmergenciaUltimas24Horas);
 
