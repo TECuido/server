@@ -47,17 +47,17 @@ class ContactoService {
   async getContactosDeUsuario(idAgrega) {
     const contactos = await db.contacto.findMany({
       where: {
-        idAgrega: Number(idAgrega)
+        idAgrega: Number(idAgrega),
       },
       select: {
         usuarioAgregado: {
-          select:{
+          select: {
             idUsuario: true,
             nombre: true,
-            correo: true
-          }
-        }
-      }
+            correo: true,
+          },
+        },
+      },
     });
     return contactos;
   }
@@ -73,16 +73,14 @@ class ContactoService {
   async getContactoPorUsuarios(idAgrega, idAgregado) {
     const contacto = await db.contacto.findFirst({
       where: {
-          AND: [
-            { idAgrega: Number(idAgrega) },
-            { idAgregado: Number(idAgregado) }
-          ]
-        }
+        AND: [
+          { idAgrega: Number(idAgrega) },
+          { idAgregado: Number(idAgregado) },
+        ],
       },
-    );
+    });
     return contacto;
   }
-
 
   /**
    * @author Bernardo de la Sierra
@@ -98,7 +96,7 @@ class ContactoService {
   }
 
   /**
-   * @author Bernardo de la Sierra    
+   * @author Bernardo de la Sierra
    * @version 1.0.1
    * @license Gp
    * @params {int} - idUsuarioActual Identificador unico del usuario actual
@@ -113,6 +111,31 @@ class ContactoService {
         idAgregado: Number(idusuarioAgregado),
       },
     });
+  }
+
+  /**
+   * @author Bernardo de la Sierra Rábago
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - idGrupo es el id del grupo
+   * @description Funcion que regresa los usuarios de un grupo con sus tokens de notificacion
+   */
+  async getUsuariosContactoTokens(idAgrega) {
+    const usuariosGrupo = await db.contacto.findMany({
+      where: {
+        idAgrega: Number(idAgrega),
+      },
+
+      select: {
+        usuarioAgregado: {
+          select: {
+            idUsuario: true,
+            token: true,
+          },
+        },
+      },
+    });
+    return usuariosGrupo;
   }
 }
 
