@@ -198,7 +198,7 @@ class EmergenciaController {
   }
 
   /**
-   * @author Julio Meza
+   * @author Bernardo de la Sierra
    * @version 1.0.1
    * @license Gp
    * @params {string} - tipo es que una breve descripcion de la emergencia
@@ -207,19 +207,18 @@ class EmergenciaController {
    * @params {int} - idReceptor quien lo recibe
    * @description Funcion para darle registro a determinado emergencia y agregarla a los miembros de un grupo
    */
-  async addEmergenciaContacto(req, res) {
+  async addEmergenciaContactos(req, res) {
     try {
       //crear emergencia
       const emergencia = await service.createEmergencia(req.body);
-
       //agregar a los receptores
-      const miembros = await contactoService.getAllContactos();
-      console.log(miembros);
-
+      const miembros = await contactoService.getContactosDeUsuario(
+        emergencia.idEmisor
+      );
       for (let i = 0; i < miembros.length; i++) {
         await service.addEmergenciaReceptor(
           emergencia.idEmergencia,
-          miembros[i].idAgregado
+          miembros[i].usuarioAgregado.idUsuario
         );
       }
 
@@ -230,10 +229,14 @@ class EmergenciaController {
       const note = crearNotificacionEmergencia(emergencia, usuario);
 
       //enviar notificacion a los usuarios
-      const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
+      const miembrosTokens = await contactoService.getUsuariosContactoTokens(
+        emergencia.idEmisor
+      );
       miembrosTokens.forEach((miembro) => {
-        if (miembro.miembroGrupo.token) {
-          let token = miembro.miembroGrupo.token;
+        console.log(miembro.usuarioAgregado.token);
+        console.log("papa");
+        if (miembro.usuarioAgregado.token) {
+          let token = miembro.usuarioAgregado.token;
           apnProvider.send(note, token).then((result) => {
             if (result.failed && result.failed.length > 0) {
               console.log(
