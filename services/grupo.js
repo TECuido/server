@@ -179,6 +179,20 @@ class GrupoService {
     return grupos;
   }
 
+  /**
+   * @author Irving Agramón y Rubén Tandon 
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} -  idContactoGrupo Identificador único del miembro en UsuarioGrupo
+   * @description Funcion para eliminar un usuario de un grupo
+   */
+
+  async deleteMiembro(idContactoGrupo){
+    await db.usuarioGrupo.delete({
+      where: {idContactoGrupo : Number(idContactoGrupo)},
+    })
+  }
+
 }
 
 module.exports = GrupoService;

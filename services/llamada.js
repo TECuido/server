@@ -46,13 +46,13 @@ class LlamadaService {
    * @params {int} - idusuarioReceptor Identificador del usuario que vamos a mandar
    * @description Funcion que crea la relaciones de las llamadas
    */
-  async addLlamada(idLlamada, idusuarioEmisor, idusuarioReceptor) {
+  async addLlamada(idLlamada, idUsuarioEmisor, idUsuarioReceptor) {
     // Creamos el llamada
     return await db.llamada.create({
       data: {
         idLlamada: idLlamada,
-        idusuarioEmisor: Number(idusuarioEmisor),
-        idusuarioReceptor: Number(idusuarioReceptor),
+        idUsuarioEmisor: Number(idUsuarioEmisor),
+        idUsuarioReceptor: Number(idUsuarioReceptor),
       },
     });
   }

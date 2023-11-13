@@ -9,7 +9,11 @@ const config = {
     dbName: process.env.DB_NAME || 'swiftie',
     dbPort: process.env.DB_PORT || 5432,
     accessSecret: process.env.JWT_ACCESS_SECRET,
-    refreshSecret: process.env.JWT_REFRESH_SECRET
+    refreshSecret: process.env.JWT_REFRESH_SECRET,
+    keyId: process.env.KEY_ID,
+    teamId: process.env.TEAM_ID,
+    streamApiKey: process.env.STREAM_API_KEY,
+    streamSecret: process.env.STREAM_SECRET
 }
 
 module.exports = config

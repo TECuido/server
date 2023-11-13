@@ -13,4 +13,5 @@ router.get("/usuario/:id", controller.getGruposUsuario);
 router.post("/", controller.addGrupo);
 router.post("/usuario", controller.addUsuarioToGrupo);
 router.delete("/:id", controller.deleteGrupo);
+router.delete("/:idGrupo/:idMiembro", controller.deleteMiembroByGrupo);
 module.exports = router;

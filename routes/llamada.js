@@ -12,4 +12,6 @@ router.get("/:id", controller.getLlamada);
 router.get("/usuario/:id", controller.getAllLlamadasUsuario);
 router.post("/usuario/:id", controller.addLlamada);
 
+router.get("/usuario/:id/token", controller.generateToken);
+
 module.exports = router;
