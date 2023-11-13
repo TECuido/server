@@ -54,8 +54,6 @@ class AuthController {
         idUsuario: usuario.idUsuario,
       });
 
-      await streamClient.createUser(usuario.nombre, usuario.idUsuario)
-
       return res
         .status(200)
         .json({
@@ -100,8 +98,6 @@ class AuthController {
         refreshToken,
         idUsuario: usuario.idUsuario,
       });
-
-      await streamClient.createUser(usuario.nombre, usuario.idUsuario)
 
       return res
         .status(200)
