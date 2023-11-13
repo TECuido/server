@@ -76,6 +76,7 @@ class GrupoController {
         .json({ message: `Error al crear el grupo. Err: ${err}` });
     }
   }
+
   /**
    * @author Bernardo de la Sierra
    * @version 1.0.1
@@ -89,7 +90,6 @@ class GrupoController {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }
     try {
-
       const grupo = await service.getGrupo(id);
       if (!grupo) {
         return res.status(404).json({ message: "No se encontró el grupo" });
@@ -127,10 +127,10 @@ class GrupoController {
       }
 
       const miembro = await service.getGrupoMiembro(idMiembro, idGrupo);
-      if(miembro){
+      if (miembro) {
         return res
-        .status(400)
-        .json({ message: "El usuario ya es miembro de este grupo"})
+          .status(400)
+          .json({ message: "El usuario ya es miembro de este grupo" });
       }
 
       const grupo = await service.addUsuarioGrupo(idMiembro, idGrupo);
@@ -171,8 +171,6 @@ class GrupoController {
     }
   }
 
-
-  
   /**
    * @author Julio Meza
    * @version 1.0.1
