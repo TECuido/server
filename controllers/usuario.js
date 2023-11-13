@@ -1,6 +1,6 @@
 const UsuarioServices = require("../services/usuario.js");
-
 const service = new UsuarioServices();
+
 
 /**
  * @author Bernardo de la Sierra y Julio Meza

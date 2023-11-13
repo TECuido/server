@@ -1,4 +1,5 @@
 const apn = require("apn");
+const config = require("../config/config")
 
 //key: Authentication Token that you can grab from apple Member Center website.
 //key-id: the XXXXXXXXXX part of the Authentication Token filename.
@@ -7,8 +8,8 @@ const apn = require("apn");
 var options = {
     token: {
       key: "./utils/AuthKey_4Q63WPVPAJ.p8",
-      keyId: "4Q63WPVPAJ",
-      teamId: "7NP8953QA5"
+      keyId: config.keyId,
+      teamId: config.teamId
     },
     production: false
 };

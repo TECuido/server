@@ -9,6 +9,10 @@ const jwt = require("jsonwebtoken");
 
 const authService = new AuthService();
 const usuarioService = new UsuarioService();
+
+const streamClient = require("../utils/streamClient.js");
+
+
 /**
  * @author Julio Meza
  * @version 1.0.1
@@ -49,6 +53,7 @@ class AuthController {
         refreshToken,
         idUsuario: usuario.idUsuario,
       });
+
       return res
         .status(200)
         .json({
@@ -93,6 +98,7 @@ class AuthController {
         refreshToken,
         idUsuario: usuario.idUsuario,
       });
+
       return res
         .status(200)
         .json({

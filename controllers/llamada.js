@@ -1,16 +1,20 @@
 const LlamadaServices = require("../services/llamada.js");
+const UsuarioServices = require("../services/usuario.js");
 
 const service = new LlamadaServices();
+const usuarioService = new UsuarioServices();
+
+const streamClient = require("../utils/streamClient.js");
 
 /**
  * @author Bernardo de la Sierra
  * @version 1.0.1
  * @license Gp
  * @params {int} tamañon del codigo a generar
- * @description Función para generar un código único de 5 letras
+ * @description Función para generar un código único de n letras
  */
 function generateUniqueCode(length) {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
   let code = "";
 
   while (code.length < length) {
@@ -83,7 +87,7 @@ class LlamadaController {
       if (llamada) {
         return res.status(200).json({ data: llamada });
       } else {
-        return res.status(404).json({ message: "No se encontró el llamada" });
+        return res.status(404).json({ message: "No se encontró la llamada" });
       }
     } catch (err) {
       return res
@@ -102,43 +106,71 @@ class LlamadaController {
    */
   async addLlamada(req, res) {
     const idUsuarioActual = req.params.id;
-    const { idusuarioReceptor } = req.body;
+    const { idUsuarioReceptor } = req.body;
 
     try {
       //si no existe el usuario lanzar un error
-      if (!idusuarioReceptor) {
+      const usuarioReceptor = await usuarioService.getUsuario(idUsuarioReceptor);
+      const usuarioEmisor = await usuarioService.getUsuario(idUsuarioActual);
+
+      if (!usuarioReceptor || !usuarioEmisor) {
         return res
           .status(400)
           .json({ message: "El usuario no se encuentra registrado" });
       }
 
       //si el usuario que se agrega como llamada es el mismo usuario lanzar un error
-
-      if (idusuarioReceptor == idUsuarioActual) {
+      if (idUsuarioReceptor == idUsuarioActual) {
         return res
           .stauts(400)
           .json({ message: "No se puede agregar el mismo usuario" });
       }
       // Generar el idLlamada
       let idLlamada = generateUniqueCode(8);
-      console.log(idLlamada);
 
       let llamadaRepetida = await service.getLlamada(idLlamada);
       while (llamadaRepetida) {
         idLlamada = generateUniqueCode(8);
         llamadaRepetida = await service.getLlamada(idLlamada);
       }
-      console.log(llamadaRepetida);
+
       //crear el llamada
       const llamadaCreada = await service.addLlamada(
         idLlamada,
         idUsuarioActual,
-        idusuarioReceptor
+        idUsuarioReceptor
       );
 
-      res.status(200).json(llamadaCreada);
+      res.status(200).json({data: llamadaCreada});
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params Sin parametros
+   * @description Funcion para conectar un usuario a una llamada existente
+   */
+  async generateToken(req, res) {
+    const idUsuario = req.params.id;
+
+    try {
+
+      const usuario = await usuarioService.getUsuario(idUsuario);
+
+      if (!usuario) {
+        return res.status(404).json({ message: "Error al generar el token" });
+      }
+
+      const token = streamClient.createToken(idUsuario);
+      return res.status(200).json({ data: {token: token} });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al generar el token. Err: ${err}` });
     }
   }
 }
