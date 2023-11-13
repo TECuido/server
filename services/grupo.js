@@ -193,6 +193,22 @@ class GrupoService {
     })
   }
 
+  /**
+   * @author Irving Agramón y Rubén Tandon 
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} -  idGrupo Grupo al que se va a eliminar el miembro
+   * @params {int} - idMiembro Identificador Unico del miembro
+   * @description Funcion que nos va a permitir cambiar el nombre de un grupo
+   */
+
+  async updateGrupoName(id, {nombre}){
+    const grupo = await db.grupo.update({
+      where: {idGrupo: Number(id)},
+      data: {nombre},
+    });
+    return grupo;
+  }
 }
 
 module.exports = GrupoService;
