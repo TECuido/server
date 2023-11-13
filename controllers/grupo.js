@@ -238,6 +238,31 @@ class GrupoController {
         .json({ message: `Error al eliminar los miembros. Err: ${err}` });
     }
   }
+
+  /**
+   * @author Irving Agramón y Rubén Tandon 
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id Identificador unico del grupo
+   * @params {string} - nombre Nombre unico del grupo
+   * @description Funcion que nos va a permitir cambiar el nombre de un grupo
+   */
+
+  async updateGrupoName(req, res){
+    const id = req.params.id;
+    if (!Number.isInteger(parseInt(id))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+
+    try{
+      const grupo = await service.updateGrupoName(id, req.body);
+      return res.status(200).json({ data: grupo });
+    } catch (err){
+      return res
+        .status(500)
+        .json({ message: `Error al obtener los grupos. Err: ${err}` });
+    }
+  }
 }
 
 
