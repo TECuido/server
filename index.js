@@ -1,8 +1,12 @@
 // Aqui llamamos al servicio de express y las rutas a utilizar
 const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
 const routerApi = require("./routes/routes");
 
 const app = express();
+app.use(cors());
+app.use(helmet());
 
 // Uso de tokens
 app.use(express.urlencoded({ extended: false }));
