@@ -199,6 +199,50 @@ class GrupoController {
         .json({ message: `Error al obtener grupos. Err: ${err}` });
     }
   }
+
+  /**
+   * @author Irving Agramón y Rubén Tandon 
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} -  idGrupo Grupo al que se va a eliminar el miembro
+   * @params {int} - idMiembro Identificador Unico del miembro
+   * @description Funcion que nos va a permitir eliminar un usuario de un grupo
+   */
+  async deleteMiembroByGrupo(req, res){
+    const {idGrupo, idMiembro} = req.params;
+    if (!Number.isInteger(parseInt(idGrupo))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+    if (!Number.isInteger(parseInt(idMiembro))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+
+    try{
+      const miembro = await service.getGrupoMiembro(
+        idMiembro,
+        idGrupo
+      );
+      if(!miembro){
+        return res.status(404).json({ message: "No se encontró el miembro" });
+      }
+
+      await service.deleteMiembro(
+        miembro.idContactoGrupo
+        );
+      return res
+        .status(200)
+        .json({ message: "Se ha eliminado el miembro correctamente" });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al eliminar los miembros. Err: ${err}` });
+    }
+  }
 }
 
+
+
+
 module.exports = GrupoController;
+
+
