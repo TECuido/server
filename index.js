@@ -5,12 +5,22 @@ const helmet = require("helmet");
 const routerApi = require("./routes/routes");
 
 const app = express();
+const rateLimit = require("express-rate-limit");
 app.use(cors());
 app.use(helmet());
+const morgan = require("morgan");
+
+// Aqui voy a poner el limite de llamadas
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // Una hora
+  max: 1000, // Limite de  llamadas por una hora
+});
 
 // Uso de tokens
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(limiter);
+app.use(morgan("tiny"));
 
 //Aqui checamos que que este funcionando
 app.get("/", (req, res) => {
