@@ -28,6 +28,8 @@ model Usuario {
   miembroGrupo UsuarioGrupo[] @relation("miembroGrupo")
   usuarioEmisor Llamada[] @relation("usuarioEmisor")
   usuarioReceptor Llamada[] @relation("usuarioReceptor")
+  pacienteReceta Receta[] @relation("pacienteReceta")
+  medicoReceta Receta[] @relation("medicoReceta")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
@@ -113,4 +115,42 @@ model Llamada{
   usuarioReceptor Usuario @relation("usuarioReceptor", fields: [idUsuarioReceptor], references: [idUsuario], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
+}
+
+model Receta {
+  idReceta Int @id @unique @default(autoincrement())
+  nombre String @db.VarChar(100)
+  idPaciente Int 
+  idMedico Int?
+  fecha DateTime
+  paciente Usuario @relation("pacienteReceta", fields: [idPaciente], references: [idUsuario], onDelete: Cascade)
+  medico Usuario? @relation("medicoReceta", fields: [idMedico], references: [idUsuario], onDelete: Cascade)
+  medicamentoReceta MedicamentoReceta[] @relation("medicamentoReceta")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}
+
+model Medicamento {
+  idMedicamento Int @id @unique @default(autoincrement())
+  nombre String @db.VarChar(100)
+  codigo String @db.VarChar(20)
+  uso String @db.Text
+  descripcion String @db.Text
+  medicamentoReceta MedicamentoReceta[] @relation("medicamentoReceta")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+} 
+
+model MedicamentoReceta {
+  idMedicamento Int 
+  idReceta Int
+  nombre String @db.VarChar(100)
+  dosis String @db.VarChar(30)
+  frecuencia String @db.VarChar(30)
+  duracion String @db.VarChar(30)
+  receta Receta @relation("medicamentoReceta", fields: [idReceta], references: [idReceta], onDelete: Cascade)
+  medicamento Medicamento @relation("medicamentoReceta", fields:[idMedicamento], references: [idMedicamento], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([idMedicamento, idReceta])
 }
