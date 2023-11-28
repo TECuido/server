@@ -7,9 +7,9 @@ const RecetasController = require("../controllers/receta");
 const controller = new RecetasController();
 
 // Ruteo de la parte de usuario
-router.get("/", controller.getAllRecetas);
-router.get("/:id", controller.getReceta);
-router.get("/usuario/:id", controller.getRecetasPaciente)
-router.post("/usuario/:id", controller.createReceta);
+router.get("/", isAuthenticated, controller.getAllRecetas);
+router.get("/:id", isAuthenticated, controller.getReceta);
+router.get("/usuario/:id", isAuthenticated, controller.getRecetasPaciente)
+router.post("/usuario/:id", isAuthenticated, controller.createReceta);
 
 module.exports = router;
