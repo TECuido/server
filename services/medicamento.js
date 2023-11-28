@@ -17,7 +17,7 @@ class MedicamentoService {
    * @description Funcion que te da todas los medicamentos
    */
   async getAllMedicamentos() {
-    const medics = await db.medicamento.findMany();
+    const medics = await db.medicamentoReceta.findMany();
     return medics;
   }
 
@@ -29,25 +29,9 @@ class MedicamentoService {
    * @description Funcion que da un medicamento por id
    */
   async getMedicamento(id) {
-    const med = await db.medicamento.findUnique({
+    const med = await db.medicamentoReceta.findUnique({
       where: {
-        idMedicamento: Number(id),
-      },
-    });
-    return med;
-  }
-
-  /**
-   * @author Julio Meza
-   * @version 1.0.1
-   * @license Gp
-   * @params {string} - codigo del medicamento
-   * @description Funcion que da un medicamento por su codigo
-   */
-  async getMedicamentoPorCodigo(codigo) {
-    const med = await db.medicamento.findUnique({
-      where: {
-        codigo: codigo,
+        idMedicamentoReceta: Number(id),
       },
     });
     return med;
@@ -64,7 +48,7 @@ class MedicamentoService {
   async getRecetaMedicamentos(id) {
     const meds = await db.receta.findUnique({
       where: {
-        idReceta: id
+        idReceta: Number(id)
       },
       select: {
         medicamentoReceta: true
@@ -74,32 +58,38 @@ class MedicamentoService {
     return meds;
   }
 
+
   /**
    * @author Julio Meza
    * @version 1.0.1
    * @license Gp
-   * @params {string} - codigo del medicamento
-   * @params {string} - uso
-   * @params {string} - descripcion
-   * @description Funcion para crear un medicamento
+   * @params {int} - id de la receta
+   * @params {int} - id del medicamento
+   * @params {string} - nombre del medicamento
+   * @params {string} - dosis del medicamento
+   * @params {string} - frecuencia del medicamento
+   * @params {string} - duracion del medicamento
+   * @description Funcion para agregar un medicamento a una receta
    */
-  async createMedicamento({
+  async addRecetaMedicamento (
+    idReceta, {
     nombre,
-    codigo,
-    uso,
-    descripcion
+    dosis,
+    frecuencia,
+    duracion
   }) {
-    const result = await db.medicamento.create({
+    const result = await db.medicamentoReceta.create({
       data: {
+        idReceta: Number(idReceta),
         nombre: nombre,
-        codigo: codigo,
-        uso: uso,
-        descripcion: descripcion
+        dosis: dosis,
+        frecuencia: frecuencia,
+        duracion: duracion
       },
     });
     return result;
   }
-
+  
 
 }
 

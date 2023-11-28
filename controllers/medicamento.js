@@ -31,7 +31,7 @@ class MedicamentoController {
     } catch (err) {
       return res
         .status(500)
-        .json({ message: `Error al obtener las recetas. Err: ${err}` });
+        .json({ message: `Error al obtener los medicamentos. Err: ${err}` });
     }
   }
 
@@ -50,17 +50,17 @@ class MedicamentoController {
     }
     try {
       const medicamento = await medicamentoService.getMedicamento(id);
-      if (receta) {
+      if (medicamento) {
         return res.status(200).json({ data: medicamento });
       } else {
         return res
           .status(404)
-          .json({ message: "No se encontró la receta" });
+          .json({ message: "No se encontró el medicamento" });
       }
     } catch (err) {
       return res
         .status(500)
-        .json({ message: `Error al obtener receta. Err: ${err}` });
+        .json({ message: `Error al obtener medicamento. Err: ${err}` });
     }
   }
 
@@ -72,13 +72,16 @@ class MedicamentoController {
    * @description Funcion que te da todas los medicamentos de una receta
    */
   async getMedicamentosReceta(req, res) {
-    const idReceta = req.params.id;
-
-    // Verificamos que el id no sea un string
-    if (!Number.isInteger(parseInt(idPaciente))) {
-      return res.status(500).json({ message: "El Id necesita ser entero" });
-    }
+   
     try {
+
+      const idReceta = req.params.id;
+
+      // Verificamos que el id no sea un string
+      if (!Number.isInteger(parseInt(idReceta))) {
+        return res.status(500).json({ message: "El Id necesita ser entero" });
+      }
+
       const meds = await medicamentoService.getRecetaMedicamentos(idReceta)
       if (meds) {
         return res.status(200).json({ data: meds})
@@ -91,7 +94,7 @@ class MedicamentoController {
     } catch (err) {
       return res
         .status(500)
-        .json({ message: `Error al obtener las recetas. Err: ${err}` });
+        .json({ message: `Error al obtener los medicamentos. Err: ${err}` });
     }
   }
 
@@ -103,38 +106,37 @@ class MedicamentoController {
    * @license Gp
    * @description Funcion para crear una receta
    */
-  async createReceta(req, res) {
+  async addMedicamentoReceta(req, res) {
+    
+   
+
     try {
 
-        const paciente = await usuarioService.getUsuario(req.body.idPaciente)
+      const idReceta = req.params.id;
 
-        //si no existe el usuario lanzar un error
-        if (!paciente) {
-          return res
-            .status(400)
-            .json({ message: "El paciente no se encuentra registrado" });
-        }
+      if (!Number.isInteger(parseInt(idReceta))) {
+        return res.status(500).json({ message: "El Id necesita ser entero" });
+      }
 
-        if(req.body.idMedico){
-            const medico = await usuarioService.getUsuario(req.body.idMedico)
-            if(!medico){
-                return res
-                .status(400)
-                .json({ message: "El médico no se encuentra registrado" });
-            }
-        }
+      const receta = await recetaService.getReceta(idReceta)
+
+      //si no existe la receta lanzar un error
+      if (!receta) {
+        return res
+          .status(400)
+          .json({ message: "La receta no existe" });
+      }
   
-      
-      const receta = await service.createReceta(req.body);
+      const medicamento = await medicamentoService.addRecetaMedicamento(idReceta, req.body)
 
-      return res.status(200).json({ data: receta });
+      return res.status(200).json({ data: medicamento });
     } catch (err) {
       return res
         .status(500)
-        .json({ message: `Error al crear el emergencia. Err: ${err}` });
+        .json({ message: `Error al crear el medicamento. Err: ${err}` });
     }
   }
 
 }
 
-module.exports = RecetaController;
+module.exports = MedicamentoController;

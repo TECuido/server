@@ -1,9 +1,7 @@
 const UsuarioService = require("../services/usuario.js")
 const RecetaService = require("../services/receta.js");
-const MedicamentoService = require("../services/medicamento.js");
 
 const recetaService = new RecetaService();
-const medicamentoService = new MedicamentoService();
 const usuarioService = new UsuarioService();
 
 
@@ -72,13 +70,16 @@ class RecetaController {
    * @description Funcion que te da todas las recetas de un paciente
    */
   async getRecetasPaciente(req, res) {
-    const idPaciente = req.params.id;
-
-    // Verificamos que el id no sea un string
-    if (!Number.isInteger(parseInt(idPaciente))) {
-      return res.status(500).json({ message: "El Id necesita ser entero" });
-    }
+    
     try {
+
+      const idPaciente = req.params.id;
+
+      // Verificamos que el id no sea un string
+      if (!Number.isInteger(parseInt(idPaciente))) {
+        return res.status(500).json({ message: "El Id necesita ser entero" });
+      }
+
       const recetas = await recetaService.getRecetasPaciente(idPaciente)
       if (recetas) {
         return res.status(200).json({ data: recetas});
@@ -105,32 +106,38 @@ class RecetaController {
   async createReceta(req, res) {
     try {
 
-        const paciente = await usuarioService.getUsuario(req.body.idPaciente)
+      const idPaciente = req.params.id;
 
-        //si no existe el usuario lanzar un error
-        if (!paciente) {
-          return res
-            .status(400)
-            .json({ message: "El paciente no se encuentra registrado" });
-        }
+      // Verificamos que el id no sea un string
+      if (!Number.isInteger(parseInt(idPaciente))) {
+        return res.status(500).json({ message: "El Id necesita ser entero" });
+      }
 
-        if(req.body.idMedico){
-            const medico = await usuarioService.getUsuario(req.body.idMedico)
-            if(!medico){
-                return res
-                .status(400)
-                .json({ message: "El médico no se encuentra registrado" });
-            }
-        }
-  
-      
-      const receta = await service.createReceta(req.body);
+      const paciente = await usuarioService.getUsuario(idPaciente)
+
+      //si no existe el usuario lanzar un error
+      if (!paciente) {
+        return res
+          .status(400)
+          .json({ message: "El paciente no se encuentra registrado" });
+      }
+
+      if(req.body.idMedico){
+          const medico = await usuarioService.getUsuario(req.body.idMedico)
+          if(!medico){
+              return res
+              .status(400)
+              .json({ message: "El médico no se encuentra registrado" });
+          }
+      }
+    
+      const receta = await recetaService.createReceta(idPaciente, req.body);
 
       return res.status(200).json({ data: receta });
     } catch (err) {
       return res
         .status(500)
-        .json({ message: `Error al crear el emergencia. Err: ${err}` });
+        .json({ message: `Error al crear la receta. Err: ${err}` });
     }
   }
 
