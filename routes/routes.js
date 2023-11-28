@@ -4,6 +4,9 @@ const emergenciasRouter = require("./emergencia.js");
 const contactosRouter = require("./contacto.js");
 const gruposRouter = require("./grupo.js");
 const llamadaRouter = require("./llamada.js");
+const medicamentoRouter = require("./medicamento.js");
+const recetaRouter = require("./receta.js");
+
 /**
  * @author Julio Meza y Bernardo de la Sierra
  * @version 1.0.1
@@ -18,6 +21,8 @@ function routerApi(app) {
   app.use("/contactos", contactosRouter);
   app.use("/grupos", gruposRouter);
   app.use("/llamadas", llamadaRouter);
+  app.use("/recetas", recetaRouter);
+  app.use("/medicamentos", medicamentoRouter);
 }
 
 module.exports = routerApi;
