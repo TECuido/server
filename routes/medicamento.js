@@ -7,10 +7,10 @@ const MedicamentosController = require("../controllers/medicamento.js");
 const controller = new MedicamentosController();
 
 // Ruteo de la parte de usuario
-router.get("/", controller.getAllMedicamentos);
-router.get("/:id", controller.getMedicamento);
-router.get("/receta/:id", controller.getMedicamentosReceta);
-router.post("/receta/:id", controller.addMedicamentoReceta);
+router.get("/", isAuthenticated, controller.getAllMedicamentos);
+router.get("/:id", isAuthenticated, controller.getMedicamento);
+router.get("/receta/:id", isAuthenticated, controller.getMedicamentosReceta);
+router.post("/receta/:id", isAuthenticated, controller.addMedicamentoReceta);
 
 
 module.exports = router;
