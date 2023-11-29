@@ -49,6 +49,46 @@ class RecetaService {
       where: {
         idPaciente: Number(idUsuario),
       },
+      select: {
+        idReceta: true,
+        nombre: true,
+        fecha: true,
+        medico: {
+          select: {
+            nombre: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    return recetas;
+  }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id de quien lo envia
+   * @description Funcion que da las recetas de un usuario
+   */
+  async getRecetasMedico(idMedico) {
+    const recetas = await db.receta.findMany({
+      where: {
+        idMedico: Number(idMedico),
+      },
+      select: {
+        idReceta: true,
+        nombre: true,
+        fecha: true,
+        paciente: {
+          select: {
+            nombre: true
+          }
+        }
+      },
       orderBy: {
         createdAt: 'desc'
       }

@@ -81,8 +81,18 @@ class RecetaController {
       }
 
       const recetas = await recetaService.getRecetasPaciente(idPaciente)
+      const result = recetas.map(receta => {
+        return {
+          idReceta: receta.idReceta,
+          nombre: receta.nombre,
+          fecha: receta.fecha,
+          nombrePersona: receta.medico.nombre
+        }
+      })
+
+
       if (recetas) {
-        return res.status(200).json({ data: recetas});
+        return res.status(200).json({ data: result});
       } else {
         return res
           .status(404)
@@ -94,6 +104,51 @@ class RecetaController {
         .json({ message: `Error al obtener las recetas. Err: ${err}` });
     }
   }
+
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id Identificador unico del medico
+   * @description Funcion que te da todas las recetas de un medico
+   */
+  async getRecetasMedico(req, res) {
+    
+    try {
+
+      const idMedico = req.params.id;
+
+      // Verificamos que el id no sea un string
+      if (!Number.isInteger(parseInt(idMedico))) {
+        return res.status(500).json({ message: "El Id necesita ser entero" });
+      }
+
+      const recetas = await recetaService.getRecetasMedico(idMedico)
+      const result = recetas.map(receta => {
+        return {
+          idReceta: receta.idReceta,
+          nombre: receta.nombre,
+          fecha: receta.fecha,
+          nombrePersona: receta.paciente.nombre
+        }
+      })
+
+
+      if (recetas) {
+        return res.status(200).json({ data: result});
+      } else {
+        return res
+          .status(404)
+          .json({ message: "No se encontraron recetas" });
+      }
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al obtener las recetas. Err: ${err}` });
+    }
+  }
+
 
 
 
