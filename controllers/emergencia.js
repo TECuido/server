@@ -233,8 +233,6 @@ class EmergenciaController {
         emergencia.idEmisor
       );
       miembrosTokens.forEach((miembro) => {
-        console.log(miembro.usuarioAgregado.token);
-        console.log("papa");
         if (miembro.usuarioAgregado.token) {
           let token = miembro.usuarioAgregado.token;
           apnProvider.send(note, token).then((result) => {
