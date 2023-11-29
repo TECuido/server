@@ -30,6 +30,7 @@ model Usuario {
   usuarioReceptor Llamada[] @relation("usuarioReceptor")
   pacienteReceta Receta[] @relation("pacienteReceta")
   medicoReceta Receta[] @relation("medicoReceta")
+  usuarioDetalles UsuarioDetalles[] @relation("usuarioDetalles")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
@@ -140,4 +141,13 @@ model MedicamentoReceta {
   receta Receta @relation("medicamentoReceta", fields: [idReceta], references: [idReceta], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UsuarioDetalles {
+  
+  idUsuarioDetalle Int
+ idUsuarioDetalles Usuario @relation("usuarioDetalles", fields: [idUsuarioDetalle], references: [idUsuario], onDelete: Cascade)
+  numPoliza Int
+  contactoEmergencia String @db.VarChar(50) 
+  @@unique([idUsuarioDetalle ])
 }
