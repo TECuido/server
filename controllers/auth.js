@@ -10,7 +10,6 @@ const jwt = require("jsonwebtoken");
 const authService = new AuthService();
 const usuarioService = new UsuarioService();
 
-const streamClient = require("../utils/streamClient.js");
 
 
 /**

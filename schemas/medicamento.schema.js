@@ -10,7 +10,6 @@ const id = Joi.string()
 
 const createMedicamentoSchema = Joi.object({
     nombre: nombre.required(),
-    idReceta: idReceta.required(),
     dosis: dosis.required(),
     frecuencia: frecuencia.required(),
     duracion: duracion.required()
