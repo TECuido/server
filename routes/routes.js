@@ -6,6 +6,7 @@ const gruposRouter = require("./grupo.js");
 const llamadaRouter = require("./llamada.js");
 const medicamentoRouter = require("./medicamento.js");
 const recetaRouter = require("./receta.js");
+const usuarioDetalleRouter = require("./usuariodetalles");
 
 /**
  * @author Julio Meza y Bernardo de la Sierra
@@ -22,6 +23,7 @@ function routerApi(app) {
   app.use("/grupos", gruposRouter);
   app.use("/llamadas", llamadaRouter);
   app.use("/recetas", recetaRouter);
+  app.use("/usuariodetalles", usuarioDetalleRouter);
   app.use("/medicamentos", medicamentoRouter);
 }
 

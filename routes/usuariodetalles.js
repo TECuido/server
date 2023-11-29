@@ -16,6 +16,7 @@ const controller = new UsuarioDetllesController();
 // Ruteo de la parte de usuario
 router.get("/", controller.getAllUsuarioDetalles);
 router.get("/:id", controller.getUsuarioDetalles);
+router.post("/:id", controller.addUsuarioDetalles);
 // router.get(
 //   "/:id",
 //   isAuthenticated,

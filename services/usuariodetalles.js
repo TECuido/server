@@ -40,16 +40,18 @@ class UsuarioDetalleService {
    * @author Bernardo de la Sierra
    * @version 1.0.1
    * @license Gp
-   * @params {int} - idUsuarioActual Identificador unico del usuario actual
-   * @params {int} - usuario2 Identificador del usuario que vamos a mandar
+   * @params {int} - idUsuarioDetalle Identificador unico del usuario
+   * @params {int} - numPoliza Numero de poliza del usuario
+   * @params {string} - contactoEmergencia correo del contacto de Emergencia
    * @description Funcion que crea las relaciones de contactos
    */
-  async addContacto(idUsuarioActual, idusuarioAgregado) {
+  async addUsuarioDetalle(idUsuarioDetalle, numPoliza, contactoEmergencia) {
     // Creamos el contacto
-    return await db.contacto.create({
+    return await db.usuariodetalles.create({
       data: {
-        idAgrega: Number(idUsuarioActual),
-        idAgregado: Number(idusuarioAgregado),
+        idUsuarioDetalle: Number(idUsuarioDetalle),
+        numPoliza: Number(numPoliza),
+        contactoEmergencia: contactoEmergencia,
       },
     });
   }
