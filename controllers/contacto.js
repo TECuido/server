@@ -151,12 +151,25 @@ class ContactoController {
           .json({ message: "No se puede agregar el mismo usuario" });
       }
 
+      const usuarioActual = await usuarioService.getUsuario(idUsuarioActual);
+      if(!usuarioActual){
+        return res
+          .status(400)
+          .json({ message: "El usuario no se encuentra registrado" });
+      }
+
+      if(usuarioActual.idTipo == 2 && usuarioAgregado.idTipo == 2){
+        return res
+        .status(400)
+        .json({ message: "Solamente puedes agregar pacientes desde un perfil de médico" });
+      }
+
       //buscar que no se haya registrado ya el contacto
       const contacto = await service.getContactoPorUsuarios(
         idUsuarioActual,
         usuarioAgregado.idUsuario
       );
-      console.log(contacto);
+
       if (contacto) {
         return res
           .status(400)

@@ -59,6 +59,7 @@ class AuthController {
         .json({
           message: "Inicio de sesión exitoso",
           id: usuario.idUsuario,
+          tipo: usuario.idTipo,
           accessToken,
           refreshToken,
         });
@@ -104,6 +105,7 @@ class AuthController {
         .json({
           message: "El usuario se registró exitosamente",
           id: usuario.idUsuario,
+          tipo: usuario.idTipo,
           accessToken,
           refreshToken,
         });
