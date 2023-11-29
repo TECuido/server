@@ -86,7 +86,7 @@ class RecetaController {
           idReceta: receta.idReceta,
           nombre: receta.nombre,
           fecha: receta.fecha,
-          nombrePersona: receta.medico.nombre
+          nombrePersona: receta.medico ? receta.medico.nombre : null
         }
       })
 
