@@ -4,7 +4,6 @@ const UsuarioServices = require("../services/usuario.js");
 const service = new LlamadaServices();
 const usuarioService = new UsuarioServices();
 
-const streamClient = require("../utils/streamClient.js");
 
 /**
  * @author Bernardo de la Sierra
@@ -165,8 +164,7 @@ class LlamadaController {
         return res.status(404).json({ message: "Error al generar el token" });
       }
 
-      const token = streamClient.createToken(idUsuario);
-      return res.status(200).json({ data: {token: token} });
+      return res.status(200).json({ data: {token: "1"} });
     } catch (err) {
       return res
         .status(500)

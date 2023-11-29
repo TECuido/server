@@ -49,6 +49,9 @@ class RecetaService {
       where: {
         idPaciente: Number(idUsuario),
       },
+      orderBy: {
+        createdAt: 'desc'
+      }
     });
 
     return recetas;
