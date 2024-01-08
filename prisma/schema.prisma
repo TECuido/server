@@ -31,6 +31,7 @@ model Usuario {
   pacienteReceta Receta[] @relation("pacienteReceta")
   medicoReceta Receta[] @relation("medicoReceta")
   usuarioDetalles UsuarioDetalles[] @relation("usuarioDetalles")
+  contactoEmergencia UsuarioDetalles[]  @relation("contactoEmergencia")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
@@ -144,10 +145,29 @@ model MedicamentoReceta {
 }
 
 model UsuarioDetalles {
-  
+  idUsuariosDetalles  Int @id @unique @default(autoincrement()) 
   idUsuarioDetalle Int
- idUsuarioDetalles Usuario @relation("usuarioDetalles", fields: [idUsuarioDetalle], references: [idUsuario], onDelete: Cascade)
+  idUsuarioDetalles Usuario @relation("usuarioDetalles", fields: [idUsuarioDetalle], references: [idUsuario], onDelete: Cascade)
   numPoliza Int
-  contactoEmergencia String @db.VarChar(50) 
-  @@unique([idUsuarioDetalle ])
+  tipoSangre String
+  idContactoEmergencia Int
+  contactoEmergencia Usuario @relation("contactoEmergencia", fields: [ idContactoEmergencia], references: [idUsuario], onDelete: Cascade)
+  @@unique([idUsuarioDetalle, idContactoEmergencia ])
+}
+
+model Alergias {
+    idAlergia Int @id @unique @default(autoincrement()) 
+    nombre String
+    idUsuario Int
+}
+
+model MedicamentosActuales{
+  idMedicamentoActual Int @id @unique @default(autoincrement()) 
+  nombre String
+  motivo String
+}
+
+model CondicionMedica{
+  idCondicionMedica Int @id @unique @default(autoincrement()) 
+    nombre String
 }
