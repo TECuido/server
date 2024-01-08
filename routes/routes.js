@@ -6,7 +6,7 @@ const gruposRouter = require("./grupo.js");
 const llamadaRouter = require("./llamada.js");
 const medicamentoRouter = require("./medicamento.js");
 const recetaRouter = require("./receta.js");
-const usuarioDetalleRouter = require("./usuariodetalles");
+const usuarioDetalleRouter = require("./usuariodetalles.js");
 
 /**
  * @author Julio Meza y Bernardo de la Sierra

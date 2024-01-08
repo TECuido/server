@@ -1,8 +1,8 @@
 const express = require("express");
+const router = express.Router();
 // const { isAuthenticated } = require("../middlewares/auth.js");
 
-const router = express.Router();
-const UsuarioDetllesController = require("../controllers/usuariodetalles.js");
+const UsuarioDetallesController = require("../controllers/usuariodetalles.js");
 
 // const validatorHandler = require("../middlewares/validator.js");
 // const {
@@ -11,12 +11,14 @@ const UsuarioDetllesController = require("../controllers/usuariodetalles.js");
 //   updateTokenSchema,
 // } = require("../schemas/usuario.schema.js");
 
-const controller = new UsuarioDetllesController();
+const controller = new UsuarioDetallesController();
 
 // Ruteo de la parte de usuario
 router.get("/", controller.getAllUsuarioDetalles);
 router.get("/:id", controller.getUsuarioDetalles);
 router.post("/:id", controller.addUsuarioDetalles);
+router.put("/:id",controller.updateUsuarioDetalles);
+
 // router.get(
 //   "/:id",
 //   isAuthenticated,
@@ -42,3 +44,4 @@ router.post("/:id", controller.addUsuarioDetalles);
 //   validatorHandler(updateTokenSchema, "body"),
 //   controller.addNotificationToken
 // );
+module.exports = router;
