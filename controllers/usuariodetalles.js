@@ -65,16 +65,59 @@ class UsuarioDetallesController {
 
   /**
    * @author Bernardo de la Sierra
-   * @version 2.0.1
+   * @version 1.0.1
    * @license Gp
-   * @params {int} - idUsuarioActual Identificador del usuario que esta registrando el contacto
-   * @params {string} - correo es el correo del usuario a añadir en la relacion
-   * @description  Funcion que crea las relaciones de contactos, en la segunda version se agrego el contacto
+   * @params {int} - idUsuario Identificador unico del usuario
+   * @params {int} - numPoliza Numero de poliza del usuario
+   * @params {int} - idContactoEmergencia Identificador unico del contacto de emergencia
+   * @params {string} - tipoSangre es el tipo de sangre
+   * @description Actualiza los detalles de los usuarios
    */
-  async addUsuarioDetalles(req, res) {
-    const idUsuarioActual = req.params.id;
-    const { numPoliza, contactoEmergencia } = req.body;
+  async updateUsuarioDetalles(req, res) {
+    const id = req.params.id;
+    const {  contactoEmergencia } = req.body;
+    if (!Number.isInteger(parseInt(id))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+   
+    const usuarioAgregado = await usuarioService.getUsuarioPorCorreo(contactoEmergencia);
+    
+    // si no existe el usuario lanzar un error
+      if (!usuarioAgregado) {
+        return res
+          .status(400)
+          .json({ message: "El correo no se encuentra registrado" });
+      }
 
+    try {
+      
+      const usuario = await service.updateUsuarioDetalle(id, req.body,usuarioAgregado.idUsuario);
+      return res.status(200).json({ data: usuario });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al obtener los datos. Err: ${err}` });
+    }
+  }
+
+     /**
+   * @author Bernardo de la Sierra
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - idUsuario Identificador unico del usuario
+   * @params {int} - numPoliza Numero de poliza del usuario
+   * @params {int} - idContactoEmergencia Identificador unico del contacto de emergencia
+   * @params {string} - tipoSangre es el tipo de sangre
+   * @params {string} - transfusionSanguinea si acepta o no la transfusion sanguinea
+   * @params {string} - donacionOrganos  si acepta o no dar o aceptar donacion de organos
+   * @params {string} - direccion donde vive 
+   * @params {string} - edad que edad tiene
+   * @description Funcion que crea los detalles de los usuarios
+   */
+   async addUsuarioDetalles(req, res) {
+    const idUsuarioActual = req.params.id;
+    const { numPoliza, tipoSangre,contactoEmergencia,transfusionSanguinea,donacionOrganos , direccion, edad} = req.body;
+  
     try {
       //buscar si el usuario que se desea añadir como contacto existe
       const usuarioAgregado =
@@ -94,7 +137,7 @@ class UsuarioDetallesController {
             "No se puede agregar el mismo usuario como contato de emergencia",
         });
       }
-
+      
       const usuarioActual = await usuarioService.getUsuario(idUsuarioActual);
       if (!usuarioActual) {
         return res
@@ -104,6 +147,7 @@ class UsuarioDetallesController {
       
       const UsuarioDetalles =
         await service.getUsuarioDetalles(idUsuarioActual);
+       
       if (UsuarioDetalles) {
         return res
           .status(400)
@@ -113,47 +157,18 @@ class UsuarioDetallesController {
       const usuariodetalleCreado = await service.addUsuarioDetalle(
         idUsuarioActual,
         numPoliza,
-        contactoEmergencia
+        tipoSangre,
+        usuarioAgregado.idUsuario,
+        transfusionSanguinea,
+        donacionOrganos,
+        direccion,
+        edad
       );
 
       res.status(200).json(usuariodetalleCreado);
 
     } catch (error) {
       res.status(500).json({ error: error.message });
-    }
-  }
-
-
-  /**
-   * @author Bernardo de la Sierra
-   * @version 2.0.1
-   * @license Gp
-   * @params {int} - idUsuarioActual Identificador del usuario que esta registrando el contacto
-   * @description  Funcion que actualiza el perfil de usuario
-   */
-  async updateUsuarioDetalles(req, res) {
-    const id = req.params.id;
-    const {  contactoEmergencia } = req.body;
-    if (!Number.isInteger(parseInt(id))) {
-      return res.status(500).json({ message: "El Id necesita ser entero" });
-    }
-    console.log(contactoEmergencia);
-    const usuarioAgregado = await usuarioService.getUsuarioPorCorreo(contactoEmergencia);
-    console.log(usuarioAgregado);
-    // si no existe el usuario lanzar un error
-      if (!usuarioAgregado) {
-        return res
-          .status(400)
-          .json({ message: "El correo no se encuentra registrado" });
-      }
-
-    try {
-      const usuario = await service.updateUsuarioDetalle(id, req.body);
-      return res.status(200).json({ data: usuario });
-    } catch (err) {
-      return res
-        .status(500)
-        .json({ message: `Error al obtener los datos. Err: ${err}` });
     }
   }
 

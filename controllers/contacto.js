@@ -132,7 +132,7 @@ class ContactoController {
   async addContacto(req, res) {
     const idUsuarioActual = req.params.id;
     const { correo } = req.body;
-
+    
     try {
       //buscar si el usuario que se desea añadir como contacto existe
       const usuarioAgregado = await usuarioService.getUsuarioPorCorreo(correo);

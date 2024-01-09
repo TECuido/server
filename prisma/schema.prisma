@@ -30,27 +30,28 @@ model Usuario {
   usuarioReceptor Llamada[] @relation("usuarioReceptor")
   pacienteReceta Receta[] @relation("pacienteReceta")
   medicoReceta Receta[] @relation("medicoReceta")
-  usuarioDetalles UsuarioDetalles[] @relation("usuarioDetalles")
+  Usuario UsuarioDetalles[] @relation("Usuario")
+  contactoEmergencia UsuarioDetalles[]  @relation("contactoEmergencia")
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
 }
 
 model TipoUsuario {
   idTipo Int @id @unique @default(autoincrement())
   nombre String @unique @db.VarChar(30)
-  usuario Usuario[] @relation() 
+  usuario Usuario[] @relation()
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
 }
 
 model RefreshToken {
-  idToken String @id @unique @default(uuid()) 
-  hashedToken String 
+  idToken String @id @unique @default(uuid())
+  hashedToken String
   idUsuario Int
   usuario Usuario @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade)
   revoked Boolean @default(false)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
 }
 
 model Emergencia{
@@ -59,11 +60,11 @@ model Emergencia{
   descripcion String? @db.Text
   idEmisor Int
   longitud Float?
-  latitud Float? 
+  latitud Float?
   usuarioEmisor Usuario @relation("emisorEmergencia", fields: [idEmisor], references: [idUsuario], onDelete: Cascade)
   emergenciasRecibidas UsuarioEmergencia[] @relation("emergenciaRecibida")
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
 }
 
 model Contacto{
@@ -73,7 +74,7 @@ model Contacto{
   idAgregado Int
   usuarioAgregado Usuario @relation("usuarioAgregado", fields: [idAgregado], references: [idUsuario], onDelete: Cascade)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
   @@unique([idAgrega, idAgregado])
 }
 
@@ -84,17 +85,17 @@ model Grupo{
   idCreador Int
   creadorGrupo Usuario @relation("usuarioGrupo", fields: [idCreador], references: [idUsuario], onDelete: Cascade)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
 }
 
 model UsuarioGrupo{
   idContactoGrupo Int @id @unique @default(autoincrement())
-  idMiembro Int 
+  idMiembro Int
   miembroGrupo Usuario @relation("miembroGrupo", fields: [idMiembro], references: [idUsuario], onDelete: Cascade)
-  idGrupo Int 
+  idGrupo Int
   grupo Grupo @relation("grupo", fields: [idGrupo], references: [idGrupo], onDelete: Cascade)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
   @@unique([idMiembro, idGrupo])
 }
 
@@ -104,35 +105,35 @@ model UsuarioEmergencia {
   idReceptor Int
   receptorEmergencia Usuario @relation("receptorEmergencia", fields: [idReceptor], references: [idUsuario], onDelete: Cascade)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
   @@unique([idReceptor, idEmergencia])
 }
 
 model Llamada{
-  idLlamada String @id @unique 
+  idLlamada String @id @unique
   idUsuarioEmisor Int
   usuarioEmisor Usuario @relation("usuarioEmisor", fields: [idUsuarioEmisor], references: [idUsuario], onDelete: Cascade)
   idUsuarioReceptor Int
   usuarioReceptor Usuario @relation("usuarioReceptor", fields: [idUsuarioReceptor], references: [idUsuario], onDelete: Cascade)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
 }
 
 model Receta {
   idReceta Int @id @unique @default(autoincrement())
   nombre String @db.VarChar(100)
-  idPaciente Int 
+  idPaciente Int
   idMedico Int?
   fecha DateTime @db.Date
   paciente Usuario @relation("pacienteReceta", fields: [idPaciente], references: [idUsuario], onDelete: Cascade)
   medico Usuario? @relation("medicoReceta", fields: [idMedico], references: [idUsuario], onDelete: Cascade)
   medicamentoReceta MedicamentoReceta[] @relation("medicamentoReceta")
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
-} 
+  updatedAt DateTime @updatedAt
+}
 
 model MedicamentoReceta {
-  idMedicamentoReceta Int @id @unique @default(autoincrement()) 
+  idMedicamentoReceta Int @id @unique @default(autoincrement())
   idReceta Int
   nombre String @db.VarChar(100)
   dosis String @db.VarChar(30)
@@ -144,10 +145,42 @@ model MedicamentoReceta {
 }
 
 model UsuarioDetalles {
-  
-  idUsuarioDetalle Int
- idUsuarioDetalles Usuario @relation("usuarioDetalles", fields: [idUsuarioDetalle], references: [idUsuario], onDelete: Cascade)
+  idUsuariosDetalles Int @id @unique @default(autoincrement())
+  idUsuario Int
+  Usuario Usuario @relation("Usuario", fields: [idUsuario ], references: [idUsuario], onDelete: Cascade)
   numPoliza Int
-  contactoEmergencia String @db.VarChar(50) 
-  @@unique([idUsuarioDetalle ])
+  tipoSangre String
+  idContactoEmergencia Int
+  contactoEmergencia Usuario @relation("contactoEmergencia", fields: [ idContactoEmergencia], references: [idUsuario], onDelete: Cascade)
+  transfusionSanguinea String
+  donacionOrganos String
+  direccion String
+  edad String
+  @@unique([idUsuario , idContactoEmergencia ])
+}
+
+model Alergias {
+    idAlergia Int @id @unique @default(autoincrement())
+    nombre String
+    idUsuario Int
+}
+
+model MedicamentosActuales{
+  idMedicamentoActual Int @id @unique @default(autoincrement())
+  nombre String
+  motivo String
+  idUsuario Int
+}
+
+model CondicionMedica{
+  idCondicionMedica Int @id @unique @default(autoincrement())
+  nombre String
+  idUsuario Int
+}
+
+model MedicoTratante{
+  idMedicoTratante Int @id @unique @default(autoincrement())
+  nombre String
+  especialidad String
+  idUsuario Int
 }
