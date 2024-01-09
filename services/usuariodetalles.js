@@ -29,21 +29,34 @@ class UsuarioDetalleService {
  * @description Funcion que da una receta por id
  */
 async getUsuarioDetalles(id) {
-  const usuarioDetalle = await db.usuarioDetalles.findUnique({
+  const usuariodetalles = await db.usuarioDetalles.findMany({
     where: {
-      idUsuarioPerfil: Number(id),
+      idUsuario: Number(id),
+    },
+    include: {
+      contactoEmergencia: {
+        select: {
+          nombre: true,
+          correo: true,
+        },
+      },
+      Usuario: { // Include details from the Usuario model
+        select: {
+          nombre: true,
+          // Add other fields from Usuario that you want to include
+        },
+      },
     },
   });
-  return usuarioDetalle;
+  return usuariodetalles;
 }
-
 
   
   /**
    * @author Bernardo de la Sierra
    * @version 1.0.1
    * @license Gp
-   * @params {int} - idUsuarioPerfil Identificador unico del usuario
+   * @params {int} - idUsuario Identificador unico del usuario
    * @params {int} - numPoliza Numero de poliza del usuario
    * @params {int} - idContactoEmergencia Identificador unico del contacto de emergencia
    * @params {string} - tipoSangre es el tipo de sangre
@@ -53,19 +66,19 @@ async getUsuarioDetalles(id) {
    * @params {string} - edad que edad tiene
    * @description Funcion que crea los detalles de los usuarios
    */
-  async addUsuarioDetalle(idUsuarioPerfil, numPoliza,tipoSangre,idContactoEmergencia,transfusionSanguinea,donacionOrganos,direccion,edad) {
+  async addUsuarioDetalle(idUsuario, numPoliza,tipoSangre,idContactoEmergencia,transfusionSanguinea,donacionOrganos,direccion,edad) {
     // Creamos el contacto
   
     return await db.usuarioDetalles.create({
       data: {
-        idUsuarioPerfil: Number(idUsuarioPerfil),
+        idUsuario: Number(idUsuario),
         tipoSangre: tipoSangre,
         numPoliza: Number(numPoliza),
         idContactoEmergencia: Number(idContactoEmergencia),
         transfusionSanguinea: transfusionSanguinea,
         donacionOrganos: donacionOrganos,
         direccion: direccion, 
-        edad: edad,
+        edad: edad
       },
     });
     
@@ -75,20 +88,32 @@ async getUsuarioDetalles(id) {
    * @author Bernardo de la Sierra
    * @version 1.0.1
    * @license Gp
-   * @params {int} - id Identificador unico del usuario
-   * @params {string} - password Contraseña unica del usuario
+   * @params {int} - idUsuario Identificador unico del usuario
    * @params {int} - numPoliza Numero de poliza del usuario
-   * @params {string} - contactoEmergencia correo del contacto de Emergencia
-   * @description Funcion para actualizar un determinado usuario
+   * @params {int} - idContactoEmergencia Identificador unico del contacto de emergencia
+   * @params {string} - tipoSangre es el tipo de sangre
+   * @params {string} - transfusionSanguinea si acepta o no la transfusion sanguinea
+   * @params {string} - donacionOrganos  si acepta o no dar o aceptar donacion de organos
+   * @params {string} - direccion donde vive 
+   * @params {string} - edad que edad tiene
+   * @description Funcion que crea los detalles de los usuarios
    */
-    async updateUsuarioDetalle(id, { numPoliza, contactoEmergencia }) {
-      const usuario = await db.usuarioDetalles.update({
-        where: { idUsuarioPerfil: Number(id) },
-        data: { numPoliza, contactoEmergencia  },
+    async updateUsuarioDetalle(id, { numPoliza, idContactoEmergencia, tipoSangre,
+       transfusionSanguinea, donacionOrganos, direccion, edad}, nuevoId) {
+      const usuario = await db.usuarioDetalles.updateMany({
+        where: { idUsuario: Number(id) }, // Use idUsuario instead of idUsuariosDetalles
+        data: {
+          numPoliza,
+          idContactoEmergencia: nuevoId,
+          tipoSangre,
+          transfusionSanguinea,
+          donacionOrganos,
+          direccion,
+          edad
+        },
       });
       return usuario;
     }
-
 }
 
 module.exports = UsuarioDetalleService;

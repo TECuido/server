@@ -7,7 +7,7 @@ const llamadaRouter = require("./llamada.js");
 const medicamentoRouter = require("./medicamento.js");
 const recetaRouter = require("./receta.js");
 const usuarioDetalleRouter = require("./usuariodetalles.js");
-
+const alergiasRouter = require("./alergias.js");
 /**
  * @author Julio Meza y Bernardo de la Sierra
  * @version 1.0.1
@@ -25,6 +25,7 @@ function routerApi(app) {
   app.use("/recetas", recetaRouter);
   app.use("/usuariodetalles", usuarioDetalleRouter);
   app.use("/medicamentos", medicamentoRouter);
+  app.use("/alergias", alergiasRouter);
 }
 
 module.exports = routerApi;

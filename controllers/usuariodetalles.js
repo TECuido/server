@@ -67,7 +67,7 @@ class UsuarioDetallesController {
    * @author Bernardo de la Sierra
    * @version 1.0.1
    * @license Gp
-   * @params {int} - idUsuarioPerfil Identificador unico del usuario
+   * @params {int} - idUsuario Identificador unico del usuario
    * @params {int} - numPoliza Numero de poliza del usuario
    * @params {int} - idContactoEmergencia Identificador unico del contacto de emergencia
    * @params {string} - tipoSangre es el tipo de sangre
@@ -79,9 +79,9 @@ class UsuarioDetallesController {
     if (!Number.isInteger(parseInt(id))) {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }
-    console.log(contactoEmergencia);
+   
     const usuarioAgregado = await usuarioService.getUsuarioPorCorreo(contactoEmergencia);
-    console.log(usuarioAgregado);
+    
     // si no existe el usuario lanzar un error
       if (!usuarioAgregado) {
         return res
@@ -90,7 +90,8 @@ class UsuarioDetallesController {
       }
 
     try {
-      const usuario = await service.updateUsuarioDetalle(id, req.body);
+      
+      const usuario = await service.updateUsuarioDetalle(id, req.body,usuarioAgregado.idUsuario);
       return res.status(200).json({ data: usuario });
     } catch (err) {
       return res
@@ -103,7 +104,7 @@ class UsuarioDetallesController {
    * @author Bernardo de la Sierra
    * @version 1.0.1
    * @license Gp
-   * @params {int} - idUsuarioPerfil Identificador unico del usuario
+   * @params {int} - idUsuario Identificador unico del usuario
    * @params {int} - numPoliza Numero de poliza del usuario
    * @params {int} - idContactoEmergencia Identificador unico del contacto de emergencia
    * @params {string} - tipoSangre es el tipo de sangre
@@ -144,14 +145,14 @@ class UsuarioDetallesController {
           .json({ message: "El usuario no se encuentra registrado" });
       }
       
-      // const UsuarioDetalles =
-      //   await service.getUsuarioDetalles(idUsuarioActual);
-      //   console.log(UsuarioDetalles, "papa ") 
-      // if (UsuarioDetalles) {
-      //   return res
-      //     .status(400)
-      //     .json({ message: "El usuario ya registro un perfil de usuario" });
-      // }
+      const UsuarioDetalles =
+        await service.getUsuarioDetalles(idUsuarioActual);
+       
+      if (UsuarioDetalles) {
+        return res
+          .status(400)
+          .json({ message: "El usuario ya registro un perfil de usuario" });
+      }
       
       const usuariodetalleCreado = await service.addUsuarioDetalle(
         idUsuarioActual,
@@ -161,7 +162,7 @@ class UsuarioDetallesController {
         transfusionSanguinea,
         donacionOrganos,
         direccion,
-        edad,
+        edad
       );
 
       res.status(200).json(usuariodetalleCreado);
