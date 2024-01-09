@@ -1,5 +1,5 @@
-const AlergiasServices = require("../services/alergias.js");
-const service = new AlergiasServices();
+const AlergiasService = require("../services/alergias.js");
+const service = new AlergiasService();
 
 /**
  * @author Bernardo de la Sierra
@@ -16,7 +16,7 @@ class AlergiasController {
    * @version 1.0.1
    * @license Gp
    * @params Sin parametros
-   * @description Funcion que te da todos los alergiass
+   * @description Funcion que te da todos los alergias
    */
   async getAllAlergias(req, res) {
     try {
