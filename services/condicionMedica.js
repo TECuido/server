@@ -42,10 +42,11 @@ class CondicionMedicaSevice {
    * @version 1.0.1
    * @license Gp
    * @params {string} - nombre 
+* @params {int} - idUsuario identificador unico de la condicion medica de un usuario
    * @description Funcion que crea una condicionMedica
    */
   async addCondicionMedica({nombre,idUsuario}) {
-    return await db.condicionMedicas.create({
+    return await db.condicionMedica.create({
       data: {
         nombre: nombre,
         idUsuario: Number(idUsuario),

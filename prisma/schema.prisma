@@ -182,4 +182,5 @@ model MedicoTratante{
   idMedicoTratante Int @id @unique @default(autoincrement())
   nombre String
   especialidad String
+  idUsuario Int
 }

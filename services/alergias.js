@@ -42,6 +42,7 @@ class AlergiaService {
    * @version 1.0.1
    * @license Gp
    * @params {string} - nombre 
+   * @params {int} - idUsuario identificador unico de alergia
    * @description Funcion que crea una alergia
    */
   async addAlergia({nombre,idUsuario}) {
