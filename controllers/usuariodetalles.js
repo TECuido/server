@@ -76,6 +76,8 @@ class UsuarioDetallesController {
   async updateUsuarioDetalles(req, res) {
     const id = req.params.id;
     const {  contactoEmergencia } = req.body;
+    const { nombre} = req.body; 
+    console.log(nombre);
     if (!Number.isInteger(parseInt(id))) {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }
@@ -91,7 +93,7 @@ class UsuarioDetallesController {
 
     try {
       
-      const usuario = await service.updateUsuarioDetalle(id, req.body,usuarioAgregado.idUsuario);
+      const usuario = await service.updateUsuarioDetalle(id, req.body,usuarioAgregado.idUsuario,nombre);
       return res.status(200).json({ data: usuario });
     } catch (err) {
       return res
@@ -112,11 +114,12 @@ class UsuarioDetallesController {
    * @params {string} - donacionOrganos  si acepta o no dar o aceptar donacion de organos
    * @params {string} - direccion donde vive 
    * @params {string} - edad que edad tiene
+   * @params {string} - medicoTratante que medico nos esta tratando
    * @description Funcion que crea los detalles de los usuarios
    */
    async addUsuarioDetalles(req, res) {
     const idUsuarioActual = req.params.id;
-    const { numPoliza, tipoSangre,contactoEmergencia,transfusionSanguinea,donacionOrganos , direccion, edad} = req.body;
+    const { numPoliza, tipoSangre,contactoEmergencia,transfusionSanguinea,donacionOrganos , direccion, edad,medicoTratante} = req.body;
   
     try {
       //buscar si el usuario que se desea añadir como contacto existe
@@ -147,12 +150,13 @@ class UsuarioDetallesController {
       
       const UsuarioDetalles =
         await service.getUsuarioDetalles(idUsuarioActual);
-       
-      if (UsuarioDetalles) {
-        return res
-          .status(400)
-          .json({ message: "El usuario ya registro un perfil de usuario" });
-      }
+      
+        if (UsuarioDetalles && UsuarioDetalles.length > 0) {
+          console.log(UsuarioDetalles);
+          return res
+            .status(400)
+            .json({ message: "El usuario ya ha registrado un perfil de usuario" });
+        }
       
       const usuariodetalleCreado = await service.addUsuarioDetalle(
         idUsuarioActual,
@@ -162,7 +166,8 @@ class UsuarioDetallesController {
         transfusionSanguinea,
         donacionOrganos,
         direccion,
-        edad
+        edad, 
+        medicoTratante
       );
 
       res.status(200).json(usuariodetalleCreado);

@@ -64,9 +64,10 @@ async getUsuarioDetalles(id) {
    * @params {string} - donacionOrganos  si acepta o no dar o aceptar donacion de organos
    * @params {string} - direccion donde vive 
    * @params {string} - edad que edad tiene
+   * @params {string} - medicoTratante que medico nos esta tratando
    * @description Funcion que crea los detalles de los usuarios
    */
-  async addUsuarioDetalle(idUsuario, numPoliza,tipoSangre,idContactoEmergencia,transfusionSanguinea,donacionOrganos,direccion,edad) {
+  async addUsuarioDetalle(idUsuario, numPoliza,tipoSangre,idContactoEmergencia,transfusionSanguinea,donacionOrganos,direccion,edad,medicoTratante) {
     // Creamos el contacto
   
     return await db.usuarioDetalles.create({
@@ -78,7 +79,8 @@ async getUsuarioDetalles(id) {
         transfusionSanguinea: transfusionSanguinea,
         donacionOrganos: donacionOrganos,
         direccion: direccion, 
-        edad: edad
+        edad: edad,
+        medicoTratante: medicoTratante
       },
     });
     
@@ -98,10 +100,9 @@ async getUsuarioDetalles(id) {
    * @params {string} - edad que edad tiene
    * @description Funcion que crea los detalles de los usuarios
    */
-    async updateUsuarioDetalle(id, { numPoliza, idContactoEmergencia, tipoSangre,
-       transfusionSanguinea, donacionOrganos, direccion, edad}, nuevoId) {
+    async updateUsuarioDetalle(id, { numPoliza, idContactoEmergencia, tipoSangre, transfusionSanguinea, donacionOrganos, direccion, edad, medicoTratante }, nuevoId, nombre) {
       const usuario = await db.usuarioDetalles.updateMany({
-        where: { idUsuario: Number(id) }, // Use idUsuario instead of idUsuariosDetalles
+        where: { idUsuario: Number(id) },
         data: {
           numPoliza,
           idContactoEmergencia: nuevoId,
@@ -109,10 +110,21 @@ async getUsuarioDetalles(id) {
           transfusionSanguinea,
           donacionOrganos,
           direccion,
-          edad
+          edad,
+          medicoTratante
         },
       });
-      return usuario;
+    
+      // Actualizar el nombre en la tabla Usuario
+      const usuarioUpdate = await db.usuario.update({
+        where: { idUsuario: Number(id) },
+        data: {
+          nombre
+          // Puedes agregar otros campos de Usuario que deseas actualizar aquí
+        },
+      });
+    
+      return { usuario, usuarioUpdate };
     }
 }
 
