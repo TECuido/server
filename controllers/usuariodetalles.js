@@ -77,7 +77,7 @@ class UsuarioDetallesController {
     const id = req.params.id;
     const {  contactoEmergencia } = req.body;
     const { nombre} = req.body; 
-    console.log(nombre);
+   
     if (!Number.isInteger(parseInt(id))) {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }

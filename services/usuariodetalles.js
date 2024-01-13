@@ -115,15 +115,15 @@ async getUsuarioDetalles(id) {
         },
       });
     
-      // Actualizar el nombre en la tabla Usuario
+       // Actualizar el nombre en la tabla Usuario
       const usuarioUpdate = await db.usuario.update({
         where: { idUsuario: Number(id) },
         data: {
           nombre
-          // Puedes agregar otros campos de Usuario que deseas actualizar aquí
         },
+        
       });
-    
+      
       return { usuario, usuarioUpdate };
     }
 }
