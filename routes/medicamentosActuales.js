@@ -9,5 +9,5 @@ router.get("/", controller.getAllMedicamentosActuales);
 router.get("/:id", controller.getMedicamentosActualesUsuario);
 router.post("/", controller.addMedicamentosActuales);
 router.put("/:id", controller.updateMedicamentosActuales);
-
+router.delete("/:id", controller.deleteMedicamentosActuales);
 module.exports = router;

@@ -37,6 +37,22 @@ class AlergiaService {
     return alergia;
   }
 
+     /**
+   * @author Bernardo de la Sierra Rábago
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} -  idAlergia Identificador único del miembro en UsuarioGrupo
+   * @description Funcion para eliminar un usuario de un grupo
+   */
+
+     async deleteAlergia(idAlergia){
+      await db.alergias.delete({
+        where: {idAlergia : Number(idAlergia)},
+      })
+    }
+      
+    
+
   /**
    * @author Bernardo de la Sierra
    * @version 1.0.1
@@ -52,8 +68,11 @@ class AlergiaService {
         idUsuario: Number(idUsuario),
       },
     });
-  }
 
+    
+    
+  }
+  
 }
 
 module.exports = AlergiaService;

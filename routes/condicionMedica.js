@@ -8,5 +8,5 @@ const controller = new CondicionMedicaController();
 router.get("/", controller.getAllCondicionMedica);
 router.get("/:id", controller.getCondicionMedicaUsuario);
 router.post("/", controller.addCondicionMedica);
-
+router.delete("/:id", controller.deleteCondicionMedica);
 module.exports = router;
