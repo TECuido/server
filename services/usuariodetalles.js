@@ -74,7 +74,7 @@ async getUsuarioDetalles(id) {
       data: {
         idUsuario: Number(idUsuario),
         tipoSangre: tipoSangre,
-        numPoliza: Number(numPoliza),
+        numPoliza: numPoliza,
         idContactoEmergencia: Number(idContactoEmergencia),
         transfusionSanguinea: transfusionSanguinea,
         donacionOrganos: donacionOrganos,

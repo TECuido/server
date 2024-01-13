@@ -107,7 +107,7 @@ class UsuarioDetallesController {
    * @version 1.0.1
    * @license Gp
    * @params {int} - idUsuario Identificador unico del usuario
-   * @params {int} - numPoliza Numero de poliza del usuario
+   * @params {string} - numPoliza Numero de poliza del usuario
    * @params {int} - idContactoEmergencia Identificador unico del contacto de emergencia
    * @params {string} - tipoSangre es el tipo de sangre
    * @params {string} - transfusionSanguinea si acepta o no la transfusion sanguinea
