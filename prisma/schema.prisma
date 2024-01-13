@@ -148,7 +148,7 @@ model UsuarioDetalles {
   idUsuariosDetalles Int @id @unique @default(autoincrement())
   idUsuario Int
   Usuario Usuario @relation("Usuario", fields: [idUsuario ], references: [idUsuario], onDelete: Cascade)
-  numPoliza Int?
+  numPoliza String?
   tipoSangre String?
   idContactoEmergencia Int
   contactoEmergencia Usuario @relation("contactoEmergencia", fields: [ idContactoEmergencia], references: [idUsuario], onDelete: Cascade)
