@@ -8,5 +8,6 @@ const controller = new AlergiaController();
 router.get("/", controller.getAllAlergias);
 router.get("/:id", controller.getAlergiasUsuario);
 router.post("/", controller.addAlergias);
+router.delete("/:id", controller.deleteAlergia);
 
 module.exports = router;

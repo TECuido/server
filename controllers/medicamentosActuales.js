@@ -100,6 +100,29 @@ class MedicamentosActualesController {
         }
       }
 
+        /**
+   * @author Bernardo de la Sierra
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id Identificador unico de medicamento
+   * @description Funcion eliminar el medicamento
+   */
+  async deleteMedicamentosActuales(req, res) {
+    const id = req.params.id;
+    if (!Number.isInteger(parseInt(id))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+    try {
+      await service.deleteMedicamentosActuales(id);
+      return res
+        .status(200)
+        .json({ message: "Se ha eliminado el medicamento correctamente" });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al obtener el medicamento. Err: ${err}` });
+    }
+  }
       
 }
 

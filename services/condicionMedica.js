@@ -54,6 +54,21 @@ class CondicionMedicaSevice {
     });
   }
 
+       /**
+   * @author Bernardo de la Sierra Rábago
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - idCondicionMedica Identificador único del miembro en UsuarioGrupo
+   * @description Funcion para eliminar un usuario de un grupo
+   */
+
+       async deleteCondicionMedica(idCondicionMedica){
+        await db.condicionMedica.delete({
+          where: {idCondicionMedica : Number(idCondicionMedica)},
+        })
+      }
+
+
 }
 
 module.exports = CondicionMedicaSevice;

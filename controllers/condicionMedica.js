@@ -74,6 +74,31 @@ class CondicionMedicaController {
       res.status(500).json({ error: error.message });
     }
   }
+
+          /**
+   * @author Bernardo de la Sierra
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id Identificador unico de la condicion fisica
+   * @description Funcion eliminar de la condicion medica
+   */
+          async deleteCondicionMedica(req, res) {
+            const id = req.params.id;
+            if (!Number.isInteger(parseInt(id))) {
+              return res.status(500).json({ message: "El Id necesita ser entero" });
+            }
+            try {
+              await service.deleteCondicionMedica(id);
+              return res
+                .status(200)
+                .json({ message: "Se ha eliminado el medicamento correctamente" });
+            } catch (err) {
+              return res
+                .status(500)
+                .json({ message: `Error al obtener el medicamento. Err: ${err}` });
+            }
+          }
+              
 }
 
 module.exports = CondicionMedicaController;

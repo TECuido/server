@@ -77,6 +77,31 @@ class AlergiasController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  /**
+   * @author Bernardo de la Sierra
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id Identificador unico de la alergia
+   * @description Funcion eliminar la alergia
+   */
+  async deleteAlergia(req, res) {
+    const id = req.params.id;
+    if (!Number.isInteger(parseInt(id))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+    try {
+      await service.deleteAlergia(id);
+      return res
+        .status(200)
+        .json({ message: "Se ha eliminado una alergia correctamente" });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al obtener la alergia. Err: ${err}` });
+    }
+  }
+
 }
 
 module.exports = AlergiasController;

@@ -67,13 +67,27 @@ class MedicamentosActualesSevice {
    * @params {int} - idUsuario identificador unico de medicamento
    * @description Funcion para actualizar un determinado usuario
    */
-   async updateMedicamentosActuales(id, { nombre,motivo,idUsuario }) {
+   async updateMedicamentosActuales(id, { nombre,idUsuario }) {
     const usuario = await db.medicamentosActuales.update({
       where: {   idMedicamentoActual: Number(id) },
-      data: { nombre,motivo,idUsuario },
+      data: { nombre,idUsuario },
     });
     return usuario;
   }
+
+      /**
+   * @author Bernardo de la Sierra Rábago
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} -  idMedicamentoActual Identificador único del miembro en UsuarioGrupo
+   * @description Funcion para eliminar un usuario de un grupo
+   */
+
+      async deleteMedicamentosActuales(idMedicamentoActual){
+        await db.medicamentosActuales.delete({
+          where: {idMedicamentoActual : Number(idMedicamentoActual)},
+        })
+      }
 
 }
 
