@@ -16,7 +16,7 @@ const controller = new UsuarioDetallesController();
 // Ruteo de la parte de usuario
 router.get("/", controller.getAllUsuarioDetalles);
 router.get("/:id", controller.getUsuarioDetalles);
-router.post("/:id", controller.addUsuarioDetalles);
+router.post("/:id", controller.addUsuarioDetalles); 
 router.put("/:id",controller.updateUsuarioDetalles);
 
 // router.get(
