@@ -14,8 +14,5 @@ const getAlergiaSchema = Joi.object({
     id: id.required()
 })
 
-const deleteAlergiaSchema = Joi.object({
-    id: id.required()
-})
 
 module.exports = {createAlergiaSchema,getAlergiaSchema,deleteAlergiaSchema  }
