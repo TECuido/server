@@ -10,7 +10,7 @@ const { createAlergiaSchema, getAlergiaSchema, deleteAlergiaSchema } = require("
 const controller = new AlergiaController();
 
 // Ruteo de la parte de Alergia
-router.get("/", isAuthenticated, validatorHandler(getAlergiaSchema, "params"), controller.getAllAlergias);
+router.get("/", isAuthenticated, controller.getAllAlergias);
 router.get("/:id", isAuthenticated, validatorHandler(getAlergiaSchema, "params"), controller.getAlergiasUsuario);
 router.post("/", isAuthenticated, validatorHandler(createAlergiaSchema, "body"), controller.addAlergias);
 router.delete("/:id", isAuthenticated, validatorHandler(deleteAlergiaSchema,"params"), controller.deleteAlergia);
