@@ -20,9 +20,13 @@ const getGrupoSchema = Joi.object({
     id: id.required()
 })
 
+const updateGrupoSchema = Joi.object({
+    nombre: nombre.required()
+})
+
 const deleteMiembroSchema = Joi.object({
     idGrupo: id.required(),
     idMiembro: id.required()
 })
 
-module.exports = { createGrupoSchema, createMiembroSchema, getGrupoSchema, deleteMiembroSchema}
+module.exports = { createGrupoSchema, createMiembroSchema, updateGrupoSchema, getGrupoSchema, deleteMiembroSchema}
