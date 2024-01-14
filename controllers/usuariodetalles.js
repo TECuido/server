@@ -76,7 +76,7 @@ class UsuarioDetallesController {
   async updateUsuarioDetalles(req, res) {
     const id = req.params.id;
     const {  contactoEmergencia } = req.body;
-    const { nombre} = req.body; 
+   
     console.log(req.body)
     if (!Number.isInteger(parseInt(id))) {
       return res.status(500).json({ message: "El Id necesita ser entero" });
@@ -93,7 +93,7 @@ class UsuarioDetallesController {
 
     try {
       
-      const usuario = await service.updateUsuarioDetalle(id, req.body,usuarioAgregado.idUsuario,nombre);
+      const usuario = await service.updateUsuarioDetalle(id, req.body,usuarioAgregado.idUsuario);
       return res.status(200).json({ data: usuario });
     } catch (err) {
       return res
