@@ -100,7 +100,7 @@ async getUsuarioDetalles(id) {
    * @params {string} - edad que edad tiene
    * @description Funcion que crea los detalles de los usuarios
    */
-    async updateUsuarioDetalle(id, { numPoliza, tipoSangre, transfusionSanguinea, donacionOrganos, direccion, edad, medicoTratante }, nuevoId) {
+    async updateUsuarioDetalle(id, { numPoliza, tipoSangre, transfusionSanguinea, donacionOrganos, direccion, edad, medicoTratante }, nuevoId, nombre) {
       const usuario = await db.usuarioDetalles.updateMany({
         where: { idUsuario: Number(id) },
         data: {
@@ -115,16 +115,15 @@ async getUsuarioDetalles(id) {
         },
       });
     
-      //  // Actualizar el nombre en la tabla Usuario
-      // const usuarioUpdate = await db.usuario.update({
-      //   where: { idUsuario: Number(id) },
-      //   data: {
-      //     nombre
-      //   },
-        
-      // });
+       // Actualizar el nombre en la tabla Usuario
+      const usuarioUpdate = await db.usuario.update({
+        where: { idUsuario: Number(id) },
+        data: {
+          nombre
+        },  
+      });
       
-      return { usuario};
+      return { usuario, usuarioUpdate };
     }
 }
 
