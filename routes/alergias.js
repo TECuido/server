@@ -9,8 +9,12 @@ const { getAlergiasSchema, createAlergiasSchema } = require("../schemas/alergias
 // Ruteo de la parte de Alergia
 router.get("/", controller.getAllAlergias);// Luego se elimina
 router.get("/:id", isAuthenticated, validatorHandler(getAlergiasSchema, "params"), controller.getAlergiasUsuario);
-router.post("/", controller.addAlergias);
-router.delete("/:id", controller.deleteAlergia);
+router.post("/", controller.addAlergias, validatorHandler(createAlergiasSchema, "body"));
+router.delete("/:id", isAuthenticated, validatorHandler(getAlergiaSchema,"params"), controller.deleteAlergia);
 
 module.exports = router;
 
+// router.get("/:id", isAuthenticated, validatorHandler(getContactoSchema, "params"), controller.getContacto);
+// router.get("/usuario/:id", isAuthenticated, validatorHandler(getContactoSchema, "params"), controller.getAllContactosUsuario);
+// router.delete("/:idAgrega/:idAgregado", isAuthenticated, validatorHandler(deleteContactoSchema, "params"), controller.deleteContacto);
+// router.post("/usuario/:id", validatorHandler(createContactoSchema, "body"), controller.addContacto);
