@@ -4,7 +4,7 @@ const validatorHandler = require("../middlewares/validator.js");
 
 const router = express.Router();
 const AlergiaController = require("../controllers/alergias.js");
-const { createAlergiaSchema, getAlergiaSchema, deleteAlergiaSchema } = require("../schemas/alergia.schema.js");
+const { createAlergiaSchema, getAlergiaSchema } = require("../schemas/alergia.schema.js");
 
 
 const controller = new AlergiaController();
