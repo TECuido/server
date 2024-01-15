@@ -1,19 +1,16 @@
 const express = require("express");
+const router = express.Router();
 const {isAuthenticated} = require("../middlewares/auth.js")
 const validatorHandler = require("../middlewares/validator.js");
-
-const router = express.Router();
 const AlergiaController = require("../controllers/alergias.js");
-const { createAlergiaSchema, getAlergiaSchema } = require("../schemas/alergia.schema.js");
-
-
 const controller = new AlergiaController();
+const { getAlergiasSchema, createAlergiasSchema } = require("../schemas/alergias.schema.js");
 
 // Ruteo de la parte de Alergia
-router.get("/", isAuthenticated, controller.getAllAlergias);
-router.get("/:id", isAuthenticated, validatorHandler(getAlergiaSchema, "params"), controller.getAlergiasUsuario);
-router.post("/", isAuthenticated, validatorHandler(createAlergiaSchema, "body"), controller.addAlergias);
-router.delete("/:id", isAuthenticated, validatorHandler(getAlergiaSchema,"params"), controller.deleteAlergia);
-
+router.get("/", controller.getAllAlergias);// Luego se elimina
+router.get("/:id", isAuthenticated, validatorHandler(getAlergiasSchema, "params"), controller.getAlergiasUsuario);
+router.post("/", controller.addAlergias);
+router.delete("/:id", controller.deleteAlergia);
 
 module.exports = router;
+
