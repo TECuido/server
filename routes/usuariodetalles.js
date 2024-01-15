@@ -8,13 +8,6 @@ const UsuarioDetallesController = require("../controllers/usuariodetalles.js");
 const { createUsuarioDetallesSchema, getUsuarioDetallesSchema, putUsuarioDetallesSchema } = require("../schemas/usuarioDetalles.schema.js");
 
 
-// const validatorHandler = require("../middlewares/validator.js");
-// const {
-//   getUsuarioSchema,
-//   createUsuarioSchema,
-//   updateTokenSchema,
-// } = require("../schemas/usuario.schema.js");
-
 const controller = new UsuarioDetallesController();
 
 // Ruteo de la parte de usuario

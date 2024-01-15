@@ -14,14 +14,14 @@ const medicoTratante = Joi.string();
 //Create UsuarioDetalles -> Post ->  (numPoliza,tipoSangre,contactoEmergencia,transfusionSanguinea,donacionOrganos,direccion
 //edad,medicoTratante)
 const createUsuarioDetallesSchema = Joi.object({
-    numPoliza: numPoliza.required(),
-    tipoSangre: tipoSangre.required(),
+    numPoliza: numPoliza,
+    tipoSangre: tipoSangre,
     contactoEmergencia: contactoEmergencia.required(),
-    transfusionSanguinea: transfusionSanguinea.required(),
-    donacionOrganos: donacionOrganos.required(),
-    direccion: direccion.required(),
-    edad: edad.required(),
-    medicoTratante: medicoTratante.required()
+    transfusionSanguinea: transfusionSanguinea,
+    donacionOrganos: donacionOrganos,
+    direccion: direccion,
+    edad: edad,
+    medicoTratante: medicoTratante
 })
 // GetUsuarioDetalles -> Get -> (id)
 const getUsuarioDetallesSchema = Joi.object({
@@ -30,7 +30,7 @@ const getUsuarioDetallesSchema = Joi.object({
 //PutUsuarioDetalles -> Put ->  (Nombre, numPoliza,tipoSangre,contactoEmergencia,transfusionSanguinea,donacionOrganos,direccion
 //edad,medicoTratante)
 const putUsuarioDetallesSchema = Joi.object({
-    nombre: nombre,
+    
     numPoliza: numPoliza,
     tipoSangre: tipoSangre,
     contactoEmergencia: contactoEmergencia,
@@ -38,7 +38,8 @@ const putUsuarioDetallesSchema = Joi.object({
     donacionOrganos: donacionOrganos,
     direccion: direccion,
     edad: edad,
-    medicoTratante: medicoTratante
+    medicoTratante: medicoTratante,
+    nombre: nombre
 })
 
 module.exports = {createUsuarioDetallesSchema, getUsuarioDetallesSchema, putUsuarioDetallesSchema }
