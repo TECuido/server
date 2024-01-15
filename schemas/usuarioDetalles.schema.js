@@ -16,7 +16,7 @@ const medicoTratante = Joi.string();
 const createUsuarioDetallesSchema = Joi.object({
     numPoliza: numPoliza,
     tipoSangre: tipoSangre,
-    contactoEmergencia: contactoEmergencia,
+    contactoEmergencia: contactoEmergencia.required(),
     transfusionSanguinea: transfusionSanguinea,
     donacionOrganos: donacionOrganos,
     direccion: direccion,

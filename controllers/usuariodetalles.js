@@ -170,7 +170,8 @@ class UsuarioDetallesController {
         medicoTratante
       );
 
-      res.status(200).json(usuariodetalleCreado);
+      res.status(200).json({data: usuariodetalleCreado});
+    
 
     } catch (error) {
       res.status(500).json({ error: error.message });
