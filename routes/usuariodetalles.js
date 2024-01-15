@@ -19,8 +19,8 @@ const controller = new UsuarioDetallesController();
 
 // Ruteo de la parte de usuario
 router.get("/", isAuthenticated, controller.getAllUsuarioDetalles);
-router.get("/:id",  isAuthenticated, validatorHandler(getUsuarioDetallesSchema, "params"), controller.getUsuarioDetallesSchema);
-router.post("/:id", isAuthenticated, validatorHandler(createUsuarioDetallesSchema, "body"), validatorHandler(getUsuarioDetallesSchema,"params", controller.createUsuarioDetallesSchema)); 
+router.get("/:id",  isAuthenticated, validatorHandler(getUsuarioDetallesSchema, "params"), controller.getUsuarioDetalles);
+router.post("/:id", isAuthenticated, validatorHandler(createUsuarioDetallesSchema, "body"), validatorHandler(getUsuarioDetallesSchema,"params", controller.addUsuarioDetalles)); 
 router.put("/:id",isAuthenticated,  validatorHandler(putUsuarioDetallesSchema, "body"), validatorHandler(getUsuarioDetallesSchema, "params"),controller.updateUsuarioDetalles);
 
 // router.get(
