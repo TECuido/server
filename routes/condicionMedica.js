@@ -12,7 +12,7 @@ const { createCondicionMedicaSchema, getCondicionMedicaSchema } = require("../sc
 const controller = new CondicionMedicaController();
 
 // Ruteo de la parte de Condicion medica
-router.get("/", controller.getAllCondicionMedica);
+router.get("/", isAuthenticated(), controller.getAllCondicionMedica);
 router.get("/:id", isAuthenticated(), validatorHandler(getCondicionMedicaSchema, "params"), controller.getCondicionMedicaUsuario);
 router.post("/", isAuthenticated(), validatorHandler(createCondicionMedicaSchema,"body"),controller.addCondicionMedica);
 router.delete("/:id", isAuthenticated(), validatorHandler(getCondicionMedicaSchema, "params"), controller.deleteCondicionMedica);
