@@ -13,7 +13,7 @@ const controller = new AlergiaController();
 router.get("/", isAuthenticated, controller.getAllAlergias);
 router.get("/:id", isAuthenticated, validatorHandler(getAlergiaSchema, "params"), controller.getAlergiasUsuario);
 router.post("/", isAuthenticated, validatorHandler(createAlergiaSchema, "body"), controller.addAlergias);
-router.delete("/:id", isAuthenticated, validatorHandler(deleteAlergiaSchema,"params"), controller.deleteAlergia);
+router.delete("/:id", isAuthenticated, validatorHandler(getAlergiaSchema,"params"), controller.deleteAlergia);
 
 
 module.exports = router;
