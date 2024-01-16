@@ -93,9 +93,10 @@ class ContactoService {
    * @params {int} - id del usuario agregado como contacto
    * @description Funcion que da un contacto a partir de los usuarios involucrados
    */
-  async getContactoPorTelefono(telefono) {
+  async getContactoPorTelefono(idAgrega, telefono) {
     const contacto = await db.contacto.findFirst({
       where: {
+        idAgrega: Number(idAgrega),
         telefono
       },
     });
