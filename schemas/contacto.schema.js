@@ -1,10 +1,14 @@
 const Joi = require('joi')
 
-const correo = Joi.string();
+const nombre = Joi.string();
+const correo = Joi.string().email();
+const telefono = Joi.string().regex(/^[0-9]{10}$/);
 const id = Joi.string()
 
 const createContactoSchema = Joi.object({
-    correo: correo.required()
+    nombre: nombre.required(),
+    correo: correo,
+    telefono: telefono.required()
 })
 
 const getContactoSchema = Joi.object({
@@ -12,8 +16,7 @@ const getContactoSchema = Joi.object({
 })
 
 const deleteContactoSchema = Joi.object({
-    idAgrega: id.required(),
-    idAgregado: id.required()
+    id: id.required(),
 })
 
 module.exports = { createContactoSchema, getContactoSchema, deleteContactoSchema }

@@ -85,7 +85,7 @@ class ContactoController {
   }
 
   /**
-   * @author Bernardo de la Sierra
+   * @author Julio Meza
    * @version 2.0.1
    * @license Gp
    * @params {int} - idAgrega Identificador del usuario que agrega
@@ -93,19 +93,13 @@ class ContactoController {
    * @description Funcion eliminar el contacto
    */
   async deleteContacto(req, res) {
-    const { idAgrega, idAgregado } = req.params;
-    if (!Number.isInteger(parseInt(idAgrega))) {
-      return res.status(500).json({ message: "El Id necesita ser entero" });
-    }
-    if (!Number.isInteger(parseInt(idAgregado))) {
+    const id = req.params.id;
+    if (!Number.isInteger(parseInt(id))) {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }
 
     try {
-      const contacto = await service.getContactoPorUsuarios(
-        idAgrega,
-        idAgregado
-      );
+      const contacto = await service.getContacto(id);
       if (!contacto) {
         return res.status(404).json({ message: "No se encontró el contacto" });
       }
@@ -126,60 +120,61 @@ class ContactoController {
    * @version 2.0.1
    * @license Gp
    * @params {int} - idUsuarioActual Identificador del usuario que esta registrando el contacto
-   * @params {string} - correo es el correo del usuario a añadir en la relacion
-   * @description  Funcion que crea las relaciones de contactos, en la segunda version se agrego el contacto
+   * @params {string?} - correo del contacto
+   * @params {string} - telefono del contacto
+   * @description  Agregar un contacto, se debe ingresa al menos uno de los siguientes: correo, teléfono
    */
   async addContacto(req, res) {
     const idUsuarioActual = req.params.id;
-    const { correo } = req.body;
+    const { telefono } = req.body;
     
     try {
-      //buscar si el usuario que se desea añadir como contacto existe
-      const usuarioAgregado = await usuarioService.getUsuarioPorCorreo(correo);
 
-      //si no existe el usuario lanzar un error
-      if (!usuarioAgregado) {
+      //Si el usuario que agrega el contacto no está registrado lanzar error
+      const usuarioActual = await usuarioService.getUsuario(idUsuarioActual);
+
+      if(!usuarioActual){
+      return res
+        .status(400)
+        .json({ message: "El usuario no se encuentra registrado" });
+      }
+
+      //buscar que no se haya registrado ya el contacto
+      const contacto = await service.getContactoPorTelefono(telefono);
+
+      if (contacto) {
         return res
           .status(400)
-          .json({ message: "El usuario no se encuentra registrado" });
+          .json({ message: "Ya se ha registrado un contacto con este número"});
+      }
+
+      //buscar si el usuario que se desea añadir como contacto existe
+      //la verificación se hace por el número de teléfono
+      const usuarioTelefono = await usuarioService.getUsuarioPorTelefono(telefono)
+
+      //si no existe el usuario crear el contacto sin idAgregado
+      if (!usuarioTelefono) {
+        //crear el contacto
+        const contactoCreado = await service.addContacto(
+          idUsuarioActual,
+          req.body
+        );
+
+        return res.status(200).json(contactoCreado)
       }
 
       //si el usuario que se agrega como contacto es el mismo usuario lanzar un error
-      if (usuarioAgregado.idUsuario == idUsuarioActual) {
+      if (usuarioTelefono.idUsuario == idUsuarioActual) {
         return res
           .stauts(400)
           .json({ message: "No se puede agregar el mismo usuario" });
       }
 
-      const usuarioActual = await usuarioService.getUsuario(idUsuarioActual);
-      if(!usuarioActual){
-        return res
-          .status(400)
-          .json({ message: "El usuario no se encuentra registrado" });
-      }
-
-      if(usuarioActual.idTipo == 2 && usuarioAgregado.idTipo == 2){
-        return res
-        .status(400)
-        .json({ message: "Solamente puedes agregar pacientes desde un perfil de médico" });
-      }
-
-      //buscar que no se haya registrado ya el contacto
-      const contacto = await service.getContactoPorUsuarios(
-        idUsuarioActual,
-        usuarioAgregado.idUsuario
-      );
-
-      if (contacto) {
-        return res
-          .status(400)
-          .json({ message: "El contacto ya se ha registrado" });
-      }
-
       //crear el contacto
       const contactoCreado = await service.addContacto(
         idUsuarioActual,
-        usuarioAgregado.idUsuario
+        req.body,
+        usuarioTelefono.idUsuario
       );
 
       res.status(200).json(contactoCreado);

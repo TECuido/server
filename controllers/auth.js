@@ -77,12 +77,13 @@ class AuthController {
    * @description  Funcion para registrar
    */
   async Register(req, res) {
-    const { correo } = req.body;
+    const { correo, telefono } = req.body;
 
     try {
       //buscar si el correo está registrado para evitar registrar de nuevo
       const usuarioCorreo = await usuarioService.getUsuarioPorCorreo(correo);
-      if (usuarioCorreo) {
+      const usuarioTelefono = await usuarioService.getUsuarioPorTelefono(telefono);
+      if (usuarioCorreo || usuarioTelefono) {
         return res
           .status(400)
           .json({ message: "El usuario ya se encuentra registrado" });
