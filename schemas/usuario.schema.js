@@ -13,6 +13,7 @@ const id = Joi.string()
 const createUsuarioSchema = Joi.object({
     nombre: nombre.required(),
     correo: correo.required(),
+    telefono: telefono.required(),
     password: password.required(),
     idTipo: idTipo.required()
 })
