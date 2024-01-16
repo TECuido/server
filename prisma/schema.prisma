@@ -14,7 +14,8 @@ datasource db {
 model Usuario {
   idUsuario Int @id @unique @default(autoincrement())
   nombre String @db.VarChar(100)
-  correo String @db.VarChar(50) @unique
+  correo String @db.VarChar(100) @unique
+  telefono String @db.VarChar(20) @unique
   password String @db.VarChar(100)
   idTipo Int
   token String? @db.VarChar(64)
@@ -25,13 +26,11 @@ model Usuario {
   usuarioAgrega Contacto[] @relation("usuarioAgrega")
   usuarioAgregado Contacto[] @relation("usuarioAgregado")
   creadorGrupo Grupo[] @relation("usuarioGrupo")
-  miembroGrupo UsuarioGrupo[] @relation("miembroGrupo")
   usuarioEmisor Llamada[] @relation("usuarioEmisor")
   usuarioReceptor Llamada[] @relation("usuarioReceptor")
   pacienteReceta Receta[] @relation("pacienteReceta")
   medicoReceta Receta[] @relation("medicoReceta")
   Usuario UsuarioDetalles[] @relation("Usuario")
-  contactoEmergencia UsuarioDetalles[]  @relation("contactoEmergencia")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -69,10 +68,15 @@ model Emergencia{
 
 model Contacto{
   idContacto Int @id @unique @default(autoincrement())
+  nombre String @db.VarChar(100)
+  correo String? @db.VarChar(100)
+  telefono String? @db.VarChar(20)
   idAgrega Int
   usuarioAgrega Usuario @relation("usuarioAgrega", fields: [idAgrega], references: [idUsuario], onDelete: Cascade)
-  idAgregado Int
-  usuarioAgregado Usuario @relation("usuarioAgregado", fields: [idAgregado], references: [idUsuario], onDelete: Cascade)
+  idAgregado Int?
+  usuarioAgregado Usuario? @relation("usuarioAgregado", fields: [idAgregado], references: [idUsuario], onDelete: Cascade)
+  miembroGrupo UsuarioGrupo[] @relation("miembroGrupo")
+  contactoEmergencia UsuarioDetalles[] @relation("contactoEmergencia")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@unique([idAgrega, idAgregado])
@@ -91,7 +95,7 @@ model Grupo{
 model UsuarioGrupo{
   idContactoGrupo Int @id @unique @default(autoincrement())
   idMiembro Int
-  miembroGrupo Usuario @relation("miembroGrupo", fields: [idMiembro], references: [idUsuario], onDelete: Cascade)
+  miembroGrupo Contacto @relation("miembroGrupo", fields: [idMiembro], references: [idContacto], onDelete: Cascade)
   idGrupo Int
   grupo Grupo @relation("grupo", fields: [idGrupo], references: [idGrupo], onDelete: Cascade)
   createdAt DateTime @default(now())
@@ -151,7 +155,7 @@ model UsuarioDetalles {
   numPoliza String?
   tipoSangre String?
   idContactoEmergencia Int
-  contactoEmergencia Usuario @relation("contactoEmergencia", fields: [ idContactoEmergencia], references: [idUsuario], onDelete: Cascade)
+  contactoEmergencia Contacto @relation("contactoEmergencia", fields: [ idContactoEmergencia], references: [idContacto], onDelete: Cascade)
   transfusionSanguinea String?
   donacionOrganos String?
   direccion String?

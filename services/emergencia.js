@@ -126,6 +126,52 @@ class EmergenciaService {
    * @version 1.0.1
    * @license Gp
    * @params {int} - id de la emergencia
+   * @params {object} - datos de la emergencia
+   */
+  async updateEmergencia(idEmergencia, {
+    tipo,
+    descripcion,
+    longitud,
+    latitud
+  }) {
+    const result = await db.emergencia.update({
+      where: {
+        idEmergencia: idEmergencia
+      },
+      data: {
+        tipo: tipo,
+        descripcion: descripcion,
+        longitud: longitud,
+        latitud: latitud
+      },
+    });
+    return result;
+  }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id de la emergencia
+   * @params {int} - id del receptor
+   * @description Funcion para obtener todos los receptores de una emergencia
+   */
+  async getEmergenciaReceptores (
+    idEmergencia
+  ) {
+    const result = await db.usuarioEmergencia.findMany({
+      where: {
+        idEmergencia: idEmergencia
+      },
+    });
+    return result;
+  }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id de la emergencia
    * @params {int} - id del receptor
    * @description Funcion para agregar un receptor de la emergencia
    */
@@ -138,6 +184,27 @@ class EmergenciaService {
         idEmergencia: idEmergencia,
         idReceptor: idReceptor
       },
+    });
+    return result;
+  }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id de la emergencia
+   * @params {int} - id del receptor
+   * @description Funcion para remover la emergencia a un receptor
+   */
+  async removeEmergenciaReceptor (
+    idEmergencia,
+    idReceptor
+  ) {
+    const result = await db.usuarioEmergencia.delete({
+      where: {
+        idEmergencia: idEmergencia,
+        idReceptor: idReceptor
+      }
     });
     return result;
   }

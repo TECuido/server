@@ -15,4 +15,4 @@ const getAlergiaSchema = Joi.object({
 })
 
 
-module.exports = {createAlergiaSchema,getAlergiaSchema  }
+module.exports = {createAlergiaSchema, getAlergiaSchema}
