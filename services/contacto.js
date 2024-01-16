@@ -50,13 +50,15 @@ class ContactoService {
         idAgrega: Number(idAgrega),
       },
       select: {
+        idContacto: true,
+        nombre: true,
+        correo:true,
+        telefono: true,
         usuarioAgregado: {
           select: {
-            idUsuario: true,
-            nombre: true,
-            correo: true,
-          },
-        },
+            idUsuario: true
+          }
+        }
       },
     });
     return contactos;
@@ -82,6 +84,25 @@ class ContactoService {
     return contacto;
   }
 
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id del usuario que agrega el contacto
+   * @params {int} - id del usuario agregado como contacto
+   * @description Funcion que da un contacto a partir de los usuarios involucrados
+   */
+  async getContactoPorTelefono(telefono) {
+    const contacto = await db.contacto.findFirst({
+      where: {
+        telefono
+      },
+    });
+    return contacto;
+  }
+
+
   /**
    * @author Bernardo de la Sierra
    * @version 1.0.1
@@ -91,7 +112,9 @@ class ContactoService {
    */
   async deleteContacto(id) {
     await db.contacto.delete({
-      where: { idContacto: Number(id) },
+      where: { 
+        idContacto: Number(id) 
+      },
     });
   }
 
@@ -103,12 +126,23 @@ class ContactoService {
    * @params {int} - usuario2 Identificador del usuario que vamos a mandar
    * @description Funcion que crea las relaciones de contactos
    */
-  async addContacto(idUsuarioActual, idusuarioAgregado) {
+  async addContacto(
+    idUsuarioActual, 
+    {
+      nombre, 
+      correo, 
+      telefono, 
+    }, 
+    idUsuarioAgregado = null
+  ) {
     // Creamos el contacto
     return await db.contacto.create({
       data: {
         idAgrega: Number(idUsuarioActual),
-        idAgregado: Number(idusuarioAgregado),
+        nombre,
+        correo,
+        telefono,
+        idAgregado: idUsuarioAgregado ? Number(idUsuarioAgregado) : idUsuarioAgregado
       },
     });
   }

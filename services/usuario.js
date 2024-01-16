@@ -53,14 +53,29 @@ class UsuarioService {
    * @author Julio Emmanuel Meza Rangel
    * @version 1.0.1
    * @license Gp
-   * @params {string} - correo correo del usuario
+   * @params {string} - correo del usuario
    * @description Funcion que regresa el usuario que tiene un determinado correo
    */
   async getUsuarioPorCorreo(correo) {
-
     const usuario = await db.usuario.findUnique({
       where: {
         correo: correo.toLowerCase(),
+      },
+    });
+    return usuario;
+  }
+
+  /**
+   * @author Julio Emmanuel Meza Rangel
+   * @version 1.0.1
+   * @license Gp
+   * @params {string} - telefono del usuario
+   * @description Funcion que regresa el usuario que tiene un determinado telefono
+   */
+  async getUsuarioPorTelefono(telefono) {
+    const usuario = await db.usuario.findUnique({
+      where: {
+        telefono: telefono.toLowerCase(),
       },
     });
     return usuario;
@@ -76,7 +91,13 @@ class UsuarioService {
    * @params {int} - id del tipo
    * @description Funcion para darle registro a determinado usuario
    */
-  async createUsuario({ nombre, correo, password, idTipo }) {
+  async createUsuario({ 
+    nombre, 
+    correo, 
+    password, 
+    idTipo,
+    telefono
+  }) {
     const result = await db.usuario.create({
       data: {
         nombre: nombre,
