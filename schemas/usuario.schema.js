@@ -7,8 +7,10 @@ const password = Joi.string()
                 .max(64)
 const token = Joi.string().min(32);
 const idTipo = Joi.number().integer();
+const telefono = Joi.string().regex(/^[0-9]{10}$/)
 
 const id = Joi.string()
+
 
 const createUsuarioSchema = Joi.object({
     nombre: nombre.required(),
