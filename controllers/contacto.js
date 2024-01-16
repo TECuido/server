@@ -140,7 +140,7 @@ class ContactoController {
       }
 
       //buscar que no se haya registrado ya el contacto
-      const contacto = await service.getContactoPorTelefono(telefono);
+      const contacto = await service.getContactoPorTelefono(idUsuarioActual, telefono);
 
       if (contacto) {
         return res
