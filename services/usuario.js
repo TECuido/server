@@ -81,6 +81,7 @@ class UsuarioService {
       data: {
         nombre: nombre,
         correo: correo.toLowerCase(),
+        telefono: telefono,
         password: bcrypt.hashSync(password, 12),
         idTipo: Number(idTipo)
       },
@@ -102,7 +103,7 @@ class UsuarioService {
     correo = correo.toLowerCase()
     const usuario = await db.usuario.update({
       where: { idUsuario: Number(id) },
-      data: { nombre, correo, password },
+      data: { nombre, correo, password, telefono },
     });
     return usuario;
   }
