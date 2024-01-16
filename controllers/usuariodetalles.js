@@ -119,27 +119,10 @@ class UsuarioDetallesController {
    */
    async addUsuarioDetalles(req, res) {
     const idUsuarioActual = req.params.id;
-    const { numPoliza, tipoSangre,contactoEmergencia,transfusionSanguinea,donacionOrganos , direccion, edad,medicoTratante} = req.body;
+    const { numPoliza, tipoSangre,idContactoEmergencia,transfusionSanguinea,donacionOrganos , direccion, edad,medicoTratante} = req.body;
   
     try {
-      //buscar si el usuario que se desea añadir como contacto existe
-      const usuarioAgregado =
-        await usuarioService.getUsuarioPorCorreo(contactoEmergencia);
-
-      //si no existe el usuario lanzar un error
-      if (!usuarioAgregado) {
-        return res
-          .status(400)
-          .json({ message: "El correo no se encuentra registrado" });
-      }
-
-      //si el usuario que se agrega como contacto es el mismo usuario lanzar un error
-      if (usuarioAgregado.idUsuario == idUsuarioActual) {
-        return res.status(400).json({
-          message:
-            "No se puede agregar el mismo usuario como contato de emergencia",
-        });
-      }
+     
       
       const usuarioActual = await usuarioService.getUsuario(idUsuarioActual);
       if (!usuarioActual) {
@@ -162,7 +145,7 @@ class UsuarioDetallesController {
         idUsuarioActual,
         numPoliza,
         tipoSangre,
-        usuarioAgregado.idUsuario,
+        idContactoEmergencia,
         transfusionSanguinea,
         donacionOrganos,
         direccion,

@@ -4,11 +4,13 @@ const nombre = Joi.string();
 const correo = Joi.string().email();
 const telefono = Joi.string().regex(/^[0-9]{10}$/);
 const id = Joi.string()
+const esContactoEmergencia = Joi.boolean()
 
 const createContactoSchema = Joi.object({
     nombre: nombre.required(),
     correo: correo,
-    telefono: telefono.required()
+    telefono: telefono.required(),
+    esContactoEmergencia: esContactoEmergencia
 })
 
 const getContactoSchema = Joi.object({
