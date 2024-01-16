@@ -8,6 +8,7 @@ const {
   apnProvider,
   crearNotificacionEmergencia,
 } = require("../utils/apnProv.js");
+const { setDifference } = require("../utils/sets.js");
 
 const service = new EmergenciaServices();
 const grupoService = new GrupoService();
@@ -258,6 +259,171 @@ class EmergenciaController {
         .json({ message: `Error al crear el emergencia. Err: ${err}` });
     }
   }
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @description Funcion para actualizar una emergencia y sus receptores
+   */
+  async updateEmergenciaGrupo(req, res) {
+    const id = req.params.id;
+    if (!Number.isInteger(parseInt(id))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+    try {
+      //crear emergencia
+      const emergenciaAntigua = await service.getEmergencia(id);
+
+      if(!emergenciaAntigua){
+        return res.status(404).json({message: "No se encontró la emergencia"})
+      }
+
+      const emergencia = await service.updateEmergencia(id, req.body);
+
+      //obtener los miembros del grupo
+      const idGrupo = req.body.idGrupo;
+      const miembros = await grupoService.getUsuariosGrupo(idGrupo);
+
+      //obtener los receptores anteriores
+      const receptores = await service.getEmergenciaReceptores(emergencia.idEmergencia);
+
+      //obtener un set con los nuevos receptores y con los que se deben eliminar
+      const antiguoGrupo = new Set(receptores);
+      const nuevoGrupo = new Set(miembros);
+      const nuevosReceptores = setDifference(nuevoGrupo, antiguoGrupo);
+      const receptoresEliminados = setDifference(antiguoGrupo, nuevoGrupo);
+
+      //remover los receptores que no están en el nuevo grupo
+      receptoresEliminados.forEach(async receptor => {
+        await service.removeEmergenciaReceptor(
+          emergencia.idEmergencia,
+          receptor.miembroGrupo.idUsuario
+        )
+      })
+
+      //agregar a los receptores que no habían recibido la emergencia
+      nuevosReceptores.forEach(async receptor => {
+        await service.addEmergenciaReceptor(
+          emergencia.idEmergencia,
+          receptor.miembsetroGrupo.idUsuario
+        );
+      })
+
+      //obtener usuario emisor
+      const usuario = await usuarioService.getUsuario(emergencia.idEmisor);
+
+      //generar notificacion
+      const note = crearNotificacionEmergencia(emergencia, usuario);
+
+      //enviar notificacion a los usuarios
+      //se envia a todos los usuarios del grupo incluyendo a quienes la habian recibido previamente
+      const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
+      miembrosTokens.forEach((miembro) => {
+        if (miembro.miembroGrupo.token) {
+          let token = miembro.miembroGrupo.token;
+          apnProvider.send(note, token).then((result) => {
+            if (result.failed && result.failed.length > 0) {
+              console.log(
+                `Error sending push notification: ${result.sent[0].device}`
+              );
+            } else if (result.sent && result.sent.length > 0) {
+              console.log(
+                `Push Notification sent to devide: ${result.sent[0].device}`
+              );
+            } else {
+              console.log(`Unknown error while sending push notification`);
+            }
+          });
+        }
+      });
+
+      return res.status(200).json({ data: emergencia });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al crear el emergencia. Err: ${err}` });
+    }
+  }
+
+
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @description Funcion para actualizar una emergencia y sus receptores
+   */
+  async updateEmergenciaContactos(req, res) {
+    const id = req.params.id;
+    if (!Number.isInteger(parseInt(id))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+    try {
+      //crear emergencia
+      const emergenciaAntigua = await service.getEmergencia(id);
+
+      if(!emergenciaAntigua){
+        return res.status(404).json({message: "No se encontró la emergencia"})
+      }
+
+      const emergencia = await service.updateEmergencia(id, req.body);
+
+      //obtener los contactos
+      const miembros = await contactoService.getContactosDeUsuario(emergencia.idEmisor);
+
+      //obtener los receptores anteriores
+      const receptores = await service.getEmergenciaReceptores(emergencia.idEmergencia);
+
+      //obtener un set con los nuevos receptores 
+      const antiguoGrupo = new Set(receptores);
+      const nuevoGrupo = new Set(miembros);
+      const nuevosReceptores = setDifference(nuevoGrupo, antiguoGrupo);
+
+      //agregar a los receptores que no habían recibido la emergencia
+      nuevosReceptores.forEach(async receptor => {
+        await service.addEmergenciaReceptor(
+          emergencia.idEmergencia,
+          receptor.miembsetroGrupo.idUsuario
+        );
+      })
+
+      //obtener usuario emisor
+      const usuario = await usuarioService.getUsuario(emergencia.idEmisor);
+
+      //generar notificacion
+      const note = crearNotificacionEmergencia(emergencia, usuario);
+
+      //enviar notificacion a los usuarios
+      //se envia a todos los usuarios del grupo incluyendo a quienes la habian recibido previamente
+      const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
+      miembrosTokens.forEach((miembro) => {
+        if (miembro.miembroGrupo.token) {
+          let token = miembro.miembroGrupo.token;
+          apnProvider.send(note, token).then((result) => {
+            if (result.failed && result.failed.length > 0) {
+              console.log(
+                `Error sending push notification: ${result.sent[0].device}`
+              );
+            } else if (result.sent && result.sent.length > 0) {
+              console.log(
+                `Push Notification sent to devide: ${result.sent[0].device}`
+              );
+            } else {
+              console.log(`Unknown error while sending push notification`);
+            }
+          });
+        }
+      });
+
+      return res.status(200).json({ data: emergencia });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al crear el emergencia. Err: ${err}` });
+    }
+  }
+
 }
 
 module.exports = EmergenciaController;
