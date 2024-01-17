@@ -168,6 +168,7 @@ class EmergenciaController {
 
       //enviar notificacion a los usuarios
       const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
+      console.log(miembrosTokens)
       const tokens = miembrosTokens.map(miembro => miembro.miembroGrupo.usuarioAgregado?.idUsuario)
 
       await sendNotificationsMiembros(tokens, note);
@@ -386,7 +387,6 @@ async function removeMiembrosEmergencia(idsUsuarios, emergencia){
    */
   async function sendNotificationsMiembros(tokensUsuarios, note){
     tokensUsuarios.forEach((tokenUsuario) => {
-      console.log(tokenUsuario)
       if (tokenUsuario) {
         apnProvider.send(note, tokenUsuario).then((result) => {
           if (result.failed && result.failed.length > 0) {
