@@ -168,8 +168,7 @@ class EmergenciaController {
 
       //enviar notificacion a los usuarios
       const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
-      console.log(miembrosTokens)
-      const tokens = miembrosTokens.map(miembro => miembro.miembroGrupo.usuarioAgregado?.idUsuario)
+      const tokens = miembrosTokens.map(miembro => miembro.miembroGrupo.usuarioAgregado?.token)
 
       await sendNotificationsMiembros(tokens, note);
 
@@ -271,7 +270,7 @@ class EmergenciaController {
       //enviar notificacion a los usuarios
       //se envia a todos los usuarios del grupo incluyendo a quienes la habian recibido previamente
       const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
-      const tokens = miembrosTokens.map(miembro => miembro.miembroGrupo.usuarioAgregado?.idUsuario)
+      const tokens = miembrosTokens.map(miembro => miembro.miembroGrupo.usuarioAgregado?.token)
       await sendNotificationsMiembros(tokens, note);
 
       return res.status(200).json({ data: emergencia });
