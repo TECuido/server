@@ -11,7 +11,7 @@ const controller = new ContactosController();
 // Ruteo de la parte de Contacto
 
 router.get("/:id",  validatorHandler(getContactoSchema, "params"), controller.getContacto);
-router.get("/usuario/:id", controller.getAllContactosUsuario);
+router.get("/usuario/:id",  validatorHandler(getContactoSchema, "params"), controller.getAllContactosUsuario);
 router.delete("/:id",  validatorHandler(deleteContactoSchema, "params"), controller.deleteContacto);
 router.post("/usuario/:id",  validatorHandler(createContactoSchema, "body"), controller.addContacto);
 
