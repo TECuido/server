@@ -386,15 +386,17 @@ async function removeMiembrosEmergencia(idsUsuarios, emergencia){
    */
   async function sendNotificationsMiembros(tokensUsuarios, note){
     tokensUsuarios.forEach((tokenUsuario) => {
+      console.log(tokenUsuario)
       if (tokenUsuario) {
         apnProvider.send(note, tokenUsuario).then((result) => {
           if (result.failed && result.failed.length > 0) {
+            console.log(result.failed)
             console.log(
-              `Error sending push notification: ${result.sent[0].device}`
+              `Error sending push notification: ${tokenUsuario}`
             );
           } else if (result.sent && result.sent.length > 0) {
             console.log(
-              `Push Notification sent to devide: ${result.sent[0].device}`
+              `Push Notification sent to device: ${tokenUsuario}`
             );
           } else {
             console.log(`Unknown error while sending push notification`);
