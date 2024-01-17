@@ -126,7 +126,12 @@ class GrupoService {
             idContacto: true,
             nombre: true,
             correo: true,
-            telefono: true
+            telefono: true,
+            usuarioAgregado: {
+              select: {
+                idUsuario: true
+              }
+            }
           }
         }
       }
@@ -152,7 +157,6 @@ class GrupoService {
           select: {
             usuarioAgregado: {
               select: {
-                idUsuario: true,
                 token: true 
               }
             }

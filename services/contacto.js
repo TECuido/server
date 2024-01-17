@@ -188,6 +188,19 @@ class ContactoService {
     });
     return usuariosGrupo;
   }
+
+  async updateUsuarioContactos(telefono, idUsuario){
+    const contactos = await db.contacto.updateMany({
+      where: {
+        telefono: telefono
+      },
+      data: {
+        idAgregado: idUsuario
+      }
+    })
+    return contactos;
+  }
+
 }
 
 module.exports = ContactoService;
