@@ -29,7 +29,7 @@ function generateRefreshToken(user, jti) {
       idUsuario: user.idUsuario,
       jti
     }, config.refreshSecret, {
-      expiresIn: '24h',
+      expiresIn: '60d',
     });
 }
 

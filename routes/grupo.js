@@ -8,12 +8,12 @@ const { getGrupoSchema, createGrupoSchema, createMiembroSchema, deleteMiembroSch
 
 const controller = new GrupoController();
 
-router.get("/:id",  validatorHandler(getGrupoSchema, "params"), controller.getGrupo);
-router.get("/:id/usuarios",  validatorHandler(getGrupoSchema, "params"), controller.getContactosGrupo);
-router.get("/usuario/:id",  validatorHandler(getGrupoSchema, "params"), controller.getGruposUsuario);
-router.post("/", validatorHandler(createGrupoSchema, "body"), controller.addGrupo);
-router.post("/usuario",  validatorHandler(createMiembroSchema, "body"), controller.addContactoToGrupo);
-router.put("/:id",  validatorHandler(getGrupoSchema, "params"), validatorHandler(updateGrupoSchema, "body"),  controller.updateGrupoName);
-router.delete("/:id",  validatorHandler(getGrupoSchema, "params"), controller.deleteGrupo);
-router.delete("/:idGrupo/:idMiembro", validatorHandler(deleteMiembroSchema, "params"), controller.deleteMiembroByGrupo);
+router.get("/:id", isAuthenticated,   validatorHandler(getGrupoSchema, "params"), controller.getGrupo);
+router.get("/:id/usuarios", isAuthenticated,  validatorHandler(getGrupoSchema, "params"), controller.getContactosGrupo);
+router.get("/usuario/:id", isAuthenticated,  validatorHandler(getGrupoSchema, "params"), controller.getGruposUsuario);
+router.post("/", isAuthenticated, validatorHandler(createGrupoSchema, "body"), controller.addGrupo);
+router.post("/usuario", isAuthenticated,  validatorHandler(createMiembroSchema, "body"), controller.addContactoToGrupo);
+router.put("/:id",  isAuthenticated, validatorHandler(getGrupoSchema, "params"), validatorHandler(updateGrupoSchema, "body"),  controller.updateGrupoName);
+router.delete("/:id", isAuthenticated,  validatorHandler(getGrupoSchema, "params"), controller.deleteGrupo);
+router.delete("/:idGrupo/:idMiembro", isAuthenticated, validatorHandler(deleteMiembroSchema, "params"), controller.deleteMiembroByGrupo);
 module.exports = router;

@@ -1,5 +1,6 @@
 const AuthService = require("../services/auth.js");
 const UsuarioService = require("../services/usuario.js");
+const ContactoService = require("../services/contacto.js")
 const { v4: uuidv4 } = require("uuid");
 const { generateTokens } = require("../utils/jwt.js");
 const { hashToken } = require("../utils/hashToken.js");
@@ -9,6 +10,7 @@ const jwt = require("jsonwebtoken");
 
 const authService = new AuthService();
 const usuarioService = new UsuarioService();
+const contactoService = new ContactoService();
 
 
 
@@ -91,6 +93,11 @@ class AuthController {
 
       //registrar al usuario
       const usuario = await usuarioService.createUsuario(req.body);
+
+      //actualizar contactos relacionados
+      const contactos = await contactoService.updateUsuarioContactos(telefono, usuario.idUsuario)
+      console.log(contactos);
+      
       //crear token de acceso
       const jti = uuidv4();
       const { accessToken, refreshToken } = generateTokens(usuario, jti);
