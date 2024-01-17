@@ -154,14 +154,11 @@ class EmergenciaController {
       const idGrupo = req.body.idGrupo;
 
       //agregar a los receptores
-      const miembros = await grupoService.getUsuariosGrupo(idGrupo);
+      const miembros = await grupoService.getContactosGrupo(idGrupo);
 
-      for (let i = 0; i < miembros.length; i++) {
-        await service.addEmergenciaReceptor(
-          emergencia.idEmergencia,
-          miembros[i].miembroGrupo.idUsuario
-        );
-      }
+      const usuarios = miembros.map(miembro => miembro.miembroGrupo.usuarioAgregado?.idUsuario)
+      
+      await addMiembrosEmergencia(usuarios, emergencia);
 
       //obtener usuario emisor
       const usuario = await usuarioService.getUsuario(emergencia.idEmisor);
@@ -171,24 +168,9 @@ class EmergenciaController {
 
       //enviar notificacion a los usuarios
       const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
-      miembrosTokens.forEach((miembro) => {
-        if (miembro.miembroGrupo.token) {
-          let token = miembro.miembroGrupo.token;
-          apnProvider.send(note, token).then((result) => {
-            if (result.failed && result.failed.length > 0) {
-              console.log(
-                `Error sending push notification: ${result.sent[0].device}`
-              );
-            } else if (result.sent && result.sent.length > 0) {
-              console.log(
-                `Push Notification sent to devide: ${result.sent[0].device}`
-              );
-            } else {
-              console.log(`Unknown error while sending push notification`);
-            }
-          });
-        }
-      });
+      const tokens = miembrosTokens.map(miembro => miembro.miembroGrupo.usuarioAgregado?.idUsuario)
+
+      await sendNotificationsMiembros(tokens, note);
 
       return res.status(200).json({ data: emergencia });
     } catch (err) {
@@ -213,15 +195,10 @@ class EmergenciaController {
       //crear emergencia
       const emergencia = await service.createEmergencia(req.body);
       //agregar a los receptores
-      const miembros = await contactoService.getContactosDeUsuario(
-        emergencia.idEmisor
-      );
-      for (let i = 0; i < miembros.length; i++) {
-        await service.addEmergenciaReceptor(
-          emergencia.idEmergencia,
-          miembros[i].usuarioAgregado.idUsuario
-        );
-      }
+      const miembros = await contactoService.getContactosDeUsuario(emergencia.idEmisor);
+      const usuarios = miembros.map(miembro => miembro.usuarioAgregado?.idUsuario);
+
+      await addMiembrosEmergencia(usuarios, emergencia);
 
       //obtener usuario emisor
       const usuario = await usuarioService.getUsuario(emergencia.idEmisor);
@@ -230,27 +207,10 @@ class EmergenciaController {
       const note = crearNotificacionEmergencia(emergencia, usuario);
 
       //enviar notificacion a los usuarios
-      const miembrosTokens = await contactoService.getUsuariosContactoTokens(
-        emergencia.idEmisor
-      );
-      miembrosTokens.forEach((miembro) => {
-        if (miembro.usuarioAgregado.token) {
-          let token = miembro.usuarioAgregado.token;
-          apnProvider.send(note, token).then((result) => {
-            if (result.failed && result.failed.length > 0) {
-              console.log(
-                `Error sending push notification: ${result.sent[0].device}`
-              );
-            } else if (result.sent && result.sent.length > 0) {
-              console.log(
-                `Push Notification sent to devide: ${result.sent[0].device}`
-              );
-            } else {
-              console.log(`Unknown error while sending push notification`);
-            }
-          });
-        }
-      });
+      const miembrosTokens = await contactoService.getUsuariosContactoTokens(emergencia.idEmisor);
+      const tokens = miembrosTokens.map(miembro => miembro.usuarioAgregado?.token);
+    
+      await sendNotificationsMiembros(tokens, note);
 
       return res.status(200).json({ data: emergencia });
     } catch (err) {
@@ -259,6 +219,7 @@ class EmergenciaController {
         .json({ message: `Error al crear el emergencia. Err: ${err}` });
     }
   }
+
 
   /**
    * @author Julio Meza
@@ -283,32 +244,22 @@ class EmergenciaController {
 
       //obtener los miembros del grupo
       const idGrupo = req.body.idGrupo;
-      const miembros = await grupoService.getUsuariosGrupo(idGrupo);
+      const miembros = await grupoService.getContactosGrupo(idGrupo);
 
       //obtener los receptores anteriores
       const receptores = await service.getEmergenciaReceptores(emergencia.idEmergencia);
 
       //obtener un set con los nuevos receptores y con los que se deben eliminar
-      const antiguoGrupo = new Set(receptores);
-      const nuevoGrupo = new Set(miembros);
+      const antiguoGrupo = new Set(receptores.map(receptor => receptor.idReceptor));
+      const nuevoGrupo = new Set(miembros.map(miembro => miembro.miembroGrupo.usuarioAgregado?.idUsuario));
       const nuevosReceptores = setDifference(nuevoGrupo, antiguoGrupo);
       const receptoresEliminados = setDifference(antiguoGrupo, nuevoGrupo);
 
       //remover los receptores que no están en el nuevo grupo
-      receptoresEliminados.forEach(async receptor => {
-        await service.removeEmergenciaReceptor(
-          emergencia.idEmergencia,
-          receptor.miembroGrupo.idUsuario
-        )
-      })
+      await removeMiembrosEmergencia(receptoresEliminados, emergencia)
 
       //agregar a los receptores que no habían recibido la emergencia
-      nuevosReceptores.forEach(async receptor => {
-        await service.addEmergenciaReceptor(
-          emergencia.idEmergencia,
-          receptor.miembsetroGrupo.idUsuario
-        );
-      })
+      await addMiembrosEmergencia(nuevosReceptores, emergencia);
 
       //obtener usuario emisor
       const usuario = await usuarioService.getUsuario(emergencia.idEmisor);
@@ -319,24 +270,8 @@ class EmergenciaController {
       //enviar notificacion a los usuarios
       //se envia a todos los usuarios del grupo incluyendo a quienes la habian recibido previamente
       const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
-      miembrosTokens.forEach((miembro) => {
-        if (miembro.miembroGrupo.token) {
-          let token = miembro.miembroGrupo.token;
-          apnProvider.send(note, token).then((result) => {
-            if (result.failed && result.failed.length > 0) {
-              console.log(
-                `Error sending push notification: ${result.sent[0].device}`
-              );
-            } else if (result.sent && result.sent.length > 0) {
-              console.log(
-                `Push Notification sent to devide: ${result.sent[0].device}`
-              );
-            } else {
-              console.log(`Unknown error while sending push notification`);
-            }
-          });
-        }
-      });
+      const tokens = miembrosTokens.map(miembro => miembro.miembroGrupo.usuarioAgregado?.idUsuario)
+      await sendNotificationsMiembros(tokens, note);
 
       return res.status(200).json({ data: emergencia });
     } catch (err) {
@@ -376,17 +311,12 @@ class EmergenciaController {
       const receptores = await service.getEmergenciaReceptores(emergencia.idEmergencia);
 
       //obtener un set con los nuevos receptores 
-      const antiguoGrupo = new Set(receptores);
-      const nuevoGrupo = new Set(miembros);
+      const antiguoGrupo = new Set(receptores.map(receptor => receptor.idReceptor));
+      const nuevoGrupo = new Set(miembros.map(miembro => miembro.usuarioAgregado?.idUsuario));      
       const nuevosReceptores = setDifference(nuevoGrupo, antiguoGrupo);
 
       //agregar a los receptores que no habían recibido la emergencia
-      nuevosReceptores.forEach(async receptor => {
-        await service.addEmergenciaReceptor(
-          emergencia.idEmergencia,
-          receptor.miembsetroGrupo.idUsuario
-        );
-      })
+      await addMiembrosEmergencia(nuevosReceptores, emergencia);
 
       //obtener usuario emisor
       const usuario = await usuarioService.getUsuario(emergencia.idEmisor);
@@ -396,26 +326,10 @@ class EmergenciaController {
 
       //enviar notificacion a los usuarios
       //se envia a todos los usuarios del grupo incluyendo a quienes la habian recibido previamente
-      const miembrosTokens = await grupoService.getUsuariosGrupoTokens(idGrupo);
-      miembrosTokens.forEach((miembro) => {
-        if (miembro.miembroGrupo.token) {
-          let token = miembro.miembroGrupo.token;
-          apnProvider.send(note, token).then((result) => {
-            if (result.failed && result.failed.length > 0) {
-              console.log(
-                `Error sending push notification: ${result.sent[0].device}`
-              );
-            } else if (result.sent && result.sent.length > 0) {
-              console.log(
-                `Push Notification sent to devide: ${result.sent[0].device}`
-              );
-            } else {
-              console.log(`Unknown error while sending push notification`);
-            }
-          });
-        }
-      });
-
+      const miembrosTokens = await contactoService.getUsuariosContactoTokens(emergencia.idEmisor);
+      const tokens = miembrosTokens.map(miembro => miembro.usuarioAgregado?.token);
+    
+      await sendNotificationsMiembros(tokens, note);
       return res.status(200).json({ data: emergencia });
     } catch (err) {
       return res
@@ -425,5 +339,70 @@ class EmergenciaController {
   }
 
 }
+
+
+/**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @description Funcion para agregar a una emergencia a los miembros
+   */
+async function addMiembrosEmergencia(idsUsuarios, emergencia){  
+  for (let i = 0; i < idsUsuarios.length; i++) {
+    if(idsUsuarios[i]){
+      await service.addEmergenciaReceptor(
+        emergencia.idEmergencia,
+        idsUsuarios[i]
+      );
+    }
+  }
+}
+
+/**
+ * @author Julio Meza
+ * @version 1.0.1
+ * @license Gp
+ * @description Funcion para remover de una emergencia a los miembros
+ */
+async function removeMiembrosEmergencia(idsUsuarios, emergencia){  
+  for (let i = 0; i < idsUsuarios.length; i++) {
+    if(idsUsuarios[i]){
+      await service.removeEmergenciaReceptor(
+        emergencia.idEmergencia,
+        idsUsuarios[i]
+      );
+    }
+  }
+}
+
+
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {Miembro} lista de miembros a enviar la notifcacion
+   * @params {Note} notificacion
+   * @description Funcion para enviar notificaciones
+   */
+  async function sendNotificationsMiembros(tokensUsuarios, note){
+    tokensUsuarios.forEach((tokenUsuario) => {
+      if (tokenUsuario) {
+        apnProvider.send(note, tokenUsuario).then((result) => {
+          if (result.failed && result.failed.length > 0) {
+            console.log(
+              `Error sending push notification: ${result.sent[0].device}`
+            );
+          } else if (result.sent && result.sent.length > 0) {
+            console.log(
+              `Push Notification sent to devide: ${result.sent[0].device}`
+            );
+          } else {
+            console.log(`Unknown error while sending push notification`);
+          }
+        });
+      }
+    });
+  }
+
 
 module.exports = EmergenciaController;

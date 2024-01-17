@@ -136,7 +136,7 @@ class EmergenciaService {
   }) {
     const result = await db.emergencia.update({
       where: {
-        idEmergencia: idEmergencia
+        idEmergencia: Number(idEmergencia)
       },
       data: {
         tipo: tipo,
