@@ -97,10 +97,10 @@ class GrupoService {
    * @params {int} - idGrupo Unico del grupo
    * @description Funcion para darle registro a determinado grupo
    */
-  async addUsuarioGrupo(idUsuario, idGrupo) {
+  async addUsuarioGrupo(idMiembro, idGrupo) {
     const result = await db.usuarioGrupo.create({
       data: {
-        idMiembro: Number(idUsuario),
+        idMiembro: Number(idMiembro),
         idGrupo: Number(idGrupo)
       },
     });
@@ -114,8 +114,8 @@ class GrupoService {
    * @params {int} - idGrupo es el id del grupo
    * @description Funcion que regresa los usuarios de su grupo
    */
-  async getUsuariosGrupo(idGrupo) {
-    const usuariosGrupo = await db.usuarioGrupo.findMany({
+  async getContactosGrupo(idGrupo) {
+    const contactosGrupo = await db.usuarioGrupo.findMany({
       where: {
         idGrupo: Number(idGrupo)
       },
@@ -123,14 +123,15 @@ class GrupoService {
       select: {
         miembroGrupo: {
           select: {
-            idUsuario: true,
+            idContacto: true,
             nombre: true,
-            correo: true
+            correo: true,
+            telefono: true
           }
         }
       }
     });
-    return usuariosGrupo;
+    return contactosGrupo;
   }
 
   /**
@@ -149,8 +150,12 @@ class GrupoService {
       select: {
         miembroGrupo: {
           select: {
-            idUsuario: true,
-            token: true
+            usuarioAgregado: {
+              select: {
+                idUsuario: true,
+                token: true 
+              }
+            }
           }
         }
       }
@@ -169,8 +174,7 @@ class GrupoService {
     const grupos = await db.grupo.findMany({
       where: {
         idCreador: Number(idUsuario)
-      },
-      
+      }, 
       select: {
         idGrupo: true,
         nombre: true,
@@ -189,7 +193,9 @@ class GrupoService {
 
   async deleteMiembro(idContactoGrupo){
     await db.usuarioGrupo.delete({
-      where: {idContactoGrupo : Number(idContactoGrupo)},
+      where: {
+        idContactoGrupo : Number(idContactoGrupo)
+      },
     })
   }
 

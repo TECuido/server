@@ -1,8 +1,10 @@
 const GrupoServices = require("../services/grupo.js");
 const UsuarioService = require("../services/usuario.js");
+const ContactoService = require("../services/contacto.js");
 
 const service = new GrupoServices();
 const usuarioService = new UsuarioService();
+const contactoService = new ContactoService();
 
 /**
  * @author Bernardo de la Sierra
@@ -114,16 +116,17 @@ class GrupoController {
    * @params {int} - idGrupo Unico del grupo
    * @description Funcion para darle registro a determinado grupo
    */
-  async addUsuarioToGrupo(req, res) {
+  async addContactoToGrupo(req, res) {
     const { idMiembro, idGrupo } = req.body;
 
     try {
-      //buscar si el usuario está registrado
-      const id = await usuarioService.getUsuario(idMiembro);
-      if (!id) {
+
+      //buscar si el usuario está registrado en los contactos
+      const contacto = await contactoService.getContacto(idMiembro);
+      if (!contacto) {
         return res
           .status(400)
-          .json({ message: "El usuario no se encuentra registrado" });
+          .json({ message: "El contacto no se encuentra registrado"});
       }
 
       const miembro = await service.getGrupoMiembro(idMiembro, idGrupo);
@@ -149,14 +152,14 @@ class GrupoController {
    * @params {int} - id Identificador unico del grupo
    * @description Funcion que nos va a permitir ver todos los contactos en un grupo
    */
-  async getUsuariosGrupo(req, res) {
+  async getContactosGrupo(req, res) {
     const id = req.params.id;
     // Verificamos que el id no sea un string
     if (!Number.isInteger(parseInt(id))) {
       return res.status(500).json({ message: "El id necesita ser entero" });
     }
     try {
-      const contactoGrupo = await service.getUsuariosGrupo(id);
+      const contactoGrupo = await service.getContactosGrupo(id);
       if (contactoGrupo) {
         return res.status(200).json({ data: contactoGrupo });
       } else {
