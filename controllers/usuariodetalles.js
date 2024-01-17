@@ -79,13 +79,10 @@ class UsuarioDetallesController {
     const id = req.params.id;
     const {  contactoEmergencia } = req.body;
     const { nombre} = req.body; 
-    console.log(req.body)
     if (!Number.isInteger(parseInt(id))) {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }
-    console.log(contactoEmergencia)
     const usuarioAgregado = await contactoService.getContactoPorNombre(contactoEmergencia);
-    console.log(usuarioAgregado)
     // si no existe el usuario lanzar un error
       if (!usuarioAgregado) {
         return res

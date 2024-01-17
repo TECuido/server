@@ -103,9 +103,7 @@ class ContactoController {
       if (!contacto) {
         return res.status(404).json({ message: "No se encontró el contacto" });
       }
-      console.log(contacto.idContacto);
       const usuarioDetalles = await usuariodetallesService.getContactoPorIdContacto(contacto.idContacto);
-      console.log(usuarioDetalles)
       if (usuarioDetalles) {
         return res.status(404).json({ message: "No se puede eliminar un contacto de emergencia" });
       }
