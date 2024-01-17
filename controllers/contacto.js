@@ -156,50 +156,27 @@ class ContactoController {
       //la verificación se hace por el número de teléfono
       const usuarioTelefono = await usuarioService.getUsuarioPorTelefono(telefono)
 
-      //si no existe el usuario crear el contacto sin idAgregado
-      if (!usuarioTelefono) {
-        //crear el contacto
-        const contactoCreado = await service.addContacto(
-          idUsuarioActual,
-          req.body
-        );
-        if (esContactoEmergencia){
-        
-            const usuarioDetalles = await usuariodetallesService.addUsuarioDetalle({
-              idUsuario: Number(idUsuarioActual),
-              numPoliza: "Sin información",
-              tipoSangre: "Sin informacion",
-              idContactoEmergencia: Number(contactoCreado.idContacto),
-              transfusionSanguinea: "Sin información",
-              donacionOrganos: "Sin información",
-              direccion: "Sin información",
-              edad: "Sin información",
-              medicoTratante: "Sin información"
-            });
-          return res.status(200).json({
-            contacto: contactoCreado,
-            detallesUsuario: esContactoEmergencia ? usuarioDetalles : null
-          });
-        }else{
-          res.status(200).json(contactoCreado);
+      if(usuarioTelefono){
+        //si el usuario que se agrega como contacto es el mismo usuario lanzar un error
+        if (usuarioTelefono.idUsuario == idUsuarioActual) {
+          return res
+            .stauts(400)
+            .json({ message: "No se puede agregar el mismo usuario" });
         }
-
-        
       }
-
-      //si el usuario que se agrega como contacto es el mismo usuario lanzar un error
-      if (usuarioTelefono.idUsuario == idUsuarioActual) {
-        return res
-          .stauts(400)
-          .json({ message: "No se puede agregar el mismo usuario" });
-      }
-
+   
       //crear el contacto
       const contactoCreado = await service.addContacto(
         idUsuarioActual,
         req.body,
-        usuarioTelefono.idUsuario
+        usuarioTelefono?.idUsuario ?? null
       );
+        
+      const response = {
+        contacto: contactoCreado
+      }
+
+      //si es contacto de emergencia agrega el contacto en el perfil
       if (esContactoEmergencia){
         const usuarioDetalles = await usuariodetallesService.addUsuarioDetalle({
           idUsuario: Number(idUsuarioActual),
@@ -212,14 +189,11 @@ class ContactoController {
           edad: "Sin información",
           medicoTratante: "Sin información"
         });
-        return res.status(200).json({
-          contacto: contactoCreado,
-          detallesUsuario: esContactoEmergencia ? usuarioDetalles : null
-        });
-      }else{
-        res.status(200).json(contactoCreado);
-      }
 
+        response.usuarioDetalles = usuarioDetalles;
+      } 
+      
+      return res.status(200).json(response);  
      
     } catch (error) {
       res.status(500).json({ error: error.message });
