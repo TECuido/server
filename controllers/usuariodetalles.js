@@ -93,7 +93,7 @@ class UsuarioDetallesController {
 
     try {
       
-      const usuario = await service.updateUsuarioDetalle(id, req.body,usuarioAgregado.idUsuario,nombre);
+      const usuario = await service.updateUsuarioDetalle(id, req.body,usuarioAgregado.idContacto,nombre);
       return res.status(200).json({ data: usuario });
     } catch (err) {
       return res
