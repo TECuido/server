@@ -13,6 +13,7 @@ const { createUsuarioDetallesSchema, getUsuarioDetallesSchema, putUsuarioDetalle
 const controller = new UsuarioDetallesController();
 
 // Ruteo de la parte de usuario
+router.get("/", controller.getAllUsuarioDetalles);
 router.get("/:id", controller.getUsuarioDetalles);
 router.put("/:id", validatorHandler(getUsuarioDetallesSchema, "params"),controller.updateUsuarioDetalles);
 
