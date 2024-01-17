@@ -52,7 +52,7 @@ class UsuarioDetallesController {
       const UsuarioDetalles =
         await service.getUsuarioDetalles(id);
       if (UsuarioDetalles) {
-        return res.status(200).json({ data: UsuarioDetalles });
+        return res.status(200).json( UsuarioDetalles );
       } else {
         return res
           .status(404)
