@@ -8,7 +8,7 @@ const { getAlergiaSchema, createAlergiaSchema } = require("../schemas/alergia.sc
 
 // Ruteo de la parte de Alergia
 router.get("/:id", isAuthenticated, validatorHandler(getAlergiaSchema, "params"), controller.getAlergiasUsuario);
-router.post("/", controller.addAlergias, validatorHandler(createAlergiaSchema, "body"));
+router.post("/", isAuthenticated, validatorHandler(createAlergiaSchema, "body"), controller.addAlergias);
 router.delete("/:id", isAuthenticated, validatorHandler(getAlergiaSchema,"params"), controller.deleteAlergia);
 
 module.exports = router;

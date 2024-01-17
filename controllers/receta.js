@@ -196,6 +196,40 @@ class RecetaController {
     }
   }
 
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @description Funcion para eliminar una receta
+   */
+  async deleteReceta(req, res) {
+    try {
+
+      const id = req.params.id;
+
+      // Verificamos que el id no sea un string
+      if (!Number.isInteger(parseInt(id))) {
+        return res.status(500).json({ message: "El Id necesita ser entero" });
+      }
+
+      const receta = await recetaService.getReceta(id);
+
+      if (!receta) {
+        return res
+          .status(400)
+          .json({ message: "La receta no existe" });
+      }
+
+      await recetaService.deleteReceta(id);
+
+      return res.status(200).json({ message: "Se eliminó la receta con éxito" });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al crear la receta. Err: ${err}` });
+    }
+  }
+
 }
 
 module.exports = RecetaController;

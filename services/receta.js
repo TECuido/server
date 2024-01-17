@@ -124,6 +124,22 @@ class RecetaService {
     return result;
   }
 
+  /**
+   * @author Julio Meza
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id de la receta
+   * @description Funcion para crear una receta
+   */
+  async deleteReceta(idReceta) {
+    const result = await db.receta.delete({
+      where: {
+        idReceta: Number(idReceta)
+      }
+    }) 
+    return result;
+  }
+
   
 }
 

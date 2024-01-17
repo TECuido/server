@@ -15,5 +15,6 @@ router.get("/:id", isAuthenticated, validatorHandler(getRecetaSchema, "params"),
 router.get("/usuario/:id", isAuthenticated, validatorHandler(getUsuarioSchema, "params"), controller.getRecetasPaciente)
 router.get("/medico/:id", isAuthenticated, validatorHandler(getUsuarioSchema, "params"), controller.getRecetasMedico)
 router.post("/usuario/:id", isAuthenticated, validatorHandler(getUsuarioSchema, "params"), validatorHandler(createRecetaSchema, "body"), controller.createReceta);
+router.delete("/:id", isAuthenticated, validatorHandler(getRecetaSchema, "params"), controller.deleteReceta)
 
 module.exports = router;
