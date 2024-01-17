@@ -83,6 +83,7 @@ class UsuarioDetallesController {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }
     const usuarioAgregado = await contactoService.getContactoPorNombre(contactoEmergencia);
+    console.log(usuarioAgregado);
     // si no existe el usuario lanzar un error
       if (!usuarioAgregado) {
         return res
