@@ -9,7 +9,6 @@ const { createMedicamentosActualesSchema, getMedicamentosActualesSchema } = requ
 const controller = new MedicamentosActualesController ();
 
 // Ruteo de la parte de Medicamentos Actuales 
-router.get("/", isAuthenticated, controller.getAllMedicamentosActuales);
 router.get("/:id", isAuthenticated, validatorHandler(getMedicamentosActualesSchema, "params"),controller.getMedicamentosActualesUsuario);
 router.post("/", isAuthenticated, validatorHandler(createMedicamentosActualesSchema, "body"), controller.addMedicamentosActuales);
 router.delete("/:id", isAuthenticated, validatorHandler(getMedicamentosActualesSchema, "params"), controller.deleteMedicamentosActuales);

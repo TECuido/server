@@ -1,10 +1,11 @@
 const ContactoServices = require("../services/contacto.js");
 const UsuarioServices = require("../services/usuario.js");
+const UsuarioDetallesServices = require("../services/usuariodetalles.js");
+
 
 const service = new ContactoServices();
-
 const usuarioService = new UsuarioServices();
-
+const usuariodetallesService = new UsuarioDetallesServices();
 /**
  * @author Bernardo de la Sierra
  * @version 1.0.1
@@ -85,11 +86,10 @@ class ContactoController {
   }
 
   /**
-   * @author Julio Meza
+   * @author Julio Meza y Bernardo de la Sierra 
    * @version 2.0.1
    * @license Gp
-   * @params {int} - idAgrega Identificador del usuario que agrega
-   *  @params {int} - idAgregado Identificador del usuario que agrega
+   * @params {int} - idContacto Identificador del Contacto a eliminar
    * @description Funcion eliminar el contacto
    */
   async deleteContacto(req, res) {
@@ -103,7 +103,10 @@ class ContactoController {
       if (!contacto) {
         return res.status(404).json({ message: "No se encontró el contacto" });
       }
-
+      const usuarioDetalles = await usuariodetallesService.getContactoPorIdContacto(contacto.idContacto);
+      if (usuarioDetalles) {
+        return res.status(404).json({ message: "No se puede eliminar un contacto de emergencia" });
+      }
       await service.deleteContacto(contacto.idContacto);
       return res
         .status(200)
@@ -126,9 +129,10 @@ class ContactoController {
    */
   async addContacto(req, res) {
     const idUsuarioActual = req.params.id;
-    const { telefono } = req.body;
+    const { telefono, esContactoEmergencia } = req.body;
     
     try {
+
 
       //Si el usuario que agrega el contacto no está registrado lanzar error
       const usuarioActual = await usuarioService.getUsuario(idUsuarioActual);
@@ -159,8 +163,28 @@ class ContactoController {
           idUsuarioActual,
           req.body
         );
+        if (esContactoEmergencia){
+        
+            const usuarioDetalles = await usuariodetallesService.addUsuarioDetalle({
+              idUsuario: Number(idUsuarioActual),
+              numPoliza: "Sin información",
+              tipoSangre: "Sin informacion",
+              idContactoEmergencia: Number(contactoCreado.idContacto),
+              transfusionSanguinea: "Sin información",
+              donacionOrganos: "Sin información",
+              direccion: "Sin información",
+              edad: "Sin información",
+              medicoTratante: "Sin información"
+            });
+          return res.status(200).json({
+            contacto: contactoCreado,
+            detallesUsuario: esContactoEmergencia ? usuarioDetalles : null
+          });
+        }else{
+          res.status(200).json(contactoCreado);
+        }
 
-        return res.status(200).json(contactoCreado)
+        
       }
 
       //si el usuario que se agrega como contacto es el mismo usuario lanzar un error
@@ -176,8 +200,27 @@ class ContactoController {
         req.body,
         usuarioTelefono.idUsuario
       );
+      if (esContactoEmergencia){
+        const usuarioDetalles = await usuariodetallesService.addUsuarioDetalle({
+          idUsuario: Number(idUsuarioActual),
+          numPoliza: "Sin información",
+          tipoSangre: "Sin informacion",
+          idContactoEmergencia: Number(contactoCreado.idContacto),
+          transfusionSanguinea: "Sin información",
+          donacionOrganos: "Sin información",
+          direccion: "Sin información",
+          edad: "Sin información",
+          medicoTratante: "Sin información"
+        });
+        return res.status(200).json({
+          contacto: contactoCreado,
+          detallesUsuario: esContactoEmergencia ? usuarioDetalles : null
+        });
+      }else{
+        res.status(200).json(contactoCreado);
+      }
 
-      res.status(200).json(contactoCreado);
+     
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

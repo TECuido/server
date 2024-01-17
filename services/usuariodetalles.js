@@ -38,12 +38,12 @@ async getUsuarioDetalles(id) {
         select: {
           nombre: true,
           correo: true,
+          telefono: true
         },
       },
-      Usuario: { // Include details from the Usuario model
+      Usuario: { 
         select: {
           nombre: true,
-          // Add other fields from Usuario that you want to include
         },
       },
     },
@@ -67,25 +67,17 @@ async getUsuarioDetalles(id) {
    * @params {string} - medicoTratante que medico nos esta tratando
    * @description Funcion que crea los detalles de los usuarios
    */
-  async addUsuarioDetalle(idUsuario, numPoliza,tipoSangre,idContactoEmergencia,transfusionSanguinea,donacionOrganos,direccion,edad,medicoTratante) {
-    // Creamos el contacto
-  
-    return await db.usuarioDetalles.create({
-      data: {
-        idUsuario: Number(idUsuario),
-        tipoSangre: tipoSangre,
-        numPoliza: numPoliza,
-        idContactoEmergencia: Number(idContactoEmergencia),
-        transfusionSanguinea: transfusionSanguinea,
-        donacionOrganos: donacionOrganos,
-        direccion: direccion, 
-        edad: edad,
-        medicoTratante: medicoTratante
-      },
-    });
-    
+  async addUsuarioDetalle(detalleUsuario) {
+    try {
+      // Creamos el detalle del usuario
+      return await db.usuarioDetalles.create({
+        data: detalleUsuario,
+      });
+    } catch (error) {
+      throw new Error(`Error al agregar el detalle del usuario: ${error.message}`);
+    }
   }
-
+  
     /**
    * @author Bernardo de la Sierra
    * @version 1.0.1
@@ -122,9 +114,24 @@ async getUsuarioDetalles(id) {
           nombre
         },  
       });
-      
       return { usuario, usuarioUpdate };
     }
+
+     /**
+   * @author Bernardo de la Sierra
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - idContactoEmergencia del usuario de contacto emergencia
+   * @description Funcion que da un contacto a partir de los usuarios involucrados
+   */
+  async getContactoPorIdContacto(idContactoEmergencia) {
+    const usuariodetalles = await db.usuarioDetalles.findFirst({
+      where: {
+        idContactoEmergencia: Number(idContactoEmergencia),
+      },
+    });
+    return usuariodetalles;
+  }
 }
 
 module.exports = UsuarioDetalleService;
