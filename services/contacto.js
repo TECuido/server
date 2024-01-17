@@ -84,6 +84,22 @@ class ContactoService {
     return contacto;
   }
 
+   /**
+   * @author Julio Emmanuel Meza Rangel
+   * @version 1.0.1
+   * @license Gp
+   * @params {string} - correo del usuario
+   * @description Funcion que regresa el usuario que tiene un determinado correo
+   */
+   async getContactoPorNombre(nombre) {
+    const contacto = await db.contacto.findFirst({
+      where: {
+        nombre: nombre
+      },
+    });
+    return contacto;
+  }
+
 
   /**
    * @author Julio Meza

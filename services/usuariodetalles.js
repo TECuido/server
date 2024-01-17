@@ -38,12 +38,12 @@ async getUsuarioDetalles(id) {
         select: {
           nombre: true,
           correo: true,
+          telefono: true
         },
       },
-      Usuario: { // Include details from the Usuario model
+      Usuario: { 
         select: {
           nombre: true,
-          // Add other fields from Usuario that you want to include
         },
       },
     },

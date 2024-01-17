@@ -1,8 +1,10 @@
 const UsuarioService = require("../services/usuario.js");
+const ContactoService = require("../services/contacto.js");
 const UsuarioDetallesService = require("../services/usuariodetalles");
 
 const service = new UsuarioDetallesService();
 const usuarioService = new UsuarioService();
+const contactoService = new ContactoService();
 
 /**
  * @author Bernardo de la Sierra Rábago
@@ -81,14 +83,14 @@ class UsuarioDetallesController {
     if (!Number.isInteger(parseInt(id))) {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }
-   
-    const usuarioAgregado = await usuarioService.getUsuarioPorCorreo(contactoEmergencia);
-    
+    console.log(contactoEmergencia)
+    const usuarioAgregado = await contactoService.getContactoPorNombre(contactoEmergencia);
+    console.log(usuarioAgregado)
     // si no existe el usuario lanzar un error
       if (!usuarioAgregado) {
         return res
           .status(400)
-          .json({ message: "El correo no se encuentra registrado" });
+          .json({ message: "El usuario con ese nombre no se encuentra registrado" });
       }
 
     try {
@@ -99,65 +101,6 @@ class UsuarioDetallesController {
       return res
         .status(500)
         .json({ message: `Error al obtener los datos. Err: ${err}` });
-    }
-  }
-
-     /**
-   * @author Bernardo de la Sierra
-   * @version 1.0.1
-   * @license Gp
-   * @params {int} - idUsuario Identificador unico del usuario
-   * @params {string} - numPoliza Numero de poliza del usuario
-   * @params {int} - idContactoEmergencia Identificador unico del contacto de emergencia
-   * @params {string} - tipoSangre es el tipo de sangre
-   * @params {string} - transfusionSanguinea si acepta o no la transfusion sanguinea
-   * @params {string} - donacionOrganos  si acepta o no dar o aceptar donacion de organos
-   * @params {string} - direccion donde vive 
-   * @params {string} - edad que edad tiene
-   * @params {string} - medicoTratante que medico nos esta tratando
-   * @description Funcion que crea los detalles de los usuarios
-   */
-   async addUsuarioDetalles(req, res) {
-    const idUsuarioActual = req.params.id;
-    const { numPoliza, tipoSangre,idContactoEmergencia,transfusionSanguinea,donacionOrganos , direccion, edad,medicoTratante} = req.body;
-  
-    try {
-     
-      
-      const usuarioActual = await usuarioService.getUsuario(idUsuarioActual);
-      if (!usuarioActual) {
-        return res
-          .status(400)
-          .json({ message: "El usuario no se encuentra registrado" });
-      }
-      
-      const UsuarioDetalles =
-        await service.getUsuarioDetalles(idUsuarioActual);
-      
-        if (UsuarioDetalles && UsuarioDetalles.length > 0) {
-          console.log(UsuarioDetalles);
-          return res
-            .status(400)
-            .json({ message: "El usuario ya ha registrado un perfil de usuario" });
-        }
-      
-      const usuariodetalleCreado = await service.addUsuarioDetalle(
-        idUsuarioActual,
-        numPoliza,
-        tipoSangre,
-        idContactoEmergencia,
-        transfusionSanguinea,
-        donacionOrganos,
-        direccion,
-        edad, 
-        medicoTratante
-      );
-
-      res.status(200).json({data: usuariodetalleCreado});
-    
-
-    } catch (error) {
-      res.status(500).json({ error: error.message });
     }
   }
 
