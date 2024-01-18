@@ -102,6 +102,30 @@ class UsuarioDetallesController {
     }
   }
 
+  async getUsuarioDetallesPorContacto(req, res) {
+    const id = req.params.id;
+    // Verificamos que el id no sea un string
+    if (!Number.isInteger(parseInt(id))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+    try {
+      const UsuarioDetalles =
+        await service.getContactoPorIdContacto(id);
+      if (UsuarioDetalles) {
+        return res.status(200).json({ data: UsuarioDetalles });
+      } else {
+        return res
+          .status(404)
+          .json({ message: "No se encontró la UsuarioDetalles" });
+      }
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al obtener UsuarioDetalles. Err: ${err}` });
+    }
+  }
+
+
 }
 
 module.exports = UsuarioDetallesController;

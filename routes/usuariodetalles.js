@@ -14,7 +14,8 @@ const controller = new UsuarioDetallesController();
 
 // Ruteo de la parte de usuario
 router.get("/", controller.getAllUsuarioDetalles);
-router.get("/:id",  controller.getUsuarioDetalles);
+router.get("/:id",  isAuthenticated, validatorHandler(getUsuarioDetallesSchema, "params"), controller.getUsuarioDetalles);
 router.put("/:id",isAuthenticated,  validatorHandler(putUsuarioDetallesSchema, "body"), validatorHandler(getUsuarioDetallesSchema, "params"),controller.updateUsuarioDetalles);
+router.get("/:id/contacto", controller.getUsuarioDetalles);
 
 module.exports = router;

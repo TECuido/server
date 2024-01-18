@@ -43,4 +43,9 @@ const putUsuarioDetallesSchema = Joi.object({
     nombre: nombre
 })
 
-module.exports = {createUsuarioDetallesSchema, getUsuarioDetallesSchema, putUsuarioDetallesSchema }
+// getUsuarioDetallesPorContacto -> Get -> (id)
+const getUsuarioDetallesPorContactoSchema = Joi.object({
+    id: id.required()
+})
+
+module.exports = {createUsuarioDetallesSchema, getUsuarioDetallesSchema, putUsuarioDetallesSchema,getUsuarioDetallesPorContactoSchema }
