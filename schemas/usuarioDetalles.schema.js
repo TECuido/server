@@ -11,18 +11,6 @@ const direccion = Joi.string();
 const edad = Joi.string();
 const medicoTratante = Joi.string();
 
-//Create UsuarioDetalles -> Post ->  (numPoliza,tipoSangre,contactoEmergencia,transfusionSanguinea,donacionOrganos,direccion
-//edad,medicoTratante)
-const createUsuarioDetallesSchema = Joi.object({
-    numPoliza: numPoliza,
-    tipoSangre: tipoSangre,
-    contactoEmergencia: contactoEmergencia.required(),
-    transfusionSanguinea: transfusionSanguinea,
-    donacionOrganos: donacionOrganos,
-    direccion: direccion,
-    edad: edad,
-    medicoTratante: medicoTratante
-})
 
 // GetUsuarioDetalles -> Get -> (id)
 const getUsuarioDetallesSchema = Joi.object({
@@ -43,9 +31,6 @@ const putUsuarioDetallesSchema = Joi.object({
     nombre: nombre
 })
 
-// getUsuarioDetallesPorContacto -> Get -> (id)
-const getUsuarioDetallesPorContactoSchema = Joi.object({
-    id: id.required()
-})
 
-module.exports = {createUsuarioDetallesSchema, getUsuarioDetallesSchema, putUsuarioDetallesSchema,getUsuarioDetallesPorContactoSchema }
+
+module.exports = { getUsuarioDetallesSchema, putUsuarioDetallesSchema }
