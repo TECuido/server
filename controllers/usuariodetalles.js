@@ -149,7 +149,7 @@ class UsuarioDetallesController {
     const medicamentos = await medicamentosActService.getMedicamentosActualesUsuario(id);
     const condicionesMedicas = await condicionMedicaService.getCondicionMedicaUsuario(id);
     
-    const correoHTML = `
+    let correoHTML = `
     <p>Hola, recibes este correo dado que ${perfil.Usuario.nombre} te ha agregado como contacto de emergencia en la aplicación TECuido</p>
     <p>A continuación se incluyen los datos médicos del usuario, para que puedas tenerlos a tu disponibilidad en caso de una emergencia</p>
     <h2>Perfil médico</h2>
