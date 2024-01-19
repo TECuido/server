@@ -7,13 +7,11 @@ const router = express.Router();
 const UsuarioDetallesController = require("../controllers/usuariodetalles.js");
 const { createUsuarioDetallesSchema, getUsuarioDetallesSchema, putUsuarioDetallesSchema } = require("../schemas/usuarioDetalles.schema.js");
 
-
-
-
 const controller = new UsuarioDetallesController();
 
 // Ruteo de la parte de usuario
-router.get("/:id", controller.getUsuarioDetalles);
-router.put("/:id", validatorHandler(getUsuarioDetallesSchema, "params"),controller.updateUsuarioDetalles);
+router.get("/:id", isAuthenticated, controller.getUsuarioDetalles);
+router.put("/:id", isAuthenticated, validatorHandler(getUsuarioDetallesSchema, "params"),controller.updateUsuarioDetalles);
+router.post("/usuarios/:id/correo", isAuthenticated, validatorHandler(getUsuarioDetallesSchema), controller.enviarCorreoDetalles)
 
 module.exports = router;
