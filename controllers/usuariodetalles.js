@@ -91,6 +91,7 @@ class UsuarioDetallesController {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }
     const usuarioAgregado = await contactoService.getContactoPorNombre(contactoEmergencia);
+    console.log(usuarioAgregado);
     // si no existe el usuario lanzar un error
       if (!usuarioAgregado) {
         return res
@@ -99,7 +100,8 @@ class UsuarioDetallesController {
       }
 
     try {
-      const usuario = await service.updateUsuarioDetalle(id, req.body,usuarioAgregado.idUsuario,nombre);
+      
+      const usuario = await service.updateUsuarioDetalle(id, req.body,usuarioAgregado.idContacto,nombre);
       return res.status(200).json({ data: usuario });
     } catch (err) {
       return res
@@ -108,85 +110,101 @@ class UsuarioDetallesController {
     }
   }
 
-  async enviarCorreoDetalles(req, res){
+  async getUsuarioDetallesPorContacto(req, res) {
     const id = req.params.id;
+    // Verificamos que el id no sea un string
     if (!Number.isInteger(parseInt(id))) {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }
     try {
-      const datos = await service.getUsuarioDetalles(id);
-
-      if(datos.length === 0){
+      const UsuarioDetalles =
+        await service.getContactoPorIdContacto(id);
+      if (UsuarioDetalles) {
+        return res.status(200).json({ data: UsuarioDetalles });
+      } else {
         return res
-          .status(400)
-          .json({ message: "No se encontró el perfil del usuario" });
+          .status(404)
+          .json({ message: "No se encontró la UsuarioDetalles" });
       }
-
-      const perfil = datos[0];
-
-      const alergias = await alergiaService.getAlergiaUsuario(id);
-      const medicamentos = await medicamentosActService.getMedicamentosActualesUsuario(id);
-      const condicionesMedicas = await condicionMedicaService.getCondicionMedicaUsuario(id);
-      
-      const correoHTML = `
-      <p>Hola, recibes este correo dado que ${perfil.Usuario.nombre} te ha agregado como contacto de emergencia en la aplicación TECuido</p>
-      <p>A continuación se incluyen los datos médicos del usuario, para que puedas tenerlos a tu disponibilidad en caso de una emergencia</p>
-      <h2>Perfil médico</h2>
-      <ul>
-        <li>Edad: ${perfil.edad}</li>
-        <li>Dirección: ${perfil.direccion}</li>
-        <li>Poliza de seguros: ${perfil.numPoliza}</li>
-        <li>Médico tratante: ${perfil.medicoTratante}</li>
-        <li>Apto para transfusión sanguínea: ${perfil.transfusionSanguinea}</li>
-        <li>Donante de órganos: ${perfil.donacionOrganos}</li>
-      </ul>
-      `
-      if(alergias.length > 0){
-        correoHTML += `
-          <h2>Alergias</h2>
-          <ul>
-          ${alergias.map(alergia => `<li>${alergia.nombre}</li>`)}
-          </ul>
-        `
-      }
-
-      if(medicamentos.length > 0){
-        correoHTML += `
-          <h2>Medicamentos</h2>
-          <ul>
-          ${medicamentos.map(medicamento => `<li>${medicamento.nombre}</li>`)}
-          </ul>
-        `
-      }
-
-      if(condicionesMedicas.length > 0){
-        correoHTML += `
-          <h2>Condiciones médicas</h2>
-          <ul>
-          ${condicionesMedicas.map(condicion => `<li>${condicion.nombre}</li>`)}
-          </ul>
-        `
-      }
-
-      const mail = {
-        from: `Dilo en señas <${config.mailerEmail}>`,
-        to: `${perfil.contactoEmergencia.correo}`,
-        subject: "Perfil médico de emergencias",
-        html: correoHTML
-      }
-
-      await sendMail(mail);
-      return res.status(200).json({message: "Se envió el correo"});
-    } catch(err){
-      console.log(err)
+    } catch (err) {
       return res
         .status(500)
-        .json({ message: `Error al enviar el correo. Err: ${err}` });
+        .json({ message: `Error al obtener UsuarioDetalles. Err: ${err}` });
     }
   }
 
-  
+  async enviarCorreoDetalles(req, res){
+    const id = req.params.id;
+    const datos = await service.getUsuarioDetalles(id);
 
+    if(datos.length === 0){
+      return res
+        .status(400)
+        .json({ message: "No se encontró el perfil del usuario" });
+    }
+
+    const perfil = datos[0];
+
+    const alergias = await alergiaService.getAlergiaUsuario(id);
+    const medicamentos = await medicamentosActService.getMedicamentosActualesUsuario(id);
+    const condicionesMedicas = await condicionMedicaService.getCondicionMedicaUsuario(id);
+    
+    const correoHTML = `
+    <p>Hola, recibes este correo dado que ${perfil.Usuario.nombre} te ha agregado como contacto de emergencia en la aplicación TECuido</p>
+    <p>A continuación se incluyen los datos médicos del usuario, para que puedas tenerlos a tu disponibilidad en caso de una emergencia</p>
+    <h2>Perfil médico</h2>
+    <ul>
+      <li>Edad: ${perfil.edad}</li>
+      <li>Dirección: ${perfil.direccion}</li>
+      <li>Poliza de seguros: ${perfil.numPoliza}</li>
+      <li>Médico tratante: ${perfil.medicoTratante}</li>
+      <li>Apto para transfusión sanguínea: ${perfil.transfusionSanguinea}</li>
+      <li>Donante de órganos: ${perfil.donacionOrganos}</li>
+    </ul>
+    `
+    if(alergias.length > 0){
+      correoHTML += `
+        <h2>Alergias</h2>
+        <ul>
+        ${alergias.map(alergia => `<li>${alergia.nombre}</li>`)}
+        </ul>
+      `
+    }
+
+    if(medicamentos.length > 0){
+      correoHTML += `
+        <h2>Medicamentos</h2>
+        <ul>
+        ${medicamentos.map(medicamento => `<li>${medicamento.nombre}</li>`)}
+        </ul>
+      `
+    }
+
+    if(condicionesMedicas.length > 0){
+      correoHTML += `
+        <h2>Condiciones médicas</h2>
+        <ul>
+        ${condicionesMedicas.map(condicion => `<li>${condicion.nombre}</li>`)}
+        </ul>
+      `
+    }
+
+    const mail = {
+      from: `Dilo en señas <${config.mailerEmail}>`,
+      to: `${perfil.contactoEmergencia.correo}`,
+      subject: "Perfil médico de emergencias",
+      html: correoHTML
+    }
+
+    await sendMail(mail);
+    return res.status(200).json({message: "Se envió el correo"});
+  } catch(err){
+    console.log(err)
+    return res
+      .status(500)
+      .json({ message: `Error al enviar el correo. Err: ${err}` });
+  }
 }
+
 
 module.exports = UsuarioDetallesController;

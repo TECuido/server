@@ -93,6 +93,7 @@ async getUsuarioDetalles(id) {
    * @description Funcion que crea los detalles de los usuarios
    */
     async updateUsuarioDetalle(id, { numPoliza, tipoSangre, transfusionSanguinea, donacionOrganos, direccion, edad, medicoTratante }, nuevoId, nombre) {
+      console.log(nuevoId)
       const usuario = await db.usuarioDetalles.updateMany({
         where: { idUsuario: Number(id) },
         data: {
