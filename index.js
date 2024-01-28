@@ -2,13 +2,17 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+const morgan = require("morgan");
+const config = require("./config/config");
+
 const routerApi = require("./routes/routes");
 
 const app = express();
 const rateLimit = require("express-rate-limit");
+
 app.use(cors());
 app.use(helmet());
-const morgan = require("morgan");
+
 
 // Aqui voy a poner el limite de llamadas
 const limiter = rateLimit({
@@ -30,6 +34,6 @@ app.get("/", (req, res) => {
 routerApi(app);
 
 //Aqui checamos que que este funcionando
-app.listen(3000, () =>
+app.listen(config.port, () =>
   console.log("El Servidor esta listo en http://localhost:3000")
 );
