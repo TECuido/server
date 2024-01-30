@@ -3,7 +3,13 @@ version: '3.8'
 services:
   tecuidoback:
     build: .
+    container_name: tecuido
     restart: unless-stopped
     env_file: ./.env
     ports:
       - $PORT:$PORT
+    networks:
+      - router-network
+networks:
+  router-network:
+    external: true
