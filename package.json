@@ -11,7 +11,7 @@
     "prisma:migrate-dev": "npx prisma migrate dev --name ",
     "prisma:migrate-production": "npx prisma migrate deploy",
     "build": "npm install && npx prisma migrate deploy --schema=./prisma/schema.prisma && npx prisma db seed && prisma generate",
-    "prisma:init": "npx prisma migrate deploy --schema=./prisma/schema.prisma && npx prisma db seed && prisma generate",
+    "prisma:init": "npx prisma migrate deploy --schema=./prisma/schema.prisma && npx prisma db seed && npx prisma generate",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
