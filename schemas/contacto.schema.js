@@ -13,6 +13,13 @@ const createContactoSchema = Joi.object({
     esContactoEmergencia: esContactoEmergencia
 })
 
+const updateContactoSchema = Joi.object({
+    nombre: nombre.required(),
+    correo: correo,
+    telefono: telefono.required()
+
+})
+
 const getContactoSchema = Joi.object({
     id: id.required()
 })
@@ -21,4 +28,4 @@ const deleteContactoSchema = Joi.object({
     id: id.required(),
 })
 
-module.exports = { createContactoSchema, getContactoSchema, deleteContactoSchema }
+module.exports = { createContactoSchema, getContactoSchema, deleteContactoSchema , updateContactoSchema}

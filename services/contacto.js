@@ -201,6 +201,16 @@ class ContactoService {
     return contactos;
   }
 
+  async updateContacto(id, { nombre, correo, telefono }) {
+    correo = correo.toLowerCase()
+    const contacto = await db.contacto.update({
+      where: { idUsuario: Number(id) },
+      data: { nombre, correo, telefono },
+    });
+    return contacto;
+  }
+
 }
 
 module.exports = ContactoService;
+

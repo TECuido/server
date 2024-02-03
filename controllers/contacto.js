@@ -199,6 +199,33 @@ class ContactoController {
       res.status(500).json({ error: error.message });
     }
   }
+
+
+   /**
+   * @author Bernardo de la Sierra
+   * @version 1.0.1
+   * @license Gp
+   * @params {int} - id Identificador unico del usuario
+   * @params {string} - telefono Telefono del usuario
+   * @params {string} - nombre Nombre del usuario
+   * @params {string} - correo Unico del usuario
+   * @description Funcion para actualizar un determinado usuario
+   */
+   async updateContacto(req, res) {
+    const id = req.params.id;
+    if (!Number.isInteger(parseInt(id))) {
+      return res.status(500).json({ message: "El Id necesita ser entero" });
+    }
+    try {
+      const contacto = await service.updateContactoo(id, req.body);
+      return res.status(200).json({ data: contacto});
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: `Error al obtener los contactos. Err: ${err}` });
+    }
+  }
+
 }
 
 module.exports = ContactoController;
