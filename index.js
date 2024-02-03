@@ -8,12 +8,12 @@ const fs = require("fs");
 const https = require("https");
 
 
-const privateKey = fs.readFileSync();
-const certificate = fs.readFileSync();
-const options = {
-  key: privateKey, 
-  cert: certificate 
-};
+// const privateKey = fs.readFileSync();
+// const certificate = fs.readFileSync();
+// const options = {
+//   key: privateKey, 
+//   cert: certificate 
+// };
 
 const config = require("./config/config");
 
@@ -44,9 +44,9 @@ app.get("/", (req, res) => {
 
 routerApi(app);
 
-const server = https.createServer(options, app);
+// const server = https.createServer(options, app);
 
 //Aqui checamos que que este funcionando
-server.listen(config.port, () =>
-  console.log("El Servidor esta listo en http://localhost:" + config.port)
-);
+// server.listen(config.port, () =>
+//   console.log("El Servidor esta listo en http://localhost:" + config.port)
+// );
