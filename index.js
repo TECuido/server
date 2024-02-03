@@ -4,16 +4,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
-const fs = require("fs");
-const https = require("https");
-
-
-const privateKey = fs.readFileSync();
-const certificate = fs.readFileSync();
-const options = {
-  key: privateKey, 
-  cert: certificate 
-};
 
 const config = require("./config/config");
 
@@ -23,7 +13,6 @@ const app = express();
 
 app.use(cors());
 app.use(helmet());
-
 
 // Aqui voy a poner el limite de llamadas
 const limiter = rateLimit({
@@ -44,9 +33,7 @@ app.get("/", (req, res) => {
 
 routerApi(app);
 
-const server = https.createServer(options, app);
-
 //Aqui checamos que que este funcionando
-server.listen(config.port, () =>
+app.listen(config.port, () =>
   console.log("El Servidor esta listo en http://localhost:" + config.port)
 );
