@@ -17,7 +17,6 @@ const updateContactoSchema = Joi.object({
     nombre: nombre.required(),
     correo: correo,
     telefono: telefono.required()
-
 })
 
 const getContactoSchema = Joi.object({
