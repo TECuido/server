@@ -8,8 +8,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
-    "prisma:migrate": "npx prisma migrate dev --name ",
+    "prisma:migrate-dev": "npx prisma migrate dev --name ",
+    "prisma:migrate-production": "npx prisma migrate deploy",
     "build": "npm install && npx prisma migrate deploy --schema=./prisma/schema.prisma && npx prisma db seed && prisma generate",
+    "prisma:init": "npx prisma migrate deploy --schema=./prisma/schema.prisma && npx prisma db seed && npx prisma generate",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,6 +32,7 @@
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.9.8",
     "pg": "^8.11.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",

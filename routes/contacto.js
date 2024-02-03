@@ -16,4 +16,5 @@ router.post("/usuario/:id", isAuthenticated,  validatorHandler(createContactoSch
 router.put("/:id",controller.updateContacto);
 
 
+
 module.exports = router;
