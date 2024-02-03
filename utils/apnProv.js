@@ -11,7 +11,7 @@ var options = {
       keyId: config.keyId,
       teamId: config.teamId
     },
-    production: false
+    production: true
 };
   
 var apnProvider = new apn.Provider(options);
