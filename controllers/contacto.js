@@ -217,7 +217,7 @@ class ContactoController {
       return res.status(500).json({ message: "El Id necesita ser entero" });
     }
     try {
-      const contacto = await service.updateContactoo(id, req.body);
+      const contacto = await service.updateContacto(id, req.body);
       return res.status(200).json({ data: contacto});
     } catch (err) {
       return res

@@ -204,7 +204,7 @@ class ContactoService {
   async updateContacto(id, { nombre, correo, telefono }) {
     correo = correo.toLowerCase()
     const contacto = await db.contacto.update({
-      where: { idUsuario: Number(id) },
+      where: { idContacto: Number(id) },
       data: { nombre, correo, telefono },
     });
     return contacto;
